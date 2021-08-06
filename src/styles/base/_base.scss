@@ -1,0 +1,53 @@
+
+* {
+    box-sizing: border-box;
+}
+
+html{
+    font-size: 90%;
+}
+
+body {
+    font-family: Helvetica, Arial, sans-serif;   
+}
+
+a { // quita la linea de vinculo de abajo
+    text-decoration: none;
+    color: $oscuro-fuerte;
+}
+
+
+button {
+    cursor: pointer;
+}
+
+button:disabled {
+    cursor:default;
+}
+
+
+
+.btn {
+    display: inline-block;
+    padding: 10px 30px; // 10px top/botton 30px left/right
+    cursor: pointer;
+    background: $azul-brillante;
+    color:white;
+    border: none;
+    border-radius:  5px;
+}
+
+.btn-outline {
+    background-color: transparent;
+    border: 1px white solid;
+}
+
+.btn:hover {
+    transform: scale(0.98);
+}
+
+.btn-primary {
+    background: $azul-brillante;
+    color:white;
+    
+}

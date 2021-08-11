@@ -1,11 +1,12 @@
 import React from 'react';
 import { Router, Switch, Route } from 'react-router-dom';
-import createHistory from 'history/createBrowserHistory';
 
 import OrdenMision from '../components/OrdenMision';
 import Home from '../components/Home';
 
-export const history = createHistory();
+import { createBrowserHistory } from "history";
+const history =  createBrowserHistory(); 
+
 
 const AppRouter = () => (
     <Router history={history}>

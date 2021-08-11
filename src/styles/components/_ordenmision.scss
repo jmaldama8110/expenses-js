@@ -83,9 +83,42 @@ input:focus{
 
 .tab.active{
     background-color: lightskyblue;
-}
 
+}
 .tab:hover{
     background-color: rgb(203, 228, 243);
 }
+
 /* END - Estilos para manejar los Tabs  (Pestañas) */
+
+/* tabcontent es el contenedor de cada tab */
+.tabcontent {
+    padding: 20px 80px 60px 20px;
+    
+}
+
+.gridcontent {
+    display: grid;
+    grid-template-columns: repeat(7,1fr) 30px;
+}
+
+.comprobantes-header {
+    background-color: #EEE;
+    line-height: 1em;
+    font-size: 0.8em;
+    border: 1px black solid;
+}
+
+.comprobantes-list {
+    margin-bottom: 2em;
+    
+}
+.comprobantes-item {
+    font-size: 0.8em;
+    border-top: 1px gray solid;
+    line-height: 1em;
+}
+.comprobantes-item:hover{
+    background-color: lightgrey;
+}
+/* END contenedor de los tabs*/

@@ -13,8 +13,8 @@ const ComprobanteAddForm = () => {
 
     const { dispatch } = useContext(ComprobantesContext)
 
-    const addComprobante = () => {
-
+    const addComprobante = (e) => {
+        e.preventDefault();
         const action = {
             type: 'ADD_COMPROBANTE',
             folio,

@@ -99,7 +99,7 @@ input:focus{
 
 .gridcontent {
     display: grid;
-    grid-template-columns: repeat(7,1fr);
+    grid-template-columns: repeat(7,1fr) 30px;
 }
 
 .comprobantes-header {
@@ -117,5 +117,8 @@ input:focus{
     font-size: 0.8em;
     border-top: 1px gray solid;
     line-height: 1em;
+}
+.comprobantes-item:hover{
+    background-color: lightgrey;
 }
 /* END contenedor de los tabs*/

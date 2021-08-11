@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
-
+import Comprobantes from './Comprobantes';
 
 const OrdenMision = () => {
     useEffect(() => {
@@ -64,54 +64,7 @@ const OrdenMision = () => {
                         <div id="alimentos-tab" data-tab-content className="active tabcontent">
 
                             <div className="tabcontent-container">
-                                <div className="comprobantes-header gridcontent">
-                                    <p>Folio</p>
-                                    <p>Fecha Aplicación</p>
-                                    <p>Concepto</p>
-                                    <p>Fecha Comprobante</p>
-                                    <p>Importe</p>
-                                    <p>Subototal</p>
-                                    <p>IVA</p>
-                                </div>
-                                <div className="comprobantes-list">
-                                    <div className="comprobantes-item gridcontent">
-                                        <div><p>A100BC</p></div>
-                                        <div><p>21-Ago</p></div>
-                                        <div><p>ALIMENTOS</p></div>
-                                        <div><p>21-Ago</p></div>
-                                        <div><p>$150.0</p></div>
-                                        <div><p>$129.31</p></div>
-                                        <div><p>$20.68</p></div>
-                                    </div>
-                                    <div className="comprobantes-item gridcontent">
-                                        <div><p>A10003</p></div>
-                                        <div><p>21-Ago</p></div>
-                                        <div><p>ALIMENTOS</p></div>
-                                        <div><p>21-Ago</p></div>
-                                        <div><p>$116.0</p></div>
-                                        <div><p>$100</p></div>
-                                        <div><p>$16.0</p></div>
-                                    </div>
-                                    <div className="comprobantes-item gridcontent">
-                                        <div><p>A100BC</p></div>
-                                        <div><p>21-Ago</p></div>
-                                        <div><p>ALIMENTOS</p></div>
-                                        <div><p>21-Ago</p></div>
-                                        <div><p>$150.0</p></div>
-                                        <div><p>$129.31</p></div>
-                                        <div><p>$20.68</p></div>
-                                    </div>
-                                </div>
-                                <div className="comprobantes-form gridcontent">
-                                    <div><input type="text" placeholder="folio.." defaultValue="B237SB"></input></div>
-                                    <div><input type="text" placeholder="Fecha aplicacion.." defaultValue="21-Ago"></input></div>
-                                    <div><input type="text" placeholder="Concepto.." defaultValue="ALIMENTOS"></input></div>
-                                    <div><input type="text" placeholder="Fecha comprobante.." defaultValue="22-Ago"></input></div>
-                                    <div><input type="text" placeholder="Importe.." defaultValue="$120.0"></input></div>
-                                    <div><input type="text" placeholder="Subtotal.." defaultValue="$103.44"></input></div>
-                                    <div><input type="text" placeholder="IVA.." defaultValue="$16.55"></input></div>
-
-                                </div>
+                                <Comprobantes />
                             </div>
                         </div>
                         <div id="transporte-tab" data-tab-content className="tabcontent">

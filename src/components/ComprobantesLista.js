@@ -6,10 +6,12 @@ const ComprobantesLista = () => {
 
     const {comprobantes} = useContext(ComprobantesContext)
 
-    return (        
+    return (
         comprobantes.map( comprobante => (
             <Comprobante    key={comprobante.folio} 
                             comprobante={comprobante} /> ) )
+
+        
     );
 }
 

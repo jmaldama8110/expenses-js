@@ -1,10 +1,18 @@
-import React, { useEffect } from 'react';
+import React, { useEffect,useReducer } from 'react';
 import { Link } from 'react-router-dom';
-import Comprobantes from './Comprobantes';
+
+import ComprobantesLista from './ComprobantesLista';
+
+import comprobantesReducer from '../reducers/comprobantes';
+import ComprobanteAddForm from './ComprobanteAddForm';
+
+import ComprobantesContext from '../context/comprobantesContext';
+
 
 const OrdenMision = () => {
 
     
+    const [comprobantes, dispatch] = useReducer(comprobantesReducer, []);
     
     useEffect(() => {
         const tabs = document.querySelectorAll('[data-tab-target]');
@@ -26,9 +34,83 @@ const OrdenMision = () => {
                 
             })
         })
+
+        /* Carga data LocalStorage */
+        const ordenmision = {
+            folio: 'A100',
+            fecha_aplicacion: '2021-08-10',
+            empleado: 'Jaime Leonardo Lara',
+            centro_costo: 'Direccion TI',
+            mision_desde: '2021-08-09',
+            mision_hasta: '2021-08-11',
+            transportacion: 'automovil',
+            descripcio: 'supervision de mantenimiento de equipos de computo',
+            anticipos: '9500',
+            gastos_total: '7690',
+            saldo: '1809.58',
+            comprobantes: [
+                {
+                    folio: '1',
+                    fecha_aplicacion: '2021-08-10',
+                    concepto: 'ALIMENTOS',
+                    fecha_comprobante: '2021-08-10',
+                    importe: '116',
+                    subtotal: '100',
+                    iva: '16',
+                    clase: 'alimentos'
+                },
+                {
+                    folio: '2',
+                    fecha_aplicacion: '2021-08-10',
+                    concepto: 'TAXI',
+                    fecha_comprobante: '2021-08-10',
+                    importe: '116',
+                    subtotal: '100',
+                    iva: '16',
+                    clase: 'transporte'
+                },
+                {
+                    folio: '3',
+                    fecha_aplicacion: '2021-08-10',
+                    concepto: 'SUITE JR',
+                    fecha_comprobante: '2021-08-10',
+                    importe: '116',
+                    subtotal: '100',
+                    iva: '16',
+                    clase: 'hospedaje'
+                },
+                {
+                    folio: '4',
+                    fecha_aplicacion: '2021-08-10',
+                    concepto: 'PROPINAS',
+                    fecha_comprobante: '2021-08-10',
+                    importe: '116',
+                    subtotal: '100',
+                    iva: '16',
+                    clase: 'otro'
+                }
+            ]
+        }
+
+        //const comprobantesData = JSON.parse(localStorage.getItem('comprobantes'))
+        const comprobantesData = ordenmision.comprobantes
+
+        if (comprobantesData) {
+            dispatch({
+                type: 'POPULATE_COMPROBANTES',
+                comprobantes: comprobantesData
+            })
+        }
+
     }, []);
 
+    /* Actualiza el local storage por cada cambio en el state de reducer */
+    useEffect(() => {
+        localStorage.setItem('comprobantes', JSON.stringify(comprobantes))
+    }, [comprobantes])
+
     return (
+        <ComprobantesContext.Provider value={{ comprobantes, dispatch }}>
         <div>
             <div className="titulo">
                 <h1>Orden de Misión</h1>
@@ -74,7 +156,8 @@ const OrdenMision = () => {
                         <div id="alimentos-tab" data-tab-content className="active tabcontent">
 
                             <div className="tabcontent-container">
-                                <Comprobantes />
+                                <ComprobantesLista />
+                                <ComprobanteAddForm />
                             </div>
                         </div>
                         <div id="transporte-tab" data-tab-content className="tabcontent">
@@ -275,11 +358,12 @@ const OrdenMision = () => {
                 </div>
                 <div className="acciones">
                     <Link to="/">Volver</Link>
-                    <Link className='btn btn-primary'>Elegir</Link><p></p>
+                    <Link to='#' className='btn btn-primary'>Elegir</Link><p></p>
                 </div>
             </div>
 
         </div>
+        </ComprobantesContext.Provider>
     );
 }
 

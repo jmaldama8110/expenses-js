@@ -3,17 +3,27 @@ import { Link } from 'react-router-dom';
 import Comprobantes from './Comprobantes';
 
 const OrdenMision = () => {
+
+    
+    
     useEffect(() => {
         const tabs = document.querySelectorAll('[data-tab-target]');
         const tabContents = document.querySelectorAll('[data-tab-content]')
-
+        
+        let tab_selected = 'alimentos-tab'
         tabs.forEach((tab) => {
             tab.addEventListener('click', () => {
+
                 const target = document.querySelector(tab.dataset.tabTarget);
+
                 tabContents.forEach(tabContent => tabContent.classList.remove('active'))
                 tabs.forEach(tab => tab.classList.remove('active'))
+
                 target.classList.add('active');
                 tab.classList.add('active');
+
+                tab_selected = target.id
+                
             })
         })
     }, []);
@@ -41,13 +51,13 @@ const OrdenMision = () => {
                     <input type="text" disabled defaultValue={"18/08/2021"}></input>
                     <label>Transportación</label>
                     <input type="radio" id="aereo" name="transporte" value="aereo" />
-                    <label for="aereo">Aéreo</label>
+                    <label htmlFor="aereo">Aéreo</label>
 
                     <input type="radio" id="autobus" name="transporte" value="autobus" />
-                    <label for="autobus">Autobus</label>
+                    <label htmlFor="autobus">Autobus</label>
 
                     <input type="radio" id="auto" name="transporte" value="auto" />
-                    <label for="auto">Automóvil</label><br /><br />
+                    <label htmlFor="auto">Automóvil</label><br /><br />
 
                     <label>Descripcion de mision</label>
                     <textarea placeholder="Escriba aqui una descripcion detallada de la mision a realiza"></textarea>

@@ -30,6 +30,7 @@ const Comprobantes = () => {
     return (
 
         <ComprobantesContext.Provider value={{ comprobantes, dispatch }}>
+
             <div className="comprobantes-header gridcontent">
                 <p>Folio</p>
                 <p>Fecha Aplicación</p>
@@ -42,6 +43,7 @@ const Comprobantes = () => {
 
             <ComprobantesLista />
             <ComprobanteAddForm />
+
         </ComprobantesContext.Provider>
     );
 }

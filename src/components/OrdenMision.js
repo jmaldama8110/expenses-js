@@ -1,19 +1,36 @@
-import React, { useEffect,useReducer } from 'react';
+import React, { useEffect, useReducer, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import ComprobantesLista from './ComprobantesLista';
 
-import comprobantesReducer from '../reducers/comprobantes';
 import ComprobanteAddForm from './ComprobanteAddForm';
 
-import ComprobantesContext from '../context/comprobantesContext';
+import comprobantesAlimentosReducer from '../reducers/comprobantesAlimentos';
+import ComprobantesAlimentosContext from '../context/comprobantesAlimentosContext';
 
 
 const OrdenMision = () => {
     
-    const [comprobantes, dispatch] = useReducer(comprobantesReducer, []);
+    const [comprobantes, dispatch] = useReducer(comprobantesAlimentosReducer, []);
+
+
+    const [folio, setFolio] = useState('');
+    const [fecha_aplicacion, setFechaAplicacion] = useState('');
+    const [empleado, setEmpleado] = useState('');
+        
+    const [centro_costo, setCentroCosto] = useState('');
+    const [mision_desde, setMisionDesde] = useState('');
+    const [mision_hasta, setMisionHasta] = useState('');
+    const [via_transporte, setViaTransporte] = useState('');
+    const [descripcion, setDescripcion] = useState('');
+    const [anticipos, setAnticipos] = useState('');
+    const [gastos_total, setGastoTotal] = useState('');
+    const [saldo, setSaldo] = useState(''); 
 
     useEffect(() => {
+
+
+        /* Javascript Tab controls */
         const tabs = document.querySelectorAll('[data-tab-target]');
         const tabContents = document.querySelectorAll('[data-tab-content]')
         
@@ -30,6 +47,7 @@ const OrdenMision = () => {
 
             })
         })
+        /* END - Javascript Tab controls */
 
         /* Carga data LocalStorage */
         const ordenmision = {
@@ -39,61 +57,50 @@ const OrdenMision = () => {
             centro_costo: 'Direccion TI',
             mision_desde: '2021-08-09',
             mision_hasta: '2021-08-11',
-            transportacion: 'automovil',
+            via_transporte: 'automovil',
             descripcio: 'supervision de mantenimiento de equipos de computo',
             anticipos: '9500',
             gastos_total: '7690',
             saldo: '1809.58',
-            comprobantes: [
-                {
-                    folio: '1',
-                    fecha_aplicacion: '2021-08-10',
-                    concepto: 'ALIMENTOS',
-                    fecha_comprobante: '2021-08-10',
-                    importe: '116',
-                    subtotal: '100',
-                    iva: '16',
-                    clase: 'alimentos'
-                },
-                {
-                    folio: '2',
-                    fecha_aplicacion: '2021-08-10',
-                    concepto: 'TAXI',
-                    fecha_comprobante: '2021-08-10',
-                    importe: '116',
-                    subtotal: '100',
-                    iva: '16',
-                    clase: 'transporte'
-                },
-                {
-                    folio: '3',
-                    fecha_aplicacion: '2021-08-10',
-                    concepto: 'SUITE JR',
-                    fecha_comprobante: '2021-08-10',
-                    importe: '116',
-                    subtotal: '100',
-                    iva: '16',
-                    clase: 'hospedaje'
-                },
-                {
-                    folio: '4',
-                    fecha_aplicacion: '2021-08-10',
-                    concepto: 'PROPINAS',
-                    fecha_comprobante: '2021-08-10',
-                    importe: '116',
-                    subtotal: '100',
-                    iva: '16',
-                    clase: 'otros'
-                }
+            alimentos: [
+                { folio: 'A1',fecha_aplicacion: '2021-08-10',concepto: 'DESAYUNO',fecha_comprobante: '2021-08-10',importe: '116',subtotal: '100',iva: '16',clase: 'alimentos' },
+                { folio: 'A2',fecha_aplicacion: '2021-08-11',concepto: 'LUNCH',fecha_comprobante: '2021-08-10',importe: '102',subtotal: '90',iva: '16',clase: 'alimentos' },
+                { folio: 'A3',fecha_aplicacion: '2021-08-12',concepto: 'COMIDA VIPS',fecha_comprobante: '2021-08-10',importe: '90',subtotal: '80',iva: '16',clase: 'alimentos' },
+                { folio: 'A4',fecha_aplicacion: '2021-08-13',concepto: 'COMIDA AMBULANTE',fecha_comprobante: '2021-08-10',importe: '134',subtotal: '120',iva: '16',clase: 'alimentos' },
+                { folio: 'A5',fecha_aplicacion: '2021-08-14',concepto: 'CENA',fecha_comprobante: '2021-08-10',importe: '125',subtotal: '115',iva: '16',clase: 'alimentos' },
+                { folio: 'A6',fecha_aplicacion: '2021-08-15',concepto: 'DESAYUNO',fecha_comprobante: '2021-08-10',importe: '115',subtotal: '95',iva: '16',clase: 'alimentos' }
+            ],
+            transportes: [
+                { folio: '93823',fecha_aplicacion: '2021-08-09',concepto: 'TAXI',fecha_comprobante: '2021-08-10',importe: '60',subtotal: '60',iva: '0', clase: 'transporte' },
+                { folio: '10293',fecha_aplicacion: '2021-08-11',concepto: 'TAXI',fecha_comprobante: '2021-08-10',importe: '116',subtotal: '80',iva: '0', clase: 'transporte' },
+                { folio: '74738',fecha_aplicacion: '2021-08-12',concepto: 'TAXI',fecha_comprobante: '2021-08-10',importe: '80',subtotal: '120',iva: '0', clase: 'transporte' },
+                { folio: 'ie9235',fecha_aplicacion: '2021-08-13',concepto: 'TAXI',fecha_comprobante: '2021-08-10',importe: '100',subtotal: '100',iva: '0', clase: 'transporte' },
+
+            ],
+            hospedajes: [
+                { folio: '01',fecha_aplicacion: '2021-08-10',concepto: 'SUITE JR',fecha_comprobante: '2021-08-14',importe: '650',subtotal: '550',iva: '16',clase: 'hospedaje' },
+                { folio: '02',fecha_aplicacion: '2021-08-11',concepto: 'SUITE JR',fecha_comprobante: '2021-08-14',importe: '650',subtotal: '550',iva: '16',clase: 'hospedaje' },
+                { folio: '03',fecha_aplicacion: '2021-08-12',concepto: 'SUITE JR',fecha_comprobante: '2021-08-14',importe: '650',subtotal: '550',iva: '16',clase: 'hospedaje' },
+                { folio: '04',fecha_aplicacion: '2021-08-13',concepto: 'SUITE JR',fecha_comprobante: '2021-08-14',importe: '650',subtotal: '550',iva: '16',clase: 'hospedaje' },
+                { folio: '05',fecha_aplicacion: '2021-08-14',concepto: 'SUITE JR',fecha_comprobante: '2021-08-14',importe: '650',subtotal: '550',iva: '16',clase: 'hospedaje' },
+
+            ],
+            otros: [
+                { folio: '837',fecha_aplicacion: '2021-08-10',concepto: 'PROPINAS',fecha_comprobante: '2021-08-10',importe: '116',subtotal: '100',iva: '16', clase: 'otros'},
+                { folio: '537',fecha_aplicacion: '2021-08-11',concepto: 'PROPINAS',fecha_comprobante: '2021-08-11',importe: '116',subtotal: '100',iva: '16', clase: 'otros'},
+                { folio: '244',fecha_aplicacion: '2021-08-12',concepto: 'PROPINAS',fecha_comprobante: '2021-08-12',importe: '116',subtotal: '100',iva: '16', clase: 'otros'},
+                { folio: '412',fecha_aplicacion: '2021-08-13',concepto: 'PROPINAS',fecha_comprobante: '2021-08-13',importe: '116',subtotal: '100',iva: '16', clase: 'otros'},
+
             ]
+                
         }
 
         //const comprobantesData = JSON.parse(localStorage.getItem('comprobantes'))
-        const comprobantesData = ordenmision.comprobantes
+        const comprobantesData = ordenmision.alimentos;
 
         if (comprobantesData) {
             dispatch({
-                type: 'POPULATE_COMPROBANTES',
+                type: 'POPULATE_COMPROBANTES_ALIMENTOS',
                 comprobantes: comprobantesData
             })
         }
@@ -102,11 +109,10 @@ const OrdenMision = () => {
 
     /* Actualiza el local storage por cada cambio en el state de reducer */
     useEffect(() => {
-        localStorage.setItem('comprobantes', JSON.stringify(comprobantes))
+        //localStorage.setItem('comprobantes', JSON.stringify(comprobantes))
     }, [comprobantes])
 
     return (
-        <ComprobantesContext.Provider value={{ comprobantes, dispatch }}>
         <div>
             <div className="titulo">
                 <h1>Orden de Misión</h1>
@@ -151,27 +157,31 @@ const OrdenMision = () => {
                     <div className="tab-content">
                         <div id="alimentos" data-tab-content className="active tabcontent">
                             <div className="tabcontent-container">
+                            <ComprobantesAlimentosContext.Provider value={{ comprobantes, dispatch }}>
+
                                 <ComprobantesLista />
                                 <ComprobanteAddForm />
+
+                            </ComprobantesAlimentosContext.Provider>
                             </div>
                         </div>
                         <div id="transporte" data-tab-content className="tabcontent">
                             <div className="tabcontent-container">
-                                <ComprobantesLista />
-                                <ComprobanteAddForm />
+                                {/* <ComprobantesLista />
+                                <ComprobanteAddForm /> */}
                             </div>
                         </div>
                         <div id="hospedaje" data-tab-content className="tabcontent">
                             <div className="tabcontent-container">
-                                <ComprobantesLista />
-                                <ComprobanteAddForm />
+                                {/* <ComprobantesLista />
+                                <ComprobanteAddForm /> */}
                             </div>
 
                         </div>
                         <div id="otros" data-tab-content className="tabcontent">
                             <div className="tabcontent-container">
-                                <ComprobantesLista />
-                                <ComprobanteAddForm />
+                                {/* <ComprobantesLista />
+                                <ComprobanteAddForm /> */}
                             </div>
 
                         </div>
@@ -218,7 +228,7 @@ const OrdenMision = () => {
             </div>
 
         </div>
-        </ComprobantesContext.Provider>
+        
     );
 }
 

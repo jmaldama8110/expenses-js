@@ -5,13 +5,10 @@ import ComprobantesContext from '../context/comprobantesContext';
 const ComprobantesLista = () => {
 
     const {comprobantes} = useContext(ComprobantesContext)
-
     return (
-        comprobantes.map( comprobante => (
-            <Comprobante    key={comprobante.folio} 
-                            comprobante={comprobante} /> ) )
-
-        
+        comprobantes.map( item => (
+            <Comprobante    key={item.folio} 
+                            comprobante={item} /> ) )
     );
 }
 

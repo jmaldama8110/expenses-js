@@ -6,7 +6,7 @@ const comprobantesReducer = (state, action) => {
         case 'ADD_COMPROBANTE':
             return [
                 ...state,
-                { 
+                {
                     folio: action.folio,
                     fecha_aplicacion: action.fecha_aplicacion,
                     concepto: action.concepto,

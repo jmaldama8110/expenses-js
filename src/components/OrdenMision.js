@@ -10,15 +10,13 @@ import ComprobantesContext from '../context/comprobantesContext';
 
 
 const OrdenMision = () => {
-
     
     const [comprobantes, dispatch] = useReducer(comprobantesReducer, []);
-    
+
     useEffect(() => {
         const tabs = document.querySelectorAll('[data-tab-target]');
         const tabContents = document.querySelectorAll('[data-tab-content]')
         
-        let tab_selected = 'alimentos-tab'
         tabs.forEach((tab) => {
             tab.addEventListener('click', () => {
 
@@ -30,8 +28,6 @@ const OrdenMision = () => {
                 target.classList.add('active');
                 tab.classList.add('active');
 
-                tab_selected = target.id
-                
             })
         })
 
@@ -87,7 +83,7 @@ const OrdenMision = () => {
                     importe: '116',
                     subtotal: '100',
                     iva: '16',
-                    clase: 'otro'
+                    clase: 'otros'
                 }
             ]
         }
@@ -147,176 +143,35 @@ const OrdenMision = () => {
                 </div>
                 <div className="detalle">
                     <ul className="tabs">
-                        <li data-tab-target="#alimentos-tab" className="active tab">Alimentos</li>
-                        <li data-tab-target="#transporte-tab" className="tab">Transporte</li>
-                        <li data-tab-target="#hospedaje-tab" className="tab">Hospedaje</li>
-                        <li data-tab-target="#otro-tab" className="tab">Otro</li>
+                        <li data-tab-target="#alimentos" className="active tab">Alimentos</li>
+                        <li data-tab-target="#transporte" className="tab">Transporte</li>
+                        <li data-tab-target="#hospedaje" className="tab">Hospedaje</li>
+                        <li data-tab-target="#otros" className="tab">Otro</li>
                     </ul>
                     <div className="tab-content">
-                        <div id="alimentos-tab" data-tab-content className="active tabcontent">
-
+                        <div id="alimentos" data-tab-content className="active tabcontent">
                             <div className="tabcontent-container">
                                 <ComprobantesLista />
                                 <ComprobanteAddForm />
                             </div>
                         </div>
-                        <div id="transporte-tab" data-tab-content className="tabcontent">
+                        <div id="transporte" data-tab-content className="tabcontent">
                             <div className="tabcontent-container">
-                                <div className="comprobantes-header gridcontent">
-                                    <p>Folio</p>
-                                    <p>Fecha Aplicación</p>
-                                    <p>Concepto</p>
-                                    <p>Fecha Comprobante</p>
-                                    <p>Importe</p>
-                                    <p>Subototal</p>
-                                    <p>IVA</p>
-                                </div>
-                                <div className="comprobantes-list">
-                                    <div className="comprobantes-item gridcontent">
-                                        <div><p>13456S</p></div>
-                                        <div><p>21-Ago</p></div>
-                                        <div><p>TAXI A HOTEL</p></div>
-                                        <div><p>21-Ago</p></div>
-                                        <div><p>$150.0</p></div>
-                                        <div><p>$129.31</p></div>
-                                        <div><p>$20.68</p></div>
-                                    </div>
-                                    <div className="comprobantes-item gridcontent">
-                                        <div><p>23567</p></div>
-                                        <div><p>21-Ago</p></div>
-                                        <div><p>AEROPUERTO</p></div>
-                                        <div><p>21-Ago</p></div>
-                                        <div><p>$116.0</p></div>
-                                        <div><p>$100</p></div>
-                                        <div><p>$16.0</p></div>
-                                    </div>
-                                    <div className="comprobantes-item gridcontent">
-                                        <div><p>C100BC</p></div>
-                                        <div><p>21-Ago</p></div>
-                                        <div><p>TAXI OFICINA</p></div>
-                                        <div><p>21-Ago</p></div>
-                                        <div><p>$150.0</p></div>
-                                        <div><p>$129.31</p></div>
-                                        <div><p>$20.68</p></div>
-                                    </div>
-                                </div>
-                                <div className="comprobantes-form gridcontent">
-                                    <div><input type="text" placeholder="folio.." defaultValue="1234"></input></div>
-                                    <div><input type="text" placeholder="Fecha aplicacion.." defaultValue="20-Ago"></input></div>
-                                    <div><input type="text" placeholder="Concepto.." defaultValue="TAXI"></input></div>
-                                    <div><input type="text" placeholder="Fecha comprobante.." defaultValue="22-Ago"></input></div>
-                                    <div><input type="text" placeholder="Importe.." defaultValue="$120.0"></input></div>
-                                    <div><input type="text" placeholder="Subtotal.." defaultValue="$103.44"></input></div>
-                                    <div><input type="text" placeholder="IVA.." defaultValue="$16.55"></input></div>
-
-                                </div>
+                                <ComprobantesLista />
+                                <ComprobanteAddForm />
                             </div>
                         </div>
-                        <div id="hospedaje-tab" data-tab-content className="tabcontent">
+                        <div id="hospedaje" data-tab-content className="tabcontent">
                             <div className="tabcontent-container">
-                                <div className="comprobantes-header gridcontent">
-                                    <p>Folio</p>
-                                    <p>Fecha Aplicación</p>
-                                    <p>Concepto</p>
-                                    <p>Fecha Comprobante</p>
-                                    <p>Importe</p>
-                                    <p>Subototal</p>
-                                    <p>IVA</p>
-                                </div>
-                                <div className="comprobantes-list">
-                                    <div className="comprobantes-item gridcontent">
-                                        <div><p>A100BC</p></div>
-                                        <div><p>21-Ago</p></div>
-                                        <div><p>SUIT BASICA</p></div>
-                                        <div><p>21-Ago</p></div>
-                                        <div><p>$750.0</p></div>
-                                        <div><p>$129.31</p></div>
-                                        <div><p>$20.68</p></div>
-                                    </div>
-                                    <div className="comprobantes-item gridcontent">
-                                        <div><p>A10003</p></div>
-                                        <div><p>21-Ago</p></div>
-                                        <div><p>SUIT BASICA</p></div>
-                                        <div><p>21-Ago</p></div>
-                                        <div><p>$750.0</p></div>
-                                        <div><p>$100</p></div>
-                                        <div><p>$16.0</p></div>
-                                    </div>
-                                    <div className="comprobantes-item gridcontent">
-                                        <div><p>A100BC</p></div>
-                                        <div><p>21-Ago</p></div>
-                                        <div><p>SUIT BASICA</p></div>
-                                        <div><p>21-Ago</p></div>
-                                        <div><p>$750.0</p></div>
-                                        <div><p>$129.31</p></div>
-                                        <div><p>$20.68</p></div>
-                                    </div>
-                                </div>
-                                <div className="comprobantes-form gridcontent">
-                                    <div><input type="text" placeholder="folio.." defaultValue="B237SB"></input></div>
-                                    <div><input type="text" placeholder="Fecha aplicacion.." defaultValue="21-Ago"></input></div>
-                                    <div><input type="text" placeholder="Concepto.." defaultValue="HOTEL"></input></div>
-                                    <div><input type="text" placeholder="Fecha comprobante.." defaultValue="22-Ago"></input></div>
-                                    <div><input type="text" placeholder="Importe.." defaultValue="$720.0"></input></div>
-                                    <div><input type="text" placeholder="Subtotal.." defaultValue="$103.44"></input></div>
-                                    <div><input type="text" placeholder="IVA.." defaultValue="$16.55"></input></div>
-
-                                </div>
+                                <ComprobantesLista />
+                                <ComprobanteAddForm />
                             </div>
 
                         </div>
-                        <div id="otro-tab" data-tab-content="tabcontent" className="tabcontent">
+                        <div id="otros" data-tab-content className="tabcontent">
                             <div className="tabcontent-container">
-                                <div className="comprobantes-header gridcontent">
-                                    <p>Folio</p>
-                                    <p>Fecha Aplicación</p>
-                                    <p>Concepto</p>
-                                    <p>Fecha Comprobante</p>
-                                    <p>Importe</p>
-                                    <p>Subototal</p>
-                                    <p>IVA</p>
-                                </div>
-                                <div className="comprobantes-list">
-                                    <div className="comprobantes-item gridcontent">
-                                        <div><p>01</p></div>
-                                        <div><p>21-Ago</p></div>
-                                        <div><p>PROPINAS</p></div>
-                                        <div><p>21-Ago</p></div>
-                                        <div><p>$20.0</p></div>
-                                        <div><p>$0</p></div>
-                                        <div><p>$0</p></div>
-                                    </div>
-                                    <div className="comprobantes-item gridcontent">
-                                        <div><p>02</p></div>
-                                        <div><p>21-Ago</p></div>
-                                        <div><p>PROPINAS</p></div>
-                                        <div><p>21-Ago</p></div>
-                                        <div><p>$20.0</p></div>
-                                        <div><p>$0</p></div>
-                                        <div><p>$0</p></div>
-                                    </div>
-                                    <div className="comprobantes-item gridcontent">
-                                        <div><p>03</p></div>
-                                        <div><p>21-Ago</p></div>
-                                        <div><p>PARQUIMETRO</p></div>
-                                        <div><p>21-Ago</p></div>
-                                        <div><p>$20.0</p></div>
-                                        <div><p>$0</p></div>
-                                        <div><p>$0</p></div>
-                                    </div>
-                                </div>
-                                <div className="comprobantes-form">
-                                    <form className="gridcontent">
-                                        <div><input type="text" placeholder="folio.." defaultValue="001"></input></div>
-                                        <div><input type="text" placeholder="Fecha aplicacion.." defaultValue="21-Ago"></input></div>
-                                        <div><input type="text" placeholder="Concepto.." defaultValue=""></input></div>
-                                        <div><input type="text" placeholder="Fecha comprobante.." defaultValue="22-Ago"></input></div>
-                                        <div><input type="text" placeholder="Importe.." defaultValue=""></input></div>
-                                        <div><input type="text" placeholder="Subtotal.." defaultValue=""></input></div>
-                                        <div><input type="text" placeholder="IVA.." defaultValue=""></input></div>
-                                    </form>
-
-                                </div>
+                                <ComprobantesLista />
+                                <ComprobanteAddForm />
                             </div>
 
                         </div>

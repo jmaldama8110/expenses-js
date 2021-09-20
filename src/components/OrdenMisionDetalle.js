@@ -5,27 +5,31 @@ import ComprobantesLista from './ComprobantesLista';
 
 import ComprobanteAddForm from './ComprobanteAddForm';
 
-import comprobantesAlimentosReducer from '../reducers/comprobantesAlimentos';
-import ComprobantesAlimentosContext from '../context/comprobantesAlimentosContext';
+import ComprobantesReducer from '../reducers/comprobantes';
+import ComprobantesContext from '../context/comprobantesContext';
+
 
 
 const OrdenMision = () => {
     
-    const [comprobantes, dispatch] = useReducer(comprobantesAlimentosReducer, []);
+    // const [folio, setFolio] = useState('');
+    // const [fecha_aplicacion, setFechaAplicacion] = useState('');
+    // const [empleado, setEmpleado] = useState('');
+    
+    // const [centro_costo, setCentroCosto] = useState('');
+    // const [mision_desde, setMisionDesde] = useState('');
+    // const [mision_hasta, setMisionHasta] = useState('');
+    // const [via_transporte, setViaTransporte] = useState('');
+    // const [descripcion, setDescripcion] = useState('');
+    // const [anticipos, setAnticipos] = useState('');
+    // const [gastos_total, setGastoTotal] = useState('');
+    // const [saldo, setSaldo] = useState(''); 
+    
+    const [alimentos, dispatchAlimentos] = useReducer(ComprobantesReducer, []);
+    const [transportes, dispatchTransportes] = useReducer(ComprobantesReducer, []);
+    const [hospedajes, dispatchHopedaje] = useReducer( ComprobantesReducer, []);
+    const [otros, dispatchOtros] = useReducer( ComprobantesReducer, []);
 
-
-    const [folio, setFolio] = useState('');
-    const [fecha_aplicacion, setFechaAplicacion] = useState('');
-    const [empleado, setEmpleado] = useState('');
-        
-    const [centro_costo, setCentroCosto] = useState('');
-    const [mision_desde, setMisionDesde] = useState('');
-    const [mision_hasta, setMisionHasta] = useState('');
-    const [via_transporte, setViaTransporte] = useState('');
-    const [descripcion, setDescripcion] = useState('');
-    const [anticipos, setAnticipos] = useState('');
-    const [gastos_total, setGastoTotal] = useState('');
-    const [saldo, setSaldo] = useState(''); 
 
     useEffect(() => {
 
@@ -58,7 +62,7 @@ const OrdenMision = () => {
             mision_desde: '2021-08-09',
             mision_hasta: '2021-08-11',
             via_transporte: 'automovil',
-            descripcio: 'supervision de mantenimiento de equipos de computo',
+            descripcion: 'supervision de mantenimiento de equipos de computo',
             anticipos: '9500',
             gastos_total: '7690',
             saldo: '1809.58',
@@ -95,22 +99,38 @@ const OrdenMision = () => {
                 
         }
 
-        //const comprobantesData = JSON.parse(localStorage.getItem('comprobantes'))
-        const comprobantesData = ordenmision.alimentos;
+        //const localData = JSON.parse(localStorage.getItem('comprobantes'))
+        const localData = ordenmision;
 
-        if (comprobantesData) {
-            dispatch({
-                type: 'POPULATE_COMPROBANTES_ALIMENTOS',
-                comprobantes: comprobantesData
+        if (localData) {
+            dispatchAlimentos({
+                type: 'POPULATE_COMPROBANTES',
+                comprobantes: localData.alimentos
             })
+
+            dispatchTransportes({
+                type: 'POPULATE_COMPROBANTES',
+                comprobantes: localData.transportes
+            })
+            dispatchHopedaje({
+                type: 'POPULATE_COMPROBANTES',
+                comprobantes: localData.hospedajes
+            });
+            dispatchOtros({
+                type: 'POPULATE_COMPROBANTES',
+                comprobantes: localData.otros
+            })
+
         }
+
+
 
     }, []);
 
     /* Actualiza el local storage por cada cambio en el state de reducer */
     useEffect(() => {
         //localStorage.setItem('comprobantes', JSON.stringify(comprobantes))
-    }, [comprobantes])
+    }, [alimentos])
 
     return (
         <div>
@@ -157,31 +177,36 @@ const OrdenMision = () => {
                     <div className="tab-content">
                         <div id="alimentos" data-tab-content className="active tabcontent">
                             <div className="tabcontent-container">
-                            <ComprobantesAlimentosContext.Provider value={{ comprobantes, dispatch }}>
+                            <ComprobantesContext.Provider value={{ comprobantes: alimentos, dispatch: dispatchAlimentos }}>
 
                                 <ComprobantesLista />
                                 <ComprobanteAddForm />
 
-                            </ComprobantesAlimentosContext.Provider>
+                            </ComprobantesContext.Provider>
                             </div>
                         </div>
                         <div id="transporte" data-tab-content className="tabcontent">
                             <div className="tabcontent-container">
-                                {/* <ComprobantesLista />
-                                <ComprobanteAddForm /> */}
+                            <ComprobantesContext.Provider value={{ comprobantes: transportes, dispatch: dispatchTransportes }} >
+                                <ComprobantesLista />
+                                <ComprobanteAddForm />
+                            </ComprobantesContext.Provider>
                             </div>
                         </div>
                         <div id="hospedaje" data-tab-content className="tabcontent">
                             <div className="tabcontent-container">
-                                {/* <ComprobantesLista />
-                                <ComprobanteAddForm /> */}
+                            <ComprobantesContext.Provider value={{comprobantes: hospedajes, dispatch: dispatchHopedaje} }>
+                                <ComprobantesLista />
+                                <ComprobanteAddForm />
+                            </ComprobantesContext.Provider>
                             </div>
-
                         </div>
                         <div id="otros" data-tab-content className="tabcontent">
                             <div className="tabcontent-container">
-                                {/* <ComprobantesLista />
-                                <ComprobanteAddForm /> */}
+                            <ComprobantesContext.Provider value={{comprobantes: otros, dispatch: dispatchOtros}}>
+                                <ComprobantesLista />
+                                <ComprobanteAddForm />
+                            </ComprobantesContext.Provider>
                             </div>
 
                         </div>

@@ -1,9 +1,9 @@
 
-const comprobantesAlimentosReducer = (state, action) => {
+const ComprobantesReducer = (state, action) => {
     switch(action.type){
-        case 'POPULATE_COMPROBANTES_ALIMENTOS':
+        case 'POPULATE_COMPROBANTES':
             return action.comprobantes
-        case 'ADD_COMPROBANTE_ALIMENTOS':
+        case 'ADD_COMPROBANTE':
             return [
                 ...state,
                 {
@@ -16,7 +16,7 @@ const comprobantesAlimentosReducer = (state, action) => {
                     iva: action.iva
                 }
             ]
-        case 'REMOVE_COMPROBANTE_ALIMENTOS':
+        case 'REMOVE_COMPROBANTE':
             return state.filter( comprobante => comprobante.folio !== action.folio)
 
         default:
@@ -25,4 +25,4 @@ const comprobantesAlimentosReducer = (state, action) => {
 }
 
 
-export {comprobantesAlimentosReducer as default};
+export {ComprobantesReducer as default};

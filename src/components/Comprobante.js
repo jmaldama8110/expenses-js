@@ -1,14 +1,14 @@
 import React,{useContext} from 'react';
 
-import ComprobantesAlimentosContext from '../context/comprobantesAlimentosContext';
+import ComprobantesContext from '../context/comprobantesContext';
 
 
 const Comprobante = ({ comprobante }) => {
-    const { dispatch } = useContext(ComprobantesAlimentosContext);
+    const { dispatch } = useContext(ComprobantesContext);
 
     const removeComprobante = (folio) => {
         dispatch({
-            type: 'REMOVE_COMPROBANTE_ALIMENTOS',
+            type: 'REMOVE_COMPROBANTE',
             folio
         })
     }

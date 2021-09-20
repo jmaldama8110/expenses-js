@@ -8,7 +8,13 @@ html{
 }
 
 body {
-    font-family: Helvetica, Arial, sans-serif;   
+    font-family: Helvetica, Arial, sans-serif;  
+
+    max-width: 950px;
+    margin: auto;
+
+    // Ojo, quitar esto 
+    margin-bottom: 4em;
 }
 
 a { // quita la linea de vinculo de abajo
@@ -51,3 +57,44 @@ button:disabled {
     color:white;
     
 }
+
+/* temporary CSS for demo*/
+
+.filtrosection {
+    border: 4px lightblue solid;
+    padding: 0 1em 0em 1em;
+
+}
+
+.ordentable {
+   
+    border: 4px lightblue solid;
+    padding: 0 1em 0em 1em;
+    
+}
+.ordenitem {
+    display: grid;
+    grid-template-columns: 80px 80px 80px 200px 300px auto;
+}
+
+.ordenitem:hover{
+    background-color: lightblue;
+    cursor: pointer;
+}
+
+.tableheader {
+    font-weight: 600;
+}
+
+.tablerow,.tableheader {
+    display: flex;
+    justify-content: space-around;
+    border-bottom: 1px solid rgba(230, 224, 224, 0.774);
+    align-items: center;
+}
+.tablerow:hover {
+    background-color: lightblue;
+    cursor: pointer;
+}
+
+/*END temporary CSS*/

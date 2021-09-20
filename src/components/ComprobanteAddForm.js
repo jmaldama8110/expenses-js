@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import ComprobantesAlimentosContext from '../context/comprobantesAlimentosContext';
+import ComprobantesContext from '../context/comprobantesContext';
 
 const ComprobanteAddForm = () => {
 
@@ -11,12 +11,12 @@ const ComprobanteAddForm = () => {
     const [subTotal, setSubtotal] = useState('84');
     const [iva, setIva] = useState('16');
 
-    const { dispatch } = useContext(ComprobantesAlimentosContext)
+    const { dispatch } = useContext(ComprobantesContext)
 
     const addComprobante = (e) => {
         e.preventDefault();
         const action = {
-            type: 'ADD_COMPROBANTE_ALIMENTOS',
+            type: 'ADD_COMPROBANTE',
             folio,
             fecha_aplicacion: fechaAplicacion,
             concepto,

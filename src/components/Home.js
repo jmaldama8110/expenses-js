@@ -36,11 +36,10 @@ const Home = () => {
             <nav>
                 <ul>
                     <li> <Link to="/add">Nueva Mision</Link> </li>
-                    <li><a href="#home">Empleados</a></li>
-                    <li><a href="#home">Esquemas contables</a></li>
+                    <li><a href="#comprobacion">Comprobacion</a></li>
                     <li><Link to="/config">Configuraciones</Link></li>
                     
-                    <li><a href="#home">Usuarios</a></li>
+                    <li><a href="#perfil">Mi perfil</a></li>
                 </ul>
             </nav>
             <ComprobantesContext.Provider value={ { ordenes, dispatchOrdenes }}>

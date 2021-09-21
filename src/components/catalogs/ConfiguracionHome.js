@@ -1,6 +1,8 @@
 import React from "react";
+import Costokm from "./Costokm";
 import Empleados from "./Empleados";
 import Empresas from "./Empresas";
+import Esquemas from "./Esquemas";
 import Pago from "./Pago";
 import Usuarios from "./Usuarios";
 
@@ -15,6 +17,8 @@ const ConfiguracionHome = ()=> {
             <Empleados />
             <Usuarios />
             <Pago />
+            <Esquemas />
+            <Costokm />
         </div>
     );
 }

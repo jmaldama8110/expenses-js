@@ -4,7 +4,7 @@ import React from "react";
 const PagoInfocliente = ()=> {
     return (
         <div>
-            <h2>Datos de facturacion</h2>
+            <h3>Datos de facturacion</h3>
                 <p> Qui ad ad officia non aute ad laboris occaecat fugiat enim nostrud enim excepteur cupidatat.
                     Aliqua amet cillum dolore incididunt ut eu anim in qui.Aute fugiat commodo sint laborum officia sit mollit laboris eiusmod.
                     

@@ -20,11 +20,11 @@ const Empresas = ()=> {
                 <p>Accion</p>
             </div>
             {empresas.map(item => {
-                return <div className="tablerow">
+                return <div className="tablerow" key={item.id}>
                     <p>{item.razon_social}</p>
                     <p>{item.rfc}</p>
                     <p>{item.centrocosto}</p>
-                    <a href="#">Modificar</a>
+                    <a href="#home">Modificar</a>
                 </div>
 
             })}

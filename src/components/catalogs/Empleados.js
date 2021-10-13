@@ -18,11 +18,11 @@ const Empleados = () => {
                 <p>Accion</p>
             </div>
             {empleados.map(item => {
-                return <div className="tablerow">
+                return <div className="tablerow" key={item.id}>
                     <p>{item.usuario}</p>
                     <p>{item.nombre +' '+item.apellidos}</p>
                     <p>{item.centrocosto}</p>
-                    <a href="#">Modificar</a>
+                    <a href="#home">Modificar</a>
                 </div>
 
             })}

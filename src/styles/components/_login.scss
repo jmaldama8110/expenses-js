@@ -1,0 +1,18 @@
+
+.login h1 {
+    text-align: center;
+}
+
+.login form {
+    display: grid;
+    gap: 1em 1em;
+    grid-template-rows: 1fr 1fr 1fr;
+    padding: 1em;
+    
+}
+
+.login input,button {
+    max-width: 200px;
+    margin: auto;
+}   
+

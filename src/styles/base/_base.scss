@@ -1,6 +1,8 @@
 
 * {
     box-sizing: border-box;
+    margin: 0;
+    padding: 0;
 }
 
 html{
@@ -10,7 +12,7 @@ html{
 body {
     font-family: Helvetica, Arial, sans-serif;  
 
-    max-width: 950px;
+    max-width: 850px;
     margin: auto;
 
     // Ojo, quitar esto 

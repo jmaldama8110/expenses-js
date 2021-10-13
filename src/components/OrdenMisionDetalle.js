@@ -10,7 +10,7 @@ import ComprobantesContext from '../context/comprobantesContext';
 
 
 
-const OrdenMision = () => {
+const OrdenMisionDetalle = () => {
     
     // const [folio, setFolio] = useState('');
     // const [fecha_aplicacion, setFechaAplicacion] = useState('');
@@ -257,4 +257,4 @@ const OrdenMision = () => {
     );
 }
 
-export default OrdenMision;
+export default OrdenMisionDetalle;

@@ -7,16 +7,15 @@ const OrdenMisionLista = () => {
     const { ordenes } = useContext(ComprobantesContext)
 
     return (
-        <div className="ordentable">
+        <div className="ordentable">        
             {
             ordenes.map( item => 
-                <OrdenMisionItem 
+                    <OrdenMisionItem 
                     key={item.folio}
                     item={item}
                 /> )
             }
         </div>
-        
     );
 }
 

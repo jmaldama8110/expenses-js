@@ -21,12 +21,11 @@ const OrdenesReducer = (state, action) => {
                     alimentos: action.alimentos,
                     transportes: action.transportes,
                     hospedajes: action.hospedajes,
-                    otros: action. otros
+                    otros: action.otros
                 }
             ]
         case 'REMOVE_ORDEN':
             return state.filter( orden => orden.folio !== action.folio)
-
         default:
             return state
     }

@@ -1,20 +1,28 @@
-import React, { useEffect, useReducer } from 'react';
-import {Link} from 'react-router-dom';
+import React, { useEffect, useReducer, useState } from 'react';
 
-import OrdeMisionLista from './OrdeMisionLista';
+
+import OrdenMisionLista from './OrdenMisionLista';
 import OrdenMisionFiltro from './OrdenMisionFiltro';
 
 import ordenesReducer from '../reducers/ordenes';
 import ComprobantesContext from '../context/comprobantesContext';
+import Header from './Header';
+
 
 const Home = () => {
 
-    const [ordenes, dispatchOrdenes ] = useReducer(ordenesReducer,[])
+    const [ordenes, dispatchOrdenes ] = useReducer(ordenesReducer,[]);
+
+    const [usuario, setUsuario ] = useState('');
 
     useEffect( ()=>{
 
         // retrieves ordenes from localStorage
-        const localData = JSON.parse(localStorage.getItem('ordenes'))
+        const localData = JSON.parse(localStorage.getItem('ordenes'));
+        const localSession = JSON.parse(sessionStorage.getItem('user'));
+
+        setUsuario(localSession.info.name);
+
         if( localData ) {
             
             dispatchOrdenes({
@@ -26,25 +34,15 @@ const Home = () => {
 
     },[]);
 
-    // useEffect( ()=>{
-    //     localStorage.setItem('ordenes', JSON.stringify(ordenes))
-    // },[ordenes])
 
     return (
         <div>
-            <h1>Busqueda de una orden de misión!</h1>
-            <nav>
-                <ul>
-                    <li> <Link to="/add">Nueva Mision</Link> </li>
-                    <li><a href="#comprobacion">Comprobacion</a></li>
-                    <li><Link to="/config">Configuraciones</Link></li>
-                    
-                    <li><a href="#perfil">Mi perfil</a></li>
-                </ul>
-            </nav>
-            <ComprobantesContext.Provider value={ { ordenes, dispatchOrdenes }}>
+            <Header />
+            <h1>Hola {usuario}, busca tus misiones!</h1>
+
+            <ComprobantesContext.Provider value={ { ordenes, dispatchOrdenes,usuario }}>
                 <OrdenMisionFiltro />
-                <OrdeMisionLista /> 
+                <OrdenMisionLista /> 
             </ComprobantesContext.Provider>
 
         </div>

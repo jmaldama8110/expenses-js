@@ -54,13 +54,21 @@ const Esquemas = () => {
             <div className="tableheader">
                 <p>Clave</p>
                 <p>Nombre Esquema</p>
+                <p>Cuentas contables</p>
                 <p>Accion</p>
             </div>
             {esquemas.map(item => {
                 return <div className="tablerow">
                     <p>{item.id}</p>
                     <p>{item.nombre_esquema}</p>
-                    <a href="#">Modificar</a>
+                    <p> Anticipos: {item.anticipos.cargo} / {item.anticipos.abono} / {item.anticipos.titulo}<br/>
+                        Transporte: {item.transporte.cargo} / {item.transporte.abono} / {item.transporte.titulo}<br/>
+                        Recepcion: {item.recepcion.cargo} / {item.recepcion.abono} / {item.recepcion.titulo}<br/>
+                        Hospedaje: {item.hospedaje.cargo} / {item.hospedaje.abono} / {item.hospedaje.titulo}<br/>
+                        Alimentos: {item.alimentos.cargo} / {item.alimentos.abono} / {item.alimentos.titulo}<br/>
+                        Mantenimiento de vehiculos: {item.mantenimiento_vehiculos.cargo} / {item.mantenimiento_vehiculos.abono} / {item.mantenimiento_vehiculos.titulo}
+                    </p>
+                    <a href="#home">Modificar</a>
                 </div>
 
             })}

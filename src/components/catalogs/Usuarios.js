@@ -22,13 +22,13 @@ const Usuarios = ()=> {
                 <p>Accion</p>
             </div>
             {usuarios.map(item => {
-                return <div className="tablerow">
+                return <div className="tablerow" key={item.id}>
                     <p>{item.id}</p>
                     <p>{item.usuario}</p>
                     <p>{item.departamento}</p>
                     <p>{item.puesto}</p>
                     <p>{item.correo}</p>
-                    <a href="#">Modificar</a>
+                    <a href="#home">Modificar</a>
                 </div>
 
             })}

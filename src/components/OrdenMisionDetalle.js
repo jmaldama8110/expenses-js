@@ -31,25 +31,27 @@ const OrdenMisionDetalle = () => {
     const [otros, dispatchOtros] = useReducer( ComprobantesReducer, []);
 
 
+    const handleEventListeners = () => {
+
+        const target = document.querySelector(tab.dataset.tabTarget);
+
+        tabContents.forEach(tabContent => tabContent.classList.remove('active'))
+        tabs.forEach(tab => tab.classList.remove('active'))
+
+        target.classList.add('active');
+        tab.classList.add('active');
+
+    }
+
     useEffect(() => {
 
 
         /* Javascript Tab controls */
-        const tabs = document.querySelectorAll('[data-tab-target]');
-        const tabContents = document.querySelectorAll('[data-tab-content]')
+        let tabs = document.querySelectorAll('[data-tab-target]');
+        let tabContents = document.querySelectorAll('[data-tab-content]')
         
         tabs.forEach((tab) => {
-            tab.addEventListener('click', () => {
-
-                const target = document.querySelector(tab.dataset.tabTarget);
-
-                tabContents.forEach(tabContent => tabContent.classList.remove('active'))
-                tabs.forEach(tab => tab.classList.remove('active'))
-
-                target.classList.add('active');
-                tab.classList.add('active');
-
-            })
+            tab.addEventListener('click', handleEventListeners )
         })
         /* END - Javascript Tab controls */
 
@@ -123,7 +125,10 @@ const OrdenMisionDetalle = () => {
 
         }
 
-
+        // removes all eventListener for tabs
+        tabs.forEach( (tab) => {
+            return () => tab.removeEventListener('click', handleEventListeners )
+        })
 
     }, []);
 

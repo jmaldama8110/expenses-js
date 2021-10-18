@@ -1,16 +1,20 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 const OrdenMisionItem = ({item}) => {
     return (
-        <div className="ordenitem">
-            <p>{item.folio}</p>
-            <p>{item.empleado}</p>
-            <p>{item.centrocosto}</p>
-            <p>{item.fecha_aplicacion}</p>
-            <p>{item.descripcion}</p>
+        <Link to={`/edit/${item.folio}`}>
+            <div className="ordenitem">
+                <p>{item.folio}</p>
+                <p>{item.empleado}</p>
+                <p>{item.centrocosto}</p>
+                <p>{item.fecha_aplicacion}</p>
+                <p>{item.descripcion}</p>
 
-        </div>
+            </div>
+        </Link>
     );
 }
+
 
 export { OrdenMisionItem as default };

@@ -1,12 +1,13 @@
 import React, { useEffect, useReducer, useState } from 'react';
 
-
 import OrdenMisionLista from './OrdenMisionLista';
 import OrdenMisionFiltro from './OrdenMisionFiltro';
 
 import ordenesReducer from '../reducers/ordenes';
 import ComprobantesContext from '../context/comprobantesContext';
 import Header from './Header';
+
+
 
 
 const Home = () => {
@@ -22,7 +23,7 @@ const Home = () => {
         const localSession = JSON.parse(sessionStorage.getItem('user'));
 
         setUsuario(localSession.info.name);
-
+        
         if( localData ) {
             
             dispatchOrdenes({
@@ -37,12 +38,12 @@ const Home = () => {
 
     return (
         <div>
-            <Header />
-            <h1>Hola {usuario}, busca tus misiones!</h1>
-
+        <Header />
+        <h1>Hola {usuario}, busca tus misiones!</h1>
             <ComprobantesContext.Provider value={ { ordenes, dispatchOrdenes,usuario }}>
+
                 <OrdenMisionFiltro />
-                <OrdenMisionLista /> 
+                <OrdenMisionLista />
             </ComprobantesContext.Provider>
 
         </div>

@@ -8,7 +8,6 @@ const Header = () => {
 
     const handlClick = e => {
 
-        console.log('header render!')
         // comprueba si el click corresponde al elemento con el data-dropdown-button
         const isDropdownButton = e.target.matches("[data-dropdown-button]") ;
         

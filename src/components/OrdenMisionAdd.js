@@ -13,6 +13,7 @@ const OrdenMisionAdd = () => {
         const localData = JSON.parse(localStorage.getItem('ordenes'))
         if( localData ) {
             setOrdenes(localData);
+
         } 
         //////
 

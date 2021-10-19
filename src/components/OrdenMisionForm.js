@@ -1,7 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
+import { useEffect } from 'react/cjs/react.development';
 
-const OrdenMisionForm = ( {onSubmit} )=> {
+const OrdenMisionForm = ( { onSubmit, orden} )=> {
 
     const [folio, setFolio] = useState('');
     const [fecha_aplicacion, setFechaAplicacion] = useState('');
@@ -13,22 +14,24 @@ const OrdenMisionForm = ( {onSubmit} )=> {
     const [centrocosto, setCentroCosto] = useState('');
 
     const [esquemaId, setEsquemaId] = useState('');
-    const [esquema, setEsquema ] = useState('')
+    const [esquema, setEsquema] = useState('');
 
     const [fecha_desde, setFechaDesde] = useState('');
     const [fecha_hasta, setFechaHasta] = useState('');
     const [transporte, setTransporte ] = useState('');
     const [descripcion, setDescripcion] = useState('');
 
+    
+
     const Guardar = (e)=> {
         e.preventDefault();
-
-
+    
         const data = {
             folio,
             fecha_aplicacion,
-            empleado,
-            centrocosto,
+            empleado:[ empleadoId, empleado ],
+            centro_costo: [centrocostoId, centrocosto],
+            esquema: [esquemaId, esquema],
             fecha_desde,
             fecha_hasta,
             transporte,
@@ -37,6 +40,28 @@ const OrdenMisionForm = ( {onSubmit} )=> {
         onSubmit(data);
 
     }
+
+    useEffect( ()=>{
+      
+       if(orden){
+           setFolio(orden.folio);
+           setFechaAplicacion(orden.fecha_aplicacion);
+           setDescripcion(orden.descripcion);
+           setTransporte(orden.transporte);
+           setFechaDesde(orden.fecha_desde);
+           setFechaHasta(orden.fecha_hasta);
+
+           setEmpleadoId(orden.empleado[0]);
+           setEmpleado(orden.empleado[1]);
+
+           setEsquemaId(orden.esquema[0]);
+           setEsquema(orden.esquema[1]);
+           
+           setCentroCostoId(orden.centro_costo[0]);
+           setCentroCosto(orden.centro_costo[1]);
+       }
+
+    },[])
 
     return (
         <form onSubmit={Guardar}>
@@ -59,11 +84,11 @@ const OrdenMisionForm = ( {onSubmit} )=> {
                                     setEmpleadoId(e.target.value);
                                     setEmpleado(e.target.options[e.target.selectedIndex].text);
                                 } }>
-                        <option value="1">Empleado</option>
-                        <option value="2">Roberto Chacon</option>
-                        <option value="3">Oscar Roman</option>
-                        <option value="4">Andres Morales</option>
-                        <option value="5">Luis Alberto</option>
+                        <option value="0">Empleado</option>
+                        <option value="10">Roberto Chacon</option>
+                        <option value="13">Oscar Roman</option>
+                        <option value="14">Andres Morales</option>
+                        <option value="15">Luis Alberto</option>
                     </select>
 
                   <select       value={centrocostoId}
@@ -73,7 +98,7 @@ const OrdenMisionForm = ( {onSubmit} )=> {
                                         setCentroCosto(e.target.options[e.target.selectedIndex].text);
                                     }
                                 }>
-                        <option value="0">Centro de Costo</option>
+                        <option value="NA">Centro de Costo</option>
                         <option value="DTI">Direccion de TI</option>
                         <option value="DAF">Direccion de Administracion y Finanzas</option>
                         <option value="DTH">Direccion de Talento</option>
@@ -85,7 +110,7 @@ const OrdenMisionForm = ( {onSubmit} )=> {
                                     setEsquemaId(e.target.value);
                                     setEsquema(e.target.options[e.target.selectedIndex].text);
                                     }}>
-                        <option value="0">Esquema</option>
+                        <option value="NA">Esquema</option>
                         <option value="A1">Esquema A1</option>
                         <option value="B2">Esquema B2</option>
                         <option value="B3">Esquema B3</option>
@@ -146,9 +171,9 @@ const OrdenMisionForm = ( {onSubmit} )=> {
                         <h1>Resumen de entrada </h1>
                         <p>Folio:{folio}</p>
                         <p>Fecha aplicacion:{fecha_aplicacion}</p>
-                        <p>Empleado:{empleado}</p>
-                        <p>Centro de costo:{centrocosto}</p>
-                        <p>Esquema:{esquema} </p>
+                        <p>Empleado:{empleadoId}</p>
+                        <p>Centro de costo:{centrocostoId}</p>
+                        <p>Esquema:{esquemaId} </p>
                         <p>De:{fecha_desde}</p>
                         <p>A:{fecha_hasta}</p>
                         <p>Transporte:{transporte}</p>

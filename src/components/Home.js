@@ -41,7 +41,6 @@ const Home = () => {
         <Header />
         <h1>Hola {usuario}, busca tus misiones!</h1>
             <ComprobantesContext.Provider value={ { ordenes, dispatchOrdenes,usuario }}>
-
                 <OrdenMisionFiltro />
                 <OrdenMisionLista />
             </ComprobantesContext.Provider>

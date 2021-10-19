@@ -23,7 +23,7 @@ const AppRouter = () => (
         <Switch>
             <PrivateRoute path="/home" component={Home} exact={true} />
             <PrivateRoute path="/add" component={OrdenMisionAdd} exact={true} />
-            <PrivateRoute path="/edit" component={OrdenMisionEdit} exact={true} />
+            <PrivateRoute path="/edit/:id" component={OrdenMisionEdit} exact={true} />
             <PrivateRoute path="/config" component={ConfiguracionHome} exact={true} />
             <PublicRoute path="/" component={Login} exact={true} />
             

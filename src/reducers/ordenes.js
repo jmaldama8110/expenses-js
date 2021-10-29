@@ -9,7 +9,7 @@ const OrdenesReducer = (state, action) => {
                 {
                     folio: action.folio,
                     fecha_aplicacion: action.fecha_aplicacion,
-                    empleado: action.centro_costo,
+                    empleado: action.empleado,
                     centro_costo: action.centro_costo,
                     mision_desde: action.mision_desde,
                     mision_hasta: action.mision_hasta,

@@ -12,6 +12,7 @@ const Pago = ()=> {
             <PagoMetodopago />
 
             <Link to='#' className='btn btn-primary'>Guardar</Link><p></p>
+            <Link to="/home">Regresar</Link>
 
         </div>
     );

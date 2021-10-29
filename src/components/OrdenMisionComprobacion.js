@@ -6,11 +6,9 @@ import ComprobantesLista from './ComprobantesLista';
 import ComprobanteAddForm from './ComprobanteAddForm';
 
 import ComprobantesReducer from '../reducers/comprobantes';
-import ComprobantesContext from '../context/comprobantesContext';
+import ExpensesContext from '../context/ExpensesContext';
 
-
-
-const OrdenMisionDetalle = () => {
+const OrdenMisionComprobacion = () => {
     
     // const [folio, setFolio] = useState('');
     // const [fecha_aplicacion, setFechaAplicacion] = useState('');
@@ -30,28 +28,24 @@ const OrdenMisionDetalle = () => {
     const [hospedajes, dispatchHopedaje] = useReducer( ComprobantesReducer, []);
     const [otros, dispatchOtros] = useReducer( ComprobantesReducer, []);
 
-
-    const handleEventListeners = () => {
-
-        const target = document.querySelector(tab.dataset.tabTarget);
-
-        tabContents.forEach(tabContent => tabContent.classList.remove('active'))
-        tabs.forEach(tab => tab.classList.remove('active'))
-
-        target.classList.add('active');
-        tab.classList.add('active');
-
-    }
-
     useEffect(() => {
-
 
         /* Javascript Tab controls */
         let tabs = document.querySelectorAll('[data-tab-target]');
         let tabContents = document.querySelectorAll('[data-tab-content]')
         
         tabs.forEach((tab) => {
-            tab.addEventListener('click', handleEventListeners )
+            tab.addEventListener('click',() => {
+
+                const target = document.querySelector(tab.dataset.tabTarget);
+        
+                tabContents.forEach(tabContent => tabContent.classList.remove('active'))
+                tabs.forEach(tab => tab.classList.remove('active'))
+        
+                target.classList.add('active');
+                tab.classList.add('active');
+        
+            })
         })
         /* END - Javascript Tab controls */
 
@@ -125,11 +119,6 @@ const OrdenMisionDetalle = () => {
 
         }
 
-        // removes all eventListener for tabs
-        tabs.forEach( (tab) => {
-            return () => tab.removeEventListener('click', handleEventListeners )
-        })
-
     }, []);
 
     /* Actualiza el local storage por cada cambio en el state de reducer */
@@ -182,36 +171,36 @@ const OrdenMisionDetalle = () => {
                     <div className="tab-content">
                         <div id="alimentos" data-tab-content className="active tabcontent">
                             <div className="tabcontent-container">
-                            <ComprobantesContext.Provider value={{ comprobantes: alimentos, dispatch: dispatchAlimentos }}>
+                            <ExpensesContext.Provider value={{ comprobantes: alimentos, dispatch: dispatchAlimentos }}>
 
                                 <ComprobantesLista />
                                 <ComprobanteAddForm />
 
-                            </ComprobantesContext.Provider>
+                            </ExpensesContext.Provider>
                             </div>
                         </div>
                         <div id="transporte" data-tab-content className="tabcontent">
                             <div className="tabcontent-container">
-                            <ComprobantesContext.Provider value={{ comprobantes: transportes, dispatch: dispatchTransportes }} >
+                            <ExpensesContext.Provider value={{ comprobantes: transportes, dispatch: dispatchTransportes }} >
                                 <ComprobantesLista />
                                 <ComprobanteAddForm />
-                            </ComprobantesContext.Provider>
+                            </ExpensesContext.Provider>
                             </div>
                         </div>
                         <div id="hospedaje" data-tab-content className="tabcontent">
                             <div className="tabcontent-container">
-                            <ComprobantesContext.Provider value={{comprobantes: hospedajes, dispatch: dispatchHopedaje} }>
+                            <ExpensesContext.Provider value={{comprobantes: hospedajes, dispatch: dispatchHopedaje} }>
                                 <ComprobantesLista />
                                 <ComprobanteAddForm />
-                            </ComprobantesContext.Provider>
+                            </ExpensesContext.Provider>
                             </div>
                         </div>
                         <div id="otros" data-tab-content className="tabcontent">
                             <div className="tabcontent-container">
-                            <ComprobantesContext.Provider value={{comprobantes: otros, dispatch: dispatchOtros}}>
+                            <ExpensesContext.Provider value={{comprobantes: otros, dispatch: dispatchOtros}}>
                                 <ComprobantesLista />
                                 <ComprobanteAddForm />
-                            </ComprobantesContext.Provider>
+                            </ExpensesContext.Provider>
                             </div>
 
                         </div>
@@ -262,4 +251,4 @@ const OrdenMisionDetalle = () => {
     );
 }
 
-export default OrdenMisionDetalle;
+export default OrdenMisionComprobacion;

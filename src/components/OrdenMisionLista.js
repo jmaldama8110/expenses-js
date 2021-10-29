@@ -1,10 +1,10 @@
 import React, { useContext } from 'react';
 import OrdenMisionItem from './OrdenMisionItem';
-import ComprobantesContext from '../context/comprobantesContext';
+import ExpensesContext from '../context/ExpensesContext';
 
 const OrdenMisionLista = () => {
 
-    const { ordenes } = useContext(ComprobantesContext)
+    const { ordenes } = useContext(ExpensesContext)
 
     return (
         <div className="ordentable">        

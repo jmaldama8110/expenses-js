@@ -1,10 +1,10 @@
 import React,{useContext} from 'react';
 
-import ComprobantesContext from '../context/comprobantesContext';
+import ExpensesContext from '../context/ExpensesContext';
 
 
 const Comprobante = ({ comprobante }) => {
-    const { dispatch } = useContext(ComprobantesContext);
+    const { dispatch } = useContext(ExpensesContext);
 
     const removeComprobante = (folio) => {
         dispatch({

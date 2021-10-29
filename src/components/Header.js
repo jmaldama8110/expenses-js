@@ -69,11 +69,14 @@ const Header = () => {
             <div className="dropdown" data-dropdown>
                 <button className="link" data-dropdown-button>Configuración</button>
                 <div className="dropdown-menu">
-                    <Link className="link" to="/config">General</Link>
-                    <Link className="link" to="/config">Usuarios</Link>
-                    <Link className="link" to="/config">Empleados</Link>
-                    <Link className="link" to="/config">Metodo de pago</Link>
-                    <Link className="link" to="/config">Cuota KM</Link>
+                    <Link className="link" to="/generalconfig">General</Link>
+                    <Link className="link" to="/usuarios">Usuarios</Link>
+                    <Link className="link" to="/empleados">Empleados</Link>
+                    <Link className="link" to="/metodopago">Metodo de pago</Link>
+                    <Link className="link" to="/esquemas">Esquemas Contables</Link>
+                    <Link className="link" to="/centrocosto">Centros de Costo</Link>
+                    <Link className="link" to="/empresas">Empresas</Link>
+                    
                 </div> 
             </div>
 

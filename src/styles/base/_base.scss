@@ -100,4 +100,20 @@ button:disabled {
     cursor: pointer;
 }
 
+.gridflex {
+    display: flex;
+    justify-content: flex-start;
+    border-bottom: 1px solid graY;
+}
+.headerlabel {
+    font-weight: 900;
+}
+
+.gridflex p {
+    padding-right: 10px;
+}
+
+.field {
+    border: 1px solid black;
+}
 /*END temporary CSS*/

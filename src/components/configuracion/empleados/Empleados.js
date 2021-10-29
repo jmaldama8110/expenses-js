@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 const Empleados = () => {
 
@@ -26,6 +27,7 @@ const Empleados = () => {
                 </div>
 
             })}
+            <Link to="/home">Regresar</Link>
         </div>
 
     );

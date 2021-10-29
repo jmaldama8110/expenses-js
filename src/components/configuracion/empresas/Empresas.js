@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 
 
 const Empresas = ()=> {
@@ -28,6 +29,7 @@ const Empresas = ()=> {
                 </div>
 
             })}
+            <Link to="/home">Regresar</Link>
         </div>
 
     );

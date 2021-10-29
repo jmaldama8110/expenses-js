@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import ComprobantesContext from '../context/comprobantesContext';
+import ExpensesContext from '../context/ExpensesContext';
 
 const ComprobanteAddForm = () => {
 
@@ -11,7 +11,7 @@ const ComprobanteAddForm = () => {
     const [subTotal, setSubtotal] = useState('84');
     const [iva, setIva] = useState('16');
 
-    const { dispatch } = useContext(ComprobantesContext)
+    const { dispatch } = useContext(ExpensesContext);
 
     const addComprobante = (e) => {
         e.preventDefault();

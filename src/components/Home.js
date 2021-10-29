@@ -4,10 +4,8 @@ import OrdenMisionLista from './OrdenMisionLista';
 import OrdenMisionFiltro from './OrdenMisionFiltro';
 
 import ordenesReducer from '../reducers/ordenes';
-import ComprobantesContext from '../context/comprobantesContext';
+import ExpensesContext from '../context/ExpensesContext';
 import Header from './Header';
-
-
 
 
 const Home = () => {
@@ -40,10 +38,11 @@ const Home = () => {
         <div>
         <Header />
         <h1>Hola {usuario}, busca tus misiones!</h1>
-            <ComprobantesContext.Provider value={ { ordenes, dispatchOrdenes,usuario }}>
+            <ExpensesContext.Provider value={ { ordenes, dispatchOrdenes,usuario }}>
                 <OrdenMisionFiltro />
                 <OrdenMisionLista />
-            </ComprobantesContext.Provider>
+
+            </ExpensesContext.Provider>
 
         </div>
     

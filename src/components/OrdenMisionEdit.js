@@ -1,5 +1,5 @@
-import React from 'react';
-import { useEffect, useState } from 'react/cjs/react.development';
+import React, { useEffect, useState } from 'react';
+
 import OrdenMisionForm from './OrdenMisionForm';
 import { history} from '../router/AppRouter';
 

@@ -1,10 +1,11 @@
 import React from 'react';
 import { Router, Switch } from 'react-router-dom';
 
-import OrdenMisionAdd from '../components/OrdenMisionAdd';
+import OrdenMisionAdd from '../components/ordenmision/OrdenMisionAdd';
 
 import Home from '../components/Home';
 import GeneralConfig from '../components/configuracion/general/GeneralConfig';
+import Organigrama from '../components/configuracion/organigrama/Organigrama';
 
 import UsuariosHome from '../components/configuracion/usuarios/UsuariosHome';
 import UsuariosAdd from '../components/configuracion/usuarios/UsuariosAdd';
@@ -15,9 +16,10 @@ import Pago from '../components/configuracion/pago/Pago';
 import Esquemas from '../components/configuracion/esquemas/Esquemas';
 import Empresas from '../components/configuracion/empresas/Empresas';
 import CentroCosto from '../components/configuracion/centrocosto/CentroCosto';
+import OrdenMisionComprobacion from '../components/comprobacion/OrdenMisionComprobacion';
 
 import { createBrowserHistory } from "history";
-import OrdenMisionEdit from '../components/OrdenMisionEdit';
+import OrdenMisionEdit from '../components/ordenmision/OrdenMisionEdit';
 import Login from '../components/Login';
 
 import PublicRoute from './PublicRoute';
@@ -34,7 +36,11 @@ const AppRouter = () => (
             <PrivateRoute path="/home" component={Home} exact={true} />
             <PrivateRoute path="/add" component={OrdenMisionAdd} exact={true} />
             <PrivateRoute path="/edit/:id" component={OrdenMisionEdit} exact={true} />
+            <PrivateRoute path="/comprobacion" component={OrdenMisionComprobacion} exact={true} />
+            
             <PrivateRoute path="/generalconfig" component={GeneralConfig} exact={true} />
+            <PrivateRoute path="/organigrama" component={Organigrama} exact={true} />
+
             <PrivateRoute path="/usuarios" component={UsuariosHome} exact={true} />
             <PrivateRoute path="/usuariosadd" component={UsuariosAdd} exact={true} />
             <PrivateRoute path="/usuariosedit/:id" component={UsuariosEdit} exact={true} />

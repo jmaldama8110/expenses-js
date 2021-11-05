@@ -48,7 +48,7 @@ const Header = () => {
 
     const handleCerrarSesion = () =>{
 
-        sessionStorage.removeItem("user");
+        sessionStorage.removeItem("usuario");
         alert('logout functions needs to be defined!');
 
         history.push('/');
@@ -62,7 +62,7 @@ const Header = () => {
                 <div className="dropdown-menu">
                     <Link className="link" to="/add">Nueva Mision</Link>
                     <Link className="link" to="/add">Anticipos</Link>
-                    <Link className="link" to="/add">Comprobacion</Link>
+                    <Link className="link" to="/comprobacion">Comprobacion</Link>
                 </div>
             </div>
 
@@ -70,6 +70,7 @@ const Header = () => {
                 <button className="link" data-dropdown-button>Configuración</button>
                 <div className="dropdown-menu">
                     <Link className="link" to="/generalconfig">General</Link>
+                    <Link className="link" to="/organigrama">Organigrama</Link>
                     <Link className="link" to="/usuarios">Usuarios</Link>
                     <Link className="link" to="/empleados">Empleados</Link>
                     <Link className="link" to="/metodopago">Metodo de pago</Link>

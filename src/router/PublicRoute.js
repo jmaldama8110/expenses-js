@@ -7,7 +7,7 @@ const PublicRoute = ({component: Component, ...rest}) => {
         
             {...rest}
             render={ (props) =>{
-                const sessionData = JSON.parse( sessionStorage.getItem("user") );
+                const sessionData = JSON.parse( sessionStorage.getItem("usuario") );
                 return !sessionData ? <Component {...props} />
                                     : <Redirect to={ {pathname :"/home"}} />
             }}

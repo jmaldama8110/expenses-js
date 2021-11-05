@@ -1,7 +1,7 @@
 import React, { useEffect, useReducer, useState } from 'react';
 
-import OrdenMisionLista from './OrdenMisionLista';
-import OrdenMisionFiltro from './OrdenMisionFiltro';
+import OrdenMisionLista from './ordenmision/OrdenMisionLista';
+import OrdenMisionFiltro from './ordenmision/OrdenMisionFiltro';
 
 import ordenesReducer from '../reducers/ordenes';
 import ExpensesContext from '../context/ExpensesContext';
@@ -18,9 +18,9 @@ const Home = () => {
 
         // retrieves ordenes from localStorage
         const localData = JSON.parse(localStorage.getItem('ordenes'));
-        const localSession = JSON.parse(sessionStorage.getItem('user'));
+        const localSession = JSON.parse(sessionStorage.getItem('usuario'));
 
-        setUsuario(localSession.info.name);
+        setUsuario(localSession.info.nombre);
         
         if( localData ) {
             

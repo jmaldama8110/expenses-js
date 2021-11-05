@@ -14,21 +14,6 @@ const Login = (props) => {
     const [error, setError] = useState('');
     const [loading, setLoading] = useState(false);
     
-    useEffect( ()=>{
-        /** Agregar funcionalidad para recuperar el token del usuario logueado */
-        /** Guardar el token en el local storage?? */
-        // const userData = sessionStorage.getItem('user-info');
-        // if( userData ) { // if a previous token has been validated
-        //     setToken(userData);
-        //     props.history.push('/home');
-        // }
- 
-    },[])
-
-    // useEffect( ()=> {
-    //     localStorage.setItem('user-info', JSON.stringify(token))
-    // },[token])
-
 
     const onLogin = (e)=> {
         e.preventDefault();
@@ -43,9 +28,10 @@ const Login = (props) => {
             email: usuario,
             password: contrasena
         }).then( res => {
-            sessionStorage.setItem("user",JSON.stringify({
-                                                    info: res.data.user,
+            sessionStorage.setItem("usuario",JSON.stringify({
+                                                    info: res.data.usuario,
                                                     token: res.data.token } ));
+
 
             setLoading(false);
             setError('');

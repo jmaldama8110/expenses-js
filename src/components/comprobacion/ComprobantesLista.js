@@ -1,6 +1,7 @@
 import React, {useContext} from 'react';
 import Comprobante from './Comprobante';
-import ExpensesContext from '../context/ExpensesContext';
+import ExpensesContext from '../../context/ExpensesContext';
+
 
 const ComprobantesLista = () => {
 

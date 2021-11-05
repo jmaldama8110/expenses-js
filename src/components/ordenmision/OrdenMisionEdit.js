@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import OrdenMisionForm from './OrdenMisionForm';
-import { history} from '../router/AppRouter';
+import { history} from '../../router/AppRouter';
 
 const OrdenMisionEdit = ( { match } ) => {
 

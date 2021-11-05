@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import OrdenMisionForm from './OrdenMisionForm';
-import { history} from '../router/AppRouter';
-import Header from './Header';
+import { history} from '../../router/AppRouter';
+import Header from '../Header';
 
 const OrdenMisionAdd = () => {
     

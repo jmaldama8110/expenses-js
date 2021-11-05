@@ -5,8 +5,8 @@ import ComprobantesLista from './ComprobantesLista';
 
 import ComprobanteAddForm from './ComprobanteAddForm';
 
-import ComprobantesReducer from '../reducers/comprobantes';
-import ExpensesContext from '../context/ExpensesContext';
+import ComprobantesReducer from '../../reducers/comprobantes';
+import ExpensesContext from '../../context/ExpensesContext';
 
 const OrdenMisionComprobacion = () => {
     

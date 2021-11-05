@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react';
-import ExpensesContext from '../context/ExpensesContext';
+import ExpensesContext from '../../context/ExpensesContext';
 
 const ComprobanteAddForm = () => {
 

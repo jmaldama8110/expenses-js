@@ -1,6 +1,6 @@
 import React, { useContext } from 'react';
 import OrdenMisionItem from './OrdenMisionItem';
-import ExpensesContext from '../context/ExpensesContext';
+import ExpensesContext from '../../context/ExpensesContext';
 
 const OrdenMisionLista = () => {
 

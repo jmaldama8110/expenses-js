@@ -11,7 +11,12 @@ import UsuariosHome from '../components/configuracion/usuarios/UsuariosHome';
 import UsuariosAdd from '../components/configuracion/usuarios/UsuariosAdd';
 import UsuariosEdit from '../components/configuracion/usuarios/UsuariosEdit';
 
-import Empleados from '../components/configuracion/empleados/Empleados';
+import PuestosAdd from "../components/configuracion/organigrama/puestos/PuestosAdd";
+import PuestosEdit from "../components/configuracion/organigrama/puestos/PuestosEdit";
+
+import DeptosAdd from '../components/configuracion/organigrama/deptos/DeptosAdd';
+import DeptosEdit from '../components/configuracion/organigrama/deptos/DeptosEdit';
+
 import Pago from '../components/configuracion/pago/Pago';
 import Esquemas from '../components/configuracion/esquemas/Esquemas';
 import Empresas from '../components/configuracion/empresas/Empresas';
@@ -24,6 +29,7 @@ import Login from '../components/Login';
 
 import PublicRoute from './PublicRoute';
 import PrivateRoute from './PrivateRoute';
+
 
 
 export const history =  createBrowserHistory(); 
@@ -39,12 +45,18 @@ const AppRouter = () => (
             <PrivateRoute path="/comprobacion" component={OrdenMisionComprobacion} exact={true} />
             
             <PrivateRoute path="/generalconfig" component={GeneralConfig} exact={true} />
+
             <PrivateRoute path="/organigrama" component={Organigrama} exact={true} />
+
+            <PrivateRoute path="/puestosadd" component={PuestosAdd} exact={true} />
+            <PrivateRoute path="/puestosedit/:id" component={PuestosEdit} exact={true} />
+
+            <PrivateRoute path="/deptosadd" component={DeptosAdd} exact={true} />
+            <PrivateRoute path="/deptosedit/:id" component={DeptosEdit} exact={true} />
 
             <PrivateRoute path="/usuarios" component={UsuariosHome} exact={true} />
             <PrivateRoute path="/usuariosadd" component={UsuariosAdd} exact={true} />
             <PrivateRoute path="/usuariosedit/:id" component={UsuariosEdit} exact={true} />
-            <PrivateRoute path="/empleados" component={Empleados} exact={true} />
             <PrivateRoute path="/metodopago" component={Pago} exact={true} />
             <PrivateRoute path="/esquemas" component={Esquemas} exact={true} />
             <PrivateRoute path="/empresas" component={Empresas} exact={true} />

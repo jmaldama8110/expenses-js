@@ -72,7 +72,6 @@ const Header = () => {
                     <Link className="link" to="/generalconfig">General</Link>
                     <Link className="link" to="/organigrama">Organigrama</Link>
                     <Link className="link" to="/usuarios">Usuarios</Link>
-                    <Link className="link" to="/empleados">Empleados</Link>
                     <Link className="link" to="/metodopago">Metodo de pago</Link>
                     <Link className="link" to="/esquemas">Esquemas Contables</Link>
                     <Link className="link" to="/centrocosto">Centros de Costo</Link>

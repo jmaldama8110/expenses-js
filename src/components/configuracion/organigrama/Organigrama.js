@@ -1,5 +1,8 @@
 import React, { useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import DeptosHome from './deptos/DeptosHome';
+
+import PuestosHome from './puestos/PuestosHome';
 
 const Organigrama = () => {
 
@@ -163,8 +166,17 @@ const Organigrama = () => {
     ]
 
     return (
+    <section>
+        <h1>Organigrama de puestos</h1>
+
         <ul id="myUL">
         </ul>
+        <PuestosHome />
+        <DeptosHome />
+        <div>
+            <Link to="/">Regresar</Link>
+        </div>
+    </section>
     );
 
 

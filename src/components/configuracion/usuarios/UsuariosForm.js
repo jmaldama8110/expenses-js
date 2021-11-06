@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-
 const UsuariosForm = ( { onSubmit, usuario} )=> {
 
     const [nombre, setNombre] = useState('');
@@ -11,27 +10,23 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
     const [passwordA, setPasswordA] = useState('');
     const [passwordB, setPasswordB] = useState('');
 
+    const [puestoId, setPuestoId] = useState('');
+    const [puesto, setPuesto] = useState('');
+
     const [renovarPass, setRenovarPass] = useState(true);
 
     const [nivelAut, setNivelAut] = useState("A");
 
-    const [deptoId, setDeptoId] = useState('');
-    const [depto, setDepto] = useState('');
-
-    const [puestoId, setPuestoId] = useState('');
-    const [puesto, setPuesto] = useState('');
-
-    const [centroCostoId, setCentroCostoId] = useState('');
-    const [centroCosto, setCentroCosto] = useState('');
-
-    const [autorizadorAId, setAutorizadorAId] = useState('');
-    const [autorizadorA, setAutorizadorA] = useState('');
-
-    const [autorizadorBId, setAutorizadorBId] = useState('');
-    const [autorizadorB, setAutorizadorB] = useState('');
+    const [puestos, setPuestos] = useState([]);
 
     useEffect( ()=>{
 
+        const lsPuestos = JSON.parse( localStorage.getItem("puestos") );
+        lsPuestos.unshift({
+            id: "NA",
+            titulo: "Puesto del usuario"
+        });
+        setPuestos(lsPuestos);
 
 
         if(usuario){
@@ -40,23 +35,9 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
             setApellidoP(usuario.apellido_paterno);
             setEmail(usuario.email);
             setNivelAut( usuario.nivel_autorizacion );
-            
-            setDeptoId( usuario.depto[0]);
-            setDepto( usuario.depto[1]);
-
-            setPuestoId( usuario.puesto[0]);
-            setPuesto( usuario.puesto[1]);
-
-            setCentroCostoId( usuario.centro_costo[0]);
-            setCentroCosto( usuario.centro_costo[1]);
-
-            setAutorizadorAId( usuario.autorizador_a[0]);
-            setAutorizadorA( usuario.autorizador_a[1]);
-
-            setAutorizadorBId( usuario.autorizador_b[0]);
-            setAutorizadorB( usuario.autorizador_b[1]);
-
             setRenovarPass( usuario.renovar_password);
+            if( usuario.puesto )
+                setPuestoId(usuario.puesto[0])
             
         }
     },[])
@@ -75,13 +56,25 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
             password: passwordA,
             renovar_password: renovarPass,
             nivel_autorizacion: nivelAut,
-            puesto: [puestoId,puesto],
-            depto: [deptoId,depto],
-            centro_costo: [centroCostoId,centroCosto],
-            autorizador_a: [autorizadorAId, autorizadorA],
-            autorizador_b: [autorizadorBId, autorizadorB]
-
+            puesto: [puestoId, puesto]
         }
+
+        /////aqui actualiza el valor "asignado" en el puesto elegido para el usuario
+        const local_puestos = JSON.parse( localStorage.getItem("puestos") );
+        const new_puestos = local_puestos.map( p => {
+            if( p.id === puestoId){
+                return {
+                    ...p,
+                    asignado: true
+                }
+            }
+            else {
+                return p;
+            }
+        });
+        localStorage.setItem("puestos", JSON.stringify(new_puestos) );
+        ///////////////////////////////////////////////////////////////////////////
+
         onSubmit(data);
 
     }
@@ -163,73 +156,23 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
                     onChange={ (e)=> setNivelAut(e.target.value)}
                 >
                 </input> <label htmlFor='norequiereaut'>No requiere</label>
+                <select
+                    value={puestoId}
+                    onChange={ e =>{
+                        setPuestoId(e.target.value);
+                        setPuesto( e.target.options[e.target.selectedIndex].text );
+                    }}
+                >
+                    {
+                        puestos.map( p =>   <option
+                                                key={p.id}
+                                                value={p.id}
+                                            >{p.titulo}
+                                            </option>)
+                    }
+                </select>
             </div>
-            <select
-                    value={deptoId} 
-                    onChange={ (e)=> {
-                            setDeptoId(e.target.value);
-                            setDepto(e.target.options[e.target.selectedIndex].text);
-                    } }
-                    >
-                <option value="10">Departamento</option>
-                <option value="11">Direccion TI</option>
-                <option value="12">Administracion y Finanzas</option>
-                <option value="13">Direccion Comercial</option>
-                <option value="14">Direcion Juridica</option>
-            </select>
-            <select 
-                    value={puestoId} 
-                    onChange={ (e)=> {
-                            setPuestoId(e.target.value);
-                            setPuesto(e.target.options[e.target.selectedIndex].text);
-                    } }
-                    >
-                <option value="10">Puesto</option>
-                <option value="11">Director</option>
-                <option value="12">Soporte Jr</option>
-                <option value="13">Coordinador Soporte</option>
-                <option value="14">Gerente de Soporte</option>
-            </select>
-            <select 
-                    value={centroCostoId} 
-                    onChange={ (e)=> {
-                            setCentroCostoId(e.target.value);
-                            setCentroCosto(e.target.options[e.target.selectedIndex].text);
-                    } }
-                    >
-                <option value="10">Centro de Costo</option>
-                <option value="11">Direccion General</option>
-                <option value="12">Suc Tonala</option>
-                <option value="13">Region Soconusco</option>
-                <option value="14">CI Puebla</option>
-            </select>
-
-            <select 
-                    value={autorizadorAId} 
-                    onChange={ (e)=> {
-                            setAutorizadorAId(e.target.value);
-                            setAutorizadorA(e.target.options[e.target.selectedIndex].text);
-                    } }
-                    >
-                <option value="10">Autorizador A</option>
-                <option value="11">Jose Manuel Gomez</option>
-                <option value="12">Andres Morales</option>
-                <option value="13">Roberto Chacon</option>
-            </select>
-
-            <select 
-                    value={autorizadorBId} 
-                    onChange={ (e)=> {
-                            setAutorizadorBId(e.target.value);
-                            setAutorizadorB(e.target.options[e.target.selectedIndex].text);
-                    } }
-                    >
-                <option value="10">Autorizador B</option>
-                <option value="11">Jose Manuel Gomez</option>
-                <option value="12">Andres Morales</option>
-                <option value="13">Roberto Chacon</option>
-            </select>
-                   
+            
             <button>Guardar</button>
             <Link to="/usuarios">Cancelar</Link>
         </form>

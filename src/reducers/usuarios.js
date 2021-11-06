@@ -14,12 +14,7 @@ const UsuariosReducer = (state, action) => {
                     email: action.correo,
                     password: action.password,
                     renovar_password: action.renovar_password,
-                    nivel_autorizacion: action.nivel_autorizacion,
-                    puesto: action.puesto,
-                    depto: action.depto,
-                    centro_costo: action.centro_costo,
-                    autorizador_a: action.autorizador_a,
-                    autorizador_b: action.autorizador_b
+                    nivel_autorizacion: action.nivel_autorizacion
                 }
             ]
         case 'REMOVE_USUARIO':

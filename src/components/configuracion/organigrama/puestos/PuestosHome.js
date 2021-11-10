@@ -24,9 +24,9 @@ const PuestosHome = ()=>{
 
     },[]);
 
-    useEffect( ()=>{
-        localStorage.setItem('puestos', JSON.stringify( puestos ) );
-    },[puestos])
+    // useEffect( ()=>{
+    //     localStorage.setItem('puestos', JSON.stringify( puestos ) );
+    // },[puestos])
 
 
     return (

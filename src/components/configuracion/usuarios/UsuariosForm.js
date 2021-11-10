@@ -22,11 +22,12 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
     useEffect( ()=>{
 
         const lsPuestos = JSON.parse( localStorage.getItem("puestos") );
-        lsPuestos.unshift({
+        const new_lspuestos = lsPuestos.filter( i => !i.asignado )
+        new_lspuestos.unshift({
             id: "NA",
             titulo: "Puesto del usuario"
         });
-        setPuestos(lsPuestos);
+        setPuestos(new_lspuestos);
 
 
         if(usuario){
@@ -36,8 +37,10 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
             setEmail(usuario.email);
             setNivelAut( usuario.nivel_autorizacion );
             setRenovarPass( usuario.renovar_password);
-            if( usuario.puesto )
+            if( usuario.puesto ){
                 setPuestoId(usuario.puesto[0])
+                setPuesto(usuario.puesto[1])
+            }
             
         }
     },[])
@@ -46,12 +49,12 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
         e.preventDefault();
         
         const randId =  Math.floor(Math.random() * 10000 );
-        
+        const idusuario = !usuario ? randId.toString(): usuario.id
         const data = {
-            id: !usuario ? randId.toString(): usuario.id,
+            id: idusuario ,
             nombre: nombre,
-            apellido_materno,
             apellido_paterno,
+            apellido_materno,
             email,
             password: passwordA,
             renovar_password: renovarPass,
@@ -65,7 +68,8 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
             if( p.id === puestoId){
                 return {
                     ...p,
-                    asignado: true
+                    asignado: true,
+                    usuario: [idusuario, `${nombre} ${apellido_paterno} ${apellido_materno}`,email]
                 }
             }
             else {
@@ -89,15 +93,15 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
             ></input>
             <input
                 type="text"
-                placeholder="Apellido Materno"
-                value={apellido_materno}
-                onChange={e => setApellidoM(e.target.value)}
-            ></input>
-            <input
-                type="text"
                 placeholder="Apellido Paterno"
                 value={apellido_paterno}
                 onChange={e => setApellidoP(e.target.value)}
+            ></input>
+            <input
+                type="text"
+                placeholder="Apellido Materno"
+                value={apellido_materno}
+                onChange={e => setApellidoM(e.target.value)}
             ></input>
 
 
@@ -161,6 +165,7 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
                     onChange={ e =>{
                         setPuestoId(e.target.value);
                         setPuesto( e.target.options[e.target.selectedIndex].text );
+
                     }}
                 >
                     {
@@ -171,6 +176,7 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
                                             </option>)
                     }
                 </select>
+        
             </div>
             
             <button>Guardar</button>

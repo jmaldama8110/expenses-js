@@ -4,26 +4,25 @@ import DeptosHome from './deptos/DeptosHome';
 
 import PuestosHome from './puestos/PuestosHome';
 
+
+
 const Organigrama = () => {
+
+    class TreeNode {
+        constructor(id,titulo){
+            this.id = id;
+            this.titulo = titulo;
+            this.hijos = [];
+        }
+    }
 
     function handleClick () {
         this.parentElement.querySelector(".nested").classList.toggle("active");
         this.classList.toggle("caret-down");
     }
+    
 
-    const printNodos = (data,nivel) => {
-         data.forEach( (nodo) => {
-
-             console.log(`${nivel}.- `,nodo.titulo);
-
-             if( nodo.tieneHijo){
-                 nivel++;
-                 printNodos(nodo.hijos, nivel);
-             }
-         })
-    }
-
-    const construirArbol = (data, contenedor ) => {
+    const construirArbolHTML = (data, contenedor ) => {
 
         data.forEach( (nodo) => {
 
@@ -31,18 +30,18 @@ const Organigrama = () => {
             const span = document.createElement('span');
             const ul = document.createElement('ul');
 
-            if( nodo.tieneHijo ){
+            if( nodo.hijos.length ){
 
                 span.textContent = nodo.titulo;
                 span.classList.toggle("caret");
                 ul.classList.toggle("nested");
-                ul.classList.toggle("active");
+                // ul.classList.toggle("active");
 
                 contenedor.appendChild(li);
                 li.appendChild(span);
                 li.appendChild(ul);
 
-                construirArbol( nodo.hijos,ul);
+                construirArbolHTML( nodo.hijos,ul);
 
             } else {
                 
@@ -52,12 +51,25 @@ const Organigrama = () => {
 
         })
     }
-    
 
     useEffect( ()=>{
-
         const contenedor = document.querySelector("#myUL");
-        construirArbol(data, contenedor);
+
+        const puestos = JSON.parse( localStorage.getItem("puestos") )
+                        .map( (i) => {return {id:i.id, titulo:i.titulo, padre: i.parent[0] } })   ;
+        
+        const setHijos = ( nodo ) => {
+            const h = puestos.filter( (i) => i.padre === nodo.id ).map( (obj) => new TreeNode(obj.id,obj.titulo));
+            nodo.hijos.push(...h);
+            h.forEach( (hijo) => setHijos(hijo) );
+        }
+
+        if(puestos )
+        {
+            const root = new TreeNode( puestos[0].id, puestos[0].titulo );
+            setHijos(root);
+            construirArbolHTML([root], contenedor);
+        }
         
         const toggler = document.getElementsByClassName("caret");
         let i = 0;

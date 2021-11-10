@@ -24,9 +24,9 @@ const DeptosHome = ()=>{
 
     },[]);
 
-    useEffect( ()=>{
-        localStorage.setItem('deptos', JSON.stringify( deptos ) );
-    },[deptos])
+    // useEffect( ()=>{
+    //     localStorage.setItem('deptos', JSON.stringify( deptos ) );
+    // },[deptos])
 
 
     return (

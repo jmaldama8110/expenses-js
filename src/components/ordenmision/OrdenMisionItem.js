@@ -6,7 +6,7 @@ const OrdenMisionItem = ({item}) => {
         <Link to={`/edit/${item.folio}`}>
             <div className="ordenitem">
                 <p>{item.folio}</p>
-                <p>{item.empleado}</p>
+                <p>{item.empleado[1]}</p>
                 <p>{item.centrocosto}</p>
                 <p>{item.fecha_aplicacion}</p>
                 <p>{item.descripcion}</p>

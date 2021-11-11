@@ -8,7 +8,7 @@
   /* Remove margins and padding from the parent ul */
   #myUL {
     margin: 0;
-    padding: 0;
+    padding: 0em;
   }
   
   /* Style the caret/arrow */
@@ -20,9 +20,9 @@
   /* Create the caret/arrow with a unicode, and style it */
   .caret::before {
     content: "\25B6";
-    color: black;
+    color: gray;
     display: inline-block;
-    margin-right: 6px;
+    margin-right: 10px;
   }
   
   /* Rotate the caret/arrow icon when clicked on (using JavaScript) */

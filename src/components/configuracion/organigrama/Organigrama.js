@@ -5,7 +5,6 @@ import DeptosHome from './deptos/DeptosHome';
 import PuestosHome from './puestos/PuestosHome';
 
 
-
 const Organigrama = () => {
 
     class TreeNode {
@@ -28,24 +27,30 @@ const Organigrama = () => {
 
             const li = document.createElement('li');
             const span = document.createElement('span');
+            const label = document.createElement('label');
             const ul = document.createElement('ul');
 
             if( nodo.hijos.length ){
 
-                span.textContent = nodo.titulo;
+                label.textContent = nodo.titulo;
+
                 span.classList.toggle("caret");
                 ul.classList.toggle("nested");
-                // ul.classList.toggle("active");
-
+                
+                ul.classList.toggle("active");
+                span.classList.toggle("caret-down");
+                
                 contenedor.appendChild(li);
                 li.appendChild(span);
+                li.appendChild(label)
                 li.appendChild(ul);
 
                 construirArbolHTML( nodo.hijos,ul);
 
             } else {
                 
-                li.textContent = nodo.titulo;
+                label.textContent = nodo.titulo;
+                li.appendChild(label);
                 contenedor.appendChild(li);
             }
 
@@ -89,93 +94,6 @@ const Organigrama = () => {
 
     },[]);
 
-    const data = [
-
-        {
-            titulo: "Director General",
-            nodo_id: 1,
-            tieneHijo: true,
-            hijos: [
-                {
-                    titulo: "Director Comercial",
-                    nodo_id: 11,
-                    tieneHijo: true,
-                    hijos: [
-                        {
-                            titulo: "Subdirector Soconusco",
-                            nodo_id: 111,
-                            tieneHijo: true,
-                            hijos: [
-                                {
-                                    titulo: "Regional Norte",
-                                    nodo_id: 1111,
-                                    tieneHijo: true,
-                                    hijos: [
-                                        {
-                                            titulo: "Gerente Suc Tonala",
-                                            nodo_id: 11111,
-                                            tieneHijo: true,
-                                            hijos: [
-                                                {
-                                                    titulo: "Coordinador 1",
-                                                    nodo_id: 111111,
-                                                    tieneHijo: true,
-                                                    hijos: [
-                                                        {
-                                                            titulo: "Oficial 01",
-                                                            nodo_id: 1111111,
-                                                            tieneHijo: false
-                                                        },
-                                                        {
-                                                            titulo: "Oficial 02",
-                                                            nodo_id: 1111111,
-                                                            tieneHijo: false
-                                                        },
-                                                        {
-                                                            titulo: "Oficial 03",
-                                                            nodo_id: 1111111,
-                                                            tieneHijo: false
-                                                        }
-
-                                                    ]
-                                                },
-                                                {
-                                                    titulo: "Auxiliar Admin",
-                                                    nodo_id: 11112,
-                                                    tieneHijo: false
-                                                }
-                                            ]
-                                        }
-
-                                    ]
-                                }
-                            ]
-
-                        }
-                    ]
-                },
-                {
-                    titulo: "Direccion Juridica",
-                    nodo_id: 20000,
-                    tieneHijo: true,
-                    hijos: [
-                        {
-                            titulo: "Oficial de Cumplimiento",
-                            nodo_id: 20010,
-                            tieneHijo: false
-                        },
-                        {
-                            titulo: "Asuntos Juridicos",
-                            nodo_id: 20010,
-                            tieneHijo: false
-                        }
-                    ]
-                }
-                
-            ]
-        }
-
-    ]
 
     return (
     <section>

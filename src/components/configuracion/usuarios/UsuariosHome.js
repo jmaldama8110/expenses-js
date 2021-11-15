@@ -6,10 +6,10 @@ import UsuariosLista from "./UsuariosLista";
 import ExpensesContext from "../../../context/ExpensesContext";
 import UsuariosReducer from "../../../reducers/usuarios";
 
-
 const UsuariosHome = () => {
 
     const [usuarios, dispatchUsuarios] = useReducer( UsuariosReducer, [] );
+
  
     useEffect( ()=>{
     

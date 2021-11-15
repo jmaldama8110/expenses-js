@@ -21,13 +21,16 @@ const OrdenMisionForm = ( { onSubmit, orden} )=> {
     const [transporte, setTransporte ] = useState('');
     const [descripcion, setDescripcion] = useState('');
 
-    
+    const [estatusId, setEstatusId] = useState("");
+    const [estatus, setEstatus] = useState("");
 
     const Guardar = (e)=> {
         e.preventDefault();
-    
+
+        const randId =  Math.floor(Math.random() * 10000 );
+
         const data = {
-            folio,
+            folio: !orden ? randId.toString(): orden.folio,
             fecha_aplicacion,
             empleado:[ empleadoId, empleado ],
             centro_costo: [centrocostoId, centrocosto],
@@ -35,19 +38,25 @@ const OrdenMisionForm = ( { onSubmit, orden} )=> {
             fecha_desde,
             fecha_hasta,
             transporte,
-            descripcion
+            descripcion,
+            estatus: !orden ? ['P','Pendiente'] : [estatusId,estatus],
         }
         onSubmit(data);
 
     }
 
     useEffect( ()=>{
+
+        const lsCentroCosto = JSON.parse( localStorage.getItem("centroscosto") );
+        if( lsCentroCosto ){
+            setCentroCosto( lsCentroCosto );
+        }
       
        if(orden){
            setFolio(orden.folio);
            setFechaAplicacion(orden.fecha_aplicacion);
            setDescripcion(orden.descripcion);
-           setTransporte(orden.transporte);
+           setTransporte(orden.transporte);  
            setFechaDesde(orden.fecha_desde);
            setFechaHasta(orden.fecha_hasta);
 
@@ -59,6 +68,10 @@ const OrdenMisionForm = ( { onSubmit, orden} )=> {
            
            setCentroCostoId(orden.centro_costo[0]);
            setCentroCosto(orden.centro_costo[1]);
+
+           setEstatusId( orden.estatus[0]);
+           setEstatus(orden.estatus[1]);
+
        }
 
     },[])
@@ -70,6 +83,7 @@ const OrdenMisionForm = ( { onSubmit, orden} )=> {
                         <input  type="text"
                                 required
                                 value={folio}
+                                disabled
                                 onChange={(e)=>setFolio(e.target.value)}
                         ></input>
                     <label>Fecha apliación</label>
@@ -115,6 +129,19 @@ const OrdenMisionForm = ( { onSubmit, orden} )=> {
                         <option value="B2">Esquema B2</option>
                         <option value="B3">Esquema B3</option>
                         <option value="DC">Esquema DC</option>
+                    </select>
+
+                    <select     value={estatusId}
+                                disabled
+                                onChange={ (e)=> {
+                                    setEstatusId(e.target.value);
+                                    setEstatus(e.target.options[e.target.selectedIndex].text);
+                                    }}>
+                        <option value="P">Pendiente</option>
+                        <option value="A">Autorizada</option>
+                        <option value="V">Vencida</option>
+                        <option value="F">Finalizada</option>
+                        <option value="C">Cancelada</option>
                     </select>
 
                 </div>
@@ -167,20 +194,7 @@ const OrdenMisionForm = ( { onSubmit, orden} )=> {
                         onChange={ (e)=> setDescripcion( e.target.value ) }
                         placeholder="Escriba aqui una descripcion detallada de la mision a realiza"
                     ></textarea>
-                    <div>
-                        <h1>Resumen de entrada </h1>
-                        <p>Folio:{folio}</p>
-                        <p>Fecha aplicacion:{fecha_aplicacion}</p>
-                        <p>Empleado:{empleadoId}</p>
-                        <p>Centro de costo:{centrocostoId}</p>
-                        <p>Esquema:{esquemaId} </p>
-                        <p>De:{fecha_desde}</p>
-                        <p>A:{fecha_hasta}</p>
-                        <p>Transporte:{transporte}</p>
-                        <p>Descripcion:{descripcion}</p>
-                    </div>
                 
-
                 </div>
                 <button>Guardar</button>
                 <Link to="/">Cancelar</Link>

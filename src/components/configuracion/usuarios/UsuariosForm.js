@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
+
 const UsuariosForm = ( { onSubmit, usuario} )=> {
 
     const [nombre, setNombre] = useState('');
@@ -19,6 +20,9 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
 
     const [puestos, setPuestos] = useState([]);
 
+    const [empresas, setEmpresas] = useState([]);
+
+
     useEffect( ()=>{
 
         const lsPuestos = JSON.parse( localStorage.getItem("puestos") );
@@ -29,6 +33,12 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
         });
         setPuestos(new_lspuestos);
 
+        const lsEmpresas = JSON.parse( localStorage.getItem( "empresas" ) )
+
+        if( lsEmpresas ) {
+            setEmpresas(lsEmpresas.map( i => [ i.id, i.nombre, false ]));
+        }
+
 
         if(usuario){
             setNombre( usuario.nombre );
@@ -37,11 +47,16 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
             setEmail(usuario.email);
             setNivelAut( usuario.nivel_autorizacion );
             setRenovarPass( usuario.renovar_password);
+
             if( usuario.puesto ){
                 setPuestoId(usuario.puesto[0])
                 setPuesto(usuario.puesto[1])
             }
-            
+            if( usuario.empresas) {
+                setEmpresas(usuario.empresas);
+            }
+
+        
         }
     },[])
 
@@ -59,7 +74,8 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
             password: passwordA,
             renovar_password: renovarPass,
             nivel_autorizacion: nivelAut,
-            puesto: [puestoId, puesto]
+            puesto: [puestoId, puesto],
+            empresas
         }
 
         /////aqui actualiza el valor "asignado" en el puesto elegido para el usuario
@@ -84,7 +100,7 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
     }
 
     return (
-        <form onSubmit={onGuardar}>
+       <form onSubmit={onGuardar}>
             <input
                 type="text"
                 placeholder="Nombre(s)"
@@ -176,12 +192,44 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
                                             </option>)
                     }
                 </select>
+                <div>
+                    
+                    <h3>Empresas permitidas:</h3>
+                    {
+                        empresas.map( emp => <label key={emp[0]}><input
+                                                    type='checkbox'
+                                                    key={emp[0]}
+                                                    checked={emp[2]}
+                                                    onChange={ (e) => {
+                                                            const x = empresas.find( (i) => i[0] === emp[0] );
+                                                            x[2] = e.target.checked;
+                                                            
+                                                            const temp_data = empresas.map( emp => {
+                                                                if( emp[0] === x[0] ){
+                                                                    return x;
+                                                                }
+                                                                else {
+                                                                    return emp;
+                                                                }
+                                                            });
+
+                                                            setEmpresas(temp_data);
+                                                            
+
+                                                    }}
+                                                    ></input>{emp[1]}</label>)
+                    }
+
+                    <p></p>
+
+                </div>
+        
         
             </div>
             
             <button>Guardar</button>
             <Link to="/usuarios">Cancelar</Link>
-        </form>
+        </form> 
     
     );
 }

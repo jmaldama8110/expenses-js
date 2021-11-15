@@ -75,9 +75,10 @@ button:disabled {
     
 }
 .ordenitem {
-    display: grid;
-    grid-template-columns: 80px 80px 80px 200px 300px auto;
-    border:  1px solid black;
+    display: flex;
+    justify-content: space-between;
+    // grid-template-columns: 80px 80px 80px 200px 300px 80px auto;
+    border-bottom:  1px solid gray;
 }
 
 .ordenitem:hover{

@@ -9,7 +9,7 @@ const OrdenMisionItem = ({item}) => {
                 <p>{item.empleado[1]}</p>
                 <p>{item.centrocosto}</p>
                 <p>{item.fecha_aplicacion}</p>
-                <p>{item.descripcion}</p>
+                <p>{item.estatus[1]}</p>
 
             </div>
         </Link>

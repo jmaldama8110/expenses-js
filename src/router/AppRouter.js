@@ -19,7 +19,11 @@ import DeptosEdit from '../components/configuracion/organigrama/deptos/DeptosEdi
 
 import Pago from '../components/configuracion/pago/Pago';
 import Esquemas from '../components/configuracion/esquemas/Esquemas';
-import Empresas from '../components/configuracion/empresas/Empresas';
+
+import EmpresasHome from '../components/configuracion/empresas/EmpresasHome';
+import EmpresasAdd from '../components/configuracion/empresas/EmpresasAdd';
+import EmpresasEdit from '../components/configuracion/empresas/EmpresasEdit';
+
 import CentroCosto from '../components/configuracion/centrocosto/CentroCosto';
 import OrdenMisionComprobacion from '../components/comprobacion/OrdenMisionComprobacion';
 
@@ -59,7 +63,12 @@ const AppRouter = () => (
             <PrivateRoute path="/usuariosedit/:id" component={UsuariosEdit} exact={true} />
             <PrivateRoute path="/metodopago" component={Pago} exact={true} />
             <PrivateRoute path="/esquemas" component={Esquemas} exact={true} />
-            <PrivateRoute path="/empresas" component={Empresas} exact={true} />
+
+            <PrivateRoute path="/empresas" component={EmpresasHome} exact={true} />
+            <PrivateRoute path="/empresasadd" component={EmpresasAdd} exact={true} />
+            <PrivateRoute path="/empresasedit/:id" component={EmpresasEdit} exact={true} />
+
+
             <PrivateRoute path="/centrocosto" component={CentroCosto} exact={true} />
       
             <PublicRoute path="/" component={Login} exact={true} />

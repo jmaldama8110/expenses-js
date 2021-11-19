@@ -2,9 +2,12 @@ import React, { useEffect, useReducer, useState } from 'react';
 import { Link } from 'react-router-dom';
 
 import CentroCostoLista from './CentroCostoLista';
+import Loader from '../../Loader';
 
 import ExpensesContext from '../../../context/ExpensesContext';
 import CentroCostoReducer from '../../../reducers/centrocosto';
+
+import { AxiosExpenseApi } from '../../../utils/axiosApi';
 
 
 const CentroCosto = () => {
@@ -13,50 +16,76 @@ const CentroCosto = () => {
 
     const [nombre_centro_costo,setNombreCentroCosto] = useState('');
     const [codigo, setCodigo] = useState('');
-
+    const [loading, setLoading] = useState(false);
 
     useEffect( ()=>{
-    
-        const localData = JSON.parse( localStorage.getItem("centroscosto") );
+        
+        setLoading(true);
 
-        if( localData ) {
-            dispatchCentroCosto( {
-                type: "POPULATE_CC",
-                centroscosto: localData
+        const axiosApi = AxiosExpenseApi();
+
+        if( axiosApi ){
+           
+            axiosApi.get('/centroscosto').then( (res)=>{
+                if( res.data ){
+                    dispatchCentroCosto( {
+                        type: "POPULATE_CC",
+                        centroscosto: res.data
+                    });
+                }
+
+            }).catch( (e)=>{
+                alert(e);
+            }).finally( ()=>{
+                setLoading(false);
             })
+    
         }
 
 
     },[]);
 
-    useEffect( ()=>{
-        localStorage.setItem('centroscosto', JSON.stringify( centroscosto ));
-    },[centroscosto])
-
 
     const onSubmit = (e)=>{
         e.preventDefault();
+        setLoading(true);
 
-        const randId =  Math.floor(Math.random() * 10000 );
+        const axiosApi = AxiosExpenseApi();
 
-        dispatchCentroCosto({
-            type: "ADD_CC",
-            id: randId.toString(),
-            nombre: nombre_centro_costo,
-            codigo,
-            activo: true
-            
-        });
+        if( axiosApi ){
 
-        setNombreCentroCosto('');
-        setCodigo('');
+            axiosApi.post('/centroscosto',{
+                nombre: nombre_centro_costo,
+                codigo,
+                activo: true,
+            }).then( (res)=>{
+
+                dispatchCentroCosto({
+                    type: "ADD_CC",
+                    _id: res.data._id,
+                    nombre: res.data.nombre,
+                    codigo: res.data.codigo,
+                    activo: true
+                    
+                });
+    
+                setNombreCentroCosto('');
+                setCodigo('');
+
+            }).catch( (e)=>{
+                alert(e);
+            }).finally( ()=>{
+                setLoading(false);
+            })
+
+        }
     }
 
     return (
         <div>
             <h1>Centros de Costos</h1>
 
-        
+
             <form onSubmit={onSubmit}>
                 <input  type="text"
                         placeholder="nombre centro costo"
@@ -68,12 +97,13 @@ const CentroCosto = () => {
                         value={codigo}
                         onChange={ e => setCodigo(e.target.value) }
                 ></input>
-                <button>Guardar</button>
+                { !loading && <button>Guardar</button>}
             </form>
 
 
         <ExpensesContext.Provider value={{ centroscosto,dispatchCentroCosto }}>
-                <CentroCostoLista />
+                { loading && <Loader />}
+                { !loading && <CentroCostoLista />}
         </ExpensesContext.Provider>
 
             

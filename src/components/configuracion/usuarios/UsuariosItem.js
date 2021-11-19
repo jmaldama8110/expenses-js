@@ -15,7 +15,7 @@ const UsuariosItem = ({usuario}) => {
         })
     }
     return (
-        <Link to={`/usuariosedit/${usuario.id}`}>
+        <Link to={`/usuariosedit/${usuario._id}`}>
                 <div className="gridflex">
                     <p><button onClick={onEliminar}>x</button></p>
                     <p>{usuario.id}</p>

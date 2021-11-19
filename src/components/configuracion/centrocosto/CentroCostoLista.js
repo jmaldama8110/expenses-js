@@ -11,8 +11,6 @@ const CentroCostoLista = () => {
         <div>
             <div className="gridflex">
 
-
-                <p className="headerlabel">id</p>
                 <p className="headerlabel">codigo</p>
                 <p className="headerlabel">nombre del centro</p>
 
@@ -20,7 +18,7 @@ const CentroCostoLista = () => {
             {
             centroscosto.map( item => 
                     <CentroCostoItem 
-                    key={item.id}
+                    key={item._id}
                     item={item}
                 /> )
             }

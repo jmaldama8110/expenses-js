@@ -60,8 +60,11 @@ const Organigrama = () => {
     useEffect( ()=>{
         const contenedor = document.querySelector("#myUL");
 
-        const puestos = JSON.parse( localStorage.getItem("puestos") )
-                        .map( (i) => {return {id:i.id, titulo:i.titulo, padre: i.parent[0] } })   ;
+        const lsPuestos = JSON.parse( localStorage.getItem("puestos") );
+        if( !lsPuestos )  return;
+
+        
+        const puestos = lsPuestos.map( (i) => {return {id:i.id, titulo:i.titulo, padre: i.parent[0] } })   ;
         
         const setHijos = ( nodo ) => {
             const h = puestos.filter( (i) => i.padre === nodo.id ).map( (obj) => new TreeNode(obj.id,obj.titulo));

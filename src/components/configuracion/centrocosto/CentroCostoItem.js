@@ -17,7 +17,6 @@ const CentroCostoItem = ({item}) => {
     return (
             <div className="gridflex">
                 <p><button onClick={onEliminar}>x</button></p>
-                <p>{item.id}</p>
                 <p>{item.codigo}</p>
                 <p>{item.nombre}</p>
             </div>

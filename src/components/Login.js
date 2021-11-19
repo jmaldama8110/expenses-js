@@ -24,15 +24,13 @@ const Login = (props) => {
 
         setLoading(true);
 
-        api.post('/users/login',{
+        api.post('/usuarios/login',{
             email: usuario,
             password: contrasena
         }).then( res => {
             sessionStorage.setItem("usuario",JSON.stringify({
                                                     info: res.data.usuario,
                                                     token: res.data.token } ));
-
-
             setLoading(false);
             setError('');
             props.history.push('/home');

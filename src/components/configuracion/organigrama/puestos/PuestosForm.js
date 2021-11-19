@@ -22,6 +22,7 @@ const PuestosForm = ( { onSubmit, puesto} )=> {
     useEffect( ()=>{
 
         const lsDeptos = JSON.parse( localStorage.getItem("deptos"));
+        if( !lsDeptos ) return;
         lsDeptos.unshift({
             id: "NA",
             titulo: ""
@@ -30,6 +31,7 @@ const PuestosForm = ( { onSubmit, puesto} )=> {
         setDeptoId("NA");
 
         const lsPuestos = JSON.parse( localStorage.getItem("puestos"));
+        if( !lsPuestos ) return;
         lsPuestos.unshift({
             id: "NA",
             titulo: ""

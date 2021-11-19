@@ -4,10 +4,9 @@ import ReactDOM from 'react-dom';
 import reportWebVitals from './reportWebVitals';
 import AppRouter from './router/AppRouter';
 
-
 import './styles/styles.scss';
 
- ReactDOM.render(<AppRouter />, document.getElementById('root'));
+ReactDOM.render(<AppRouter /> , document.getElementById('root'));
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))

@@ -18,7 +18,7 @@ const UsuariosLista = () => {
             {
             usuarios.map( usu => 
                     <UsuariosItem 
-                        key={usu.id}
+                        key={usu._id}
                         usuario={usu}
                     /> )
             }

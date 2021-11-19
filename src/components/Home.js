@@ -22,6 +22,7 @@ const Home = () => {
 
         setUsuario(localSession.info.nombre);
         
+        
         if( localData ) {
             
             dispatchOrdenes({

@@ -7,14 +7,14 @@ const CentroCostoReducer = (state, action) => {
             return [
                 ...state,
                 {
-                    id: action.id,
+                    _id: action._id,
                     nombre: action.nombre,
                     codigo: action.codigo,
                     activo: action.activo
                 }
             ]
         case 'REMOVE_CC':
-            return state.filter( ccitem => ccitem.id !== action.id)
+            return state.filter( ccitem => ccitem._id !== action._id)
         default:
             return state
     }

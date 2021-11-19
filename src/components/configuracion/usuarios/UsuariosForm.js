@@ -26,12 +26,14 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
     useEffect( ()=>{
 
         const lsPuestos = JSON.parse( localStorage.getItem("puestos") );
-        const new_lspuestos = lsPuestos.filter( i => !i.asignado )
-        new_lspuestos.unshift({
-            id: "NA",
-            titulo: "Puesto del usuario"
-        });
-        setPuestos(new_lspuestos);
+        if( lsPuestos ){
+            const new_lspuestos = lsPuestos.filter( i => !i.asignado )
+            new_lspuestos.unshift({
+                id: "NA",
+                titulo: "Puesto del usuario"
+            });
+            setPuestos(new_lspuestos);
+        }
 
         const lsEmpresas = JSON.parse( localStorage.getItem( "empresas" ) )
 
@@ -41,6 +43,7 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
 
 
         if(usuario){
+            console.log(usuario);
             setNombre( usuario.nombre );
             setApellidoM(usuario.apellido_materno);
             setApellidoP(usuario.apellido_paterno);

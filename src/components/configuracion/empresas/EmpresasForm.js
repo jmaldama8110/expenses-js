@@ -7,18 +7,22 @@ const EmpresasForm = ( { onSubmit, empresa} )=> {
     const [nombre, setNombre] = useState('');
 
     useEffect( ()=>{
-        if(empresa){
-            setNombre(empresa.nombre);
+        let mounted = true;
+        
+        if( mounted ){
+            if(empresa){
+                setNombre(empresa.nombre);
+            }
+        
         }
+
+        return ()=> mounted = false;
     },[])
 
     const onGuardar = (e)=> {
         e.preventDefault();
-        
-        const randId =  Math.floor(Math.random() * 10000 );
-        
+              
         const data = {
-            id: !empresa ? randId.toString(): empresa.id,
             nombre
         }
         onSubmit(data);

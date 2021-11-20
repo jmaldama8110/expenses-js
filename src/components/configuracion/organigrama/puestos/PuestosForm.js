@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
+import { AxiosExpenseApi } from '../../../../utils/axiosApi';
+import Loader from '../../../Loader';
 
 const PuestosForm = ( { onSubmit, puesto} )=> {
 
@@ -18,51 +20,63 @@ const PuestosForm = ( { onSubmit, puesto} )=> {
 
     const [deptos, setDeptos] = useState([]);
     const [puestos, setPuestos] = useState([]);
+
+    const [loading,setLoading] = useState(false);
     
     useEffect( ()=>{
 
-        const lsDeptos = JSON.parse( localStorage.getItem("deptos"));
-        if( !lsDeptos ) return;
-        lsDeptos.unshift({
-            id: "NA",
-            titulo: ""
-        });
-        setDeptos(lsDeptos);
-        setDeptoId("NA");
+        let mounted = true;
 
-        const lsPuestos = JSON.parse( localStorage.getItem("puestos"));
-        if( !lsPuestos ) return;
-        lsPuestos.unshift({
-            id: "NA",
-            titulo: ""
-        });
-        setPuestos(lsPuestos)
-        setParentId("NA");
-        
-        if(puesto){
+        if( mounted ){
+            setLoading(true);
+            const axiosApi = AxiosExpenseApi();
 
-            setTitulo(puesto.titulo);
+            axiosApi.get('/deptos').then( (res) =>{
+                const lsDeptos = res.data;
+                setDeptos(lsDeptos);
+                setDeptoId("NA");
+    
+            }).catch( (e)=>{
+                    alert(e);
+            }).finally( ()=>{
+                setLoading(false);
+            });
+
+            setLoading(true);
+            axiosApi.get('/puestos').then( (res) =>{
+                const lsPuestos = res.data;
+                setPuestos(lsPuestos);
+                setParentId("NA");
+            }).catch( (e)=>{
+                    alert(e);
+            }).finally( ()=>{
+                setLoading(false);
+            })
             
-            setDeptoId( puesto.depto[0]);
-            setDepto( puesto.depto[1]);
+            if(puesto){
 
-            setParentId( puesto.parent[0]);
-            setParent( puesto.parent[1]);
+                setTitulo(puesto.titulo);
+                
+                setDeptoId( puesto.depto[0]);
+                setDepto( puesto.depto[1]);
 
-            setIsRoot(puesto.isroot);
-            setAsignado(puesto.asignado);
+                setParentId( puesto.parent[0]);
+                setParent( puesto.parent[1]);
 
-            
+                setIsRoot(puesto.isroot);
+                setAsignado(puesto.asignado);
+
+                
+            }
         }
+
+        return () => mounted = false;
     },[])
 
     const onGuardar = (e)=> {
         e.preventDefault();
-        
-        const randId =  Math.floor(Math.random() * 10000 );
-        
+                
         const data = {
-            id: !puesto ? randId.toString(): puesto.id,
             titulo: titulo,
             depto: [deptoId,depto],
             parent: [parentId, parent],
@@ -74,7 +88,10 @@ const PuestosForm = ( { onSubmit, puesto} )=> {
     }
 
     return (
-        <form onSubmit={onGuardar}>
+    <div>
+
+    { loading && <Loader /> }
+     { !loading &&   <form onSubmit={onGuardar}>
             <p>Titulo del puesto</p>
             <input
                 type="text"
@@ -116,8 +133,8 @@ const PuestosForm = ( { onSubmit, puesto} )=> {
                     >
                 {
                     deptos.map( d =>    <option
-                                            key={d.id}
-                                            value={d.id}
+                                            key={d._id}
+                                            value={d._id}
                                         >
                                         {`${d.titulo}`}
                                         </option>)
@@ -125,34 +142,36 @@ const PuestosForm = ( { onSubmit, puesto} )=> {
 
             </select>
 
-            { !isroot && <div>
-            <p>Jefe inmediato</p>
-            <select 
-                    value={parentId} 
-                    onChange={ (e)=> {
-                            setParentId(e.target.value);
-                            setParent(e.target.options[e.target.selectedIndex].text);
-                    } }
-                    >
-                    {
-                        puestos.map( p =>   <option
-                                                key={p.id}
-                                                value={p.id}
-                                            >
-                                                {p.titulo}
+            { !isroot && 
+            <div>
+                <p>Jefe inmediato</p>
+                <select 
+                        value={parentId} 
+                        onChange={ (e)=> {
+                                setParentId(e.target.value);
+                                setParent(e.target.options[e.target.selectedIndex].text);
+                        } }
+                        >
+                        {
+                            puestos.map( p =>   <option
+                                                    key={p._id}
+                                                    value={p._id}
+                                                >
+                                                    {p.titulo}
 
-                                            </option>)
-                    }
+                                                </option>)
+                        }
 
 
-            </select>
+                </select>
             </div>}
 
 
             <button>Guardar</button>
             <Link to="/organigrama">Cancelar</Link>
-        </form>
-    
+        </form> }
+
+    </div>
     );
 }
 

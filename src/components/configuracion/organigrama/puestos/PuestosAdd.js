@@ -1,35 +1,37 @@
 
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import PuestosForm from './PuestosForm';
 import { history } from "../../../../router/AppRouter";
 
+import { AxiosExpenseApi } from '../../../../utils/axiosApi';
+import Loader from '../../../Loader';
+
+
 const PuestosAdd = () => {
 
-    let puestos = [];
-
-    useEffect( ()=> {
-
-        // retrieves ordenes from localStorage
-        const localData = JSON.parse(localStorage.getItem('puestos'))
-        if( localData ) {
-            puestos = localData;
-
-        } 
-        //////
-
-    },[]);
+    const [loading, setLoading] = useState(false);
 
     const onSubmit = (data) => {
-
-        puestos.push(data);
-        localStorage.setItem('puestos', JSON.stringify(puestos));
-        history.push('/organigrama');
+        setLoading(true);
+        const axiosApi = AxiosExpenseApi();
+        if( axiosApi ){
+            axiosApi.post('/puestos',{...data})
+            .then( (res)=>{
+                history.push('/organigrama');
+            }).catch( e=>{
+                alert(e)
+            }).finally( ()=>{
+                setLoading(false);
+            })
+        }
+    
     }
 
     return (
         <div>
             <h1>Nuevo Puesto</h1>
-            <PuestosForm onSubmit={onSubmit}/>
+            { loading && <Loader />}
+            { !loading && <PuestosForm onSubmit={onSubmit}/>}
         </div>
     );
 }

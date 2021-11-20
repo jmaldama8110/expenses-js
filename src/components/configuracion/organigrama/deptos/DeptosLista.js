@@ -18,7 +18,7 @@ const DeptosLista = () => {
             {
             deptos.map( depto => 
                     <DeptosItem 
-                        key={depto.id}
+                        key={depto._id}
                         depto={depto}
                     /> )
             }

@@ -7,12 +7,12 @@ const DeptosReducer = (state, action) => {
             return [
                 ...state,
                 {
-                    id: action.id,
+                    _id: action._id,
                     titulo: action.titulo,
                 }
             ]
         case 'REMOVE_DEPTO':
-            return state.filter( ccitem => ccitem.id !== action.id)
+            return state.filter( ccitem => ccitem._id !== action._id)
         default:
             return state
     }

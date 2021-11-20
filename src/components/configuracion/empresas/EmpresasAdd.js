@@ -1,35 +1,39 @@
 
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import EmpresasForm from './EmpresasForm';
 import { history } from '../../../router/AppRouter';
+import { AxiosExpenseApi } from '../../../utils/axiosApi';
+import Loader from '../../Loader';
+
 
 const EmpresasAdd = () => {
 
-    let empresas = [];
-
-    useEffect( ()=> {
-
-        // retrieves ordenes from localStorage
-        const localData = JSON.parse(localStorage.getItem('empresas'))
-        if( localData ) {
-            empresas = localData;
-
-        } 
-        //////
-
-    },[]);
+    const [loading, setLoading] = useState(false);
 
     const onSubmit = (data) => {
+        setLoading(true);
 
-        empresas.push(data);
-        localStorage.setItem('empresas', JSON.stringify(empresas));
-        history.push('/empresas');
+        const axiosApi = AxiosExpenseApi();
+        if( axiosApi ){
+
+            axiosApi.post('/empresas',{...data}
+            ).then( (res)=>{
+                history.push('/empresas');
+            }).catch( (e)=>{
+                alert(e);
+            }).finally( ()=>{
+                setLoading(false);
+            })
+        }
+    
+    
     }
 
     return (
         <div>
             <h1>Nueva Empresa</h1>
-            <EmpresasForm onSubmit={onSubmit}/>
+            { loading && <Loader />}
+            { !loading && <EmpresasForm onSubmit={onSubmit}/>}
         </div>
     );
 }

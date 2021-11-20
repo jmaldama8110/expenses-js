@@ -2,17 +2,17 @@
 const EmpresasReducer = (state, action) => {
     switch(action.type){
         case 'POPULATE_EMPRESAS':
-            return action.deptos
+            return action.empresas
         case 'ADD_EMPRESA':
             return [
                 ...state,
                 {
-                    id: action.id,
+                    _id: action._id,
                     titulo: action.titulo,
                 }
             ]
         case 'REMOVE_EMPRESA':
-            return state.filter( ccitem => ccitem.id !== action.id)
+            return state.filter( ccitem => ccitem._id !== action._id)
         default:
             return state
     }

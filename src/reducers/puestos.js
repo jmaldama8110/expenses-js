@@ -7,7 +7,7 @@ const PuestosReducer = (state, action) => {
             return [
                 ...state,
                 {
-                    id: action.id,
+                    _id: action._id,
                     titulo: action.titulo,
                     usuario: action.usuario,
                     depto: action.depto,
@@ -18,7 +18,7 @@ const PuestosReducer = (state, action) => {
                 }
             ]
         case 'REMOVE_PUESTO':
-            return state.filter( ccitem => ccitem.id !== action.id)
+            return state.filter( ccitem => ccitem._id !== action._id)
         default:
             return state
     }

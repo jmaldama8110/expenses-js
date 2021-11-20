@@ -7,9 +7,15 @@ const DeptosForm = ( { onSubmit, depto} )=> {
     const [titulo, setTitulo] = useState('');
 
     useEffect( ()=>{
-        if(depto){
-            setTitulo(depto.titulo);
+        let mounted = true;
+        if( mounted ){
+
+            if(depto){
+                setTitulo(depto.titulo);
+            }
         }
+
+        return ()=> mounted = false;
     },[])
 
     const onGuardar = (e)=> {

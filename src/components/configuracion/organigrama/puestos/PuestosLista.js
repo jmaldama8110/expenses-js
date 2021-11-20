@@ -20,7 +20,7 @@ const PuestosLista = () => {
             {
             puestos.map( puesto => 
                     <PuestosItem 
-                        key={puesto.id}
+                        key={puesto._id}
                         puesto={puesto}
                     /> )
             }

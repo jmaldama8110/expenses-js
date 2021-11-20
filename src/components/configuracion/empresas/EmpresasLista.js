@@ -18,7 +18,7 @@ const EmpresasLista = () => {
             {
             empresas.map( empresa => 
                     <EmpresasItem 
-                        key={empresa.id}
+                        key={empresa._id}
                         empresa={empresa}
                     /> )
             }

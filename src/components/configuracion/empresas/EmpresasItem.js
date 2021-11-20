@@ -15,10 +15,9 @@ const EmpresasItem = ({empresa}) => {
         })
     }
     return (
-        <Link to={`/empresasedit/${empresa.id}`}>
+        <Link to={`/empresasedit/${empresa._id}`}>
                 <div className="gridflex">
                     <p><button onClick={onEliminar}>x</button></p>
-                    <p>{empresa.id}</p>
                     <p>{empresa.nombre}</p>
                 </div>
         </Link>

@@ -1,32 +1,44 @@
-import React, { useReducer, useEffect } from 'react';
+import React, { useReducer, useEffect, useState } from 'react';
 import PuestosLista from './PuestosLista';
-
+import Loader from '../../../Loader';
 import { Link } from 'react-router-dom';
 
 import ExpensesContext from '../../../../context/ExpensesContext';
 import PuestosReducer from '../../../../reducers/puestos';
+import { AxiosExpenseApi } from '../../../../utils/axiosApi';
 
 const PuestosHome = ()=>{
 
-
+    const [loading, setLoading ] = useState(false);
+    
     const [puestos, dispatchPuestos]  = useReducer(PuestosReducer, []);
 
     useEffect( ()=>{
     
-        const lsPuestos = JSON.parse( localStorage.getItem("puestos") );
-      
-        if( lsPuestos ) {
-            dispatchPuestos( {
-                type: "POPULATE_PUESTOS",
-                puestos: lsPuestos
-            })
+        let mounted = true;
+        if( mounted ){
+            
+            const axiosApi = AxiosExpenseApi();
+            if( axiosApi ){
+                axiosApi.get('/puestos').then( res => {
+                    dispatchPuestos( {
+                        type: "POPULATE_PUESTOS",
+                        puestos: res.data
+                    })
+        
+                }).catch(e =>{
+                    alert(e);
+                }).finally( ()=>{
+                    setLoading(false);
+                })
+
+            }
+
         }
-
+      
+        return () => mounted = false;
+        
     },[]);
-
-    // useEffect( ()=>{
-    //     localStorage.setItem('puestos', JSON.stringify( puestos ) );
-    // },[puestos])
 
 
     return (
@@ -35,7 +47,8 @@ const PuestosHome = ()=>{
             <Link to="/puestosadd">Agregar</Link>
             <ExpensesContext.Provider value={ { puestos,
                                                 dispatchPuestos }}>
-                <PuestosLista />
+                { loading && <Loader />}
+                {!loading && <PuestosLista />}
             </ExpensesContext.Provider>
         </div>
     );

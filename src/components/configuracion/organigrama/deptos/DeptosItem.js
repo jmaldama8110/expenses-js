@@ -11,14 +11,14 @@ const DeptosItem = ({depto}) => {
 
         dispatchDeptos({
             type: 'REMOVE_DEPTO',
-            id: depto.id
+            _id: depto._id
         })
     }
     return (
-        <Link to={`/deptosedit/${depto.id}`}>
+        <Link to={`/deptosedit/${depto._id}`}>
                 <div className="gridflex">
                     <p><button onClick={onEliminar}>x</button></p>
-                    <p>{depto.id}</p>
+                    <p>{depto._id}</p>
                     <p>{depto.titulo}</p>
                 </div>
         </Link>

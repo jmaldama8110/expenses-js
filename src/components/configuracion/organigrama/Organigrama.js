@@ -1,11 +1,14 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import DeptosHome from './deptos/DeptosHome';
 
 import PuestosHome from './puestos/PuestosHome';
-
+import Loader from '../../Loader';
+import { AxiosExpenseApi } from '../../../utils/axiosApi';
 
 const Organigrama = () => {
+
+    const [ loading, setLoading ] = useState(false);
 
     class TreeNode {
         constructor(id,titulo){
@@ -35,6 +38,7 @@ const Organigrama = () => {
                 label.textContent = nodo.titulo;
 
                 span.classList.toggle("caret");
+                span.addEventListener("click",handleClick);
                 ul.classList.toggle("nested");
                 
                 ul.classList.toggle("active");
@@ -58,42 +62,63 @@ const Organigrama = () => {
     }
 
     useEffect( ()=>{
-        const contenedor = document.querySelector("#myUL");
 
-        const lsPuestos = JSON.parse( localStorage.getItem("puestos") );
-        if( !lsPuestos )  return;
+        let mounted = true;
 
-        
-        const puestos = lsPuestos.map( (i) => {return {id:i.id, titulo:i.titulo, padre: i.parent[0] } })   ;
-        
-        const setHijos = ( nodo ) => {
-            const h = puestos.filter( (i) => i.padre === nodo.id ).map( (obj) => new TreeNode(obj.id,obj.titulo));
-            nodo.hijos.push(...h);
-            h.forEach( (hijo) => setHijos(hijo) );
-        }
+        if( mounted ) {
 
-        if(puestos )
-        {
-            const root = new TreeNode( puestos[0].id, puestos[0].titulo );
-            setHijos(root);
-            construirArbolHTML([root], contenedor);
-        }
+            const contenedor = document.querySelector("#myUL");
+
+            let lsPuestos = []
+
+            setLoading(true);
+            
+            const axiosApi = AxiosExpenseApi();
+
+            axiosApi.get('/puestos').then( res =>{
+                lsPuestos = res.data
+                const puestos = lsPuestos.map( (i) => {
+                    return {
+                        id: i._id,
+                        titulo: i.titulo,
+                        padre: i.parent[0]
+                    } 
+                });
+
+                const setHijos = ( nodo ) => {
+                    const h = puestos.filter( (i) => i.padre === nodo.id ).map( (obj) => new TreeNode(obj.id,obj.titulo));
+                    nodo.hijos.push(...h);
+                    h.forEach( (hijo) => setHijos(hijo) );
+                }
         
-        const toggler = document.getElementsByClassName("caret");
-        let i = 0;
-        
-        for (i = 0; i < toggler.length; i++) {
-          toggler[i].addEventListener("click", handleClick );
+                if( puestos )
+                {
+                    const root = new TreeNode( puestos[0].id, puestos[0].titulo );
+                    setHijos(root);
+                    construirArbolHTML([root], contenedor);
+                }
+                
+            }).catch( e=>{
+                alert(e);
+            }).finally( ()=>{
+                setLoading(false);
+            })
+
         }
 
         return () => {
-            for (i = 0; i < toggler.length; i++) {
+
+            const toggler = document.getElementsByClassName("caret");
+            mounted = false;
+            
+            for (let i = 0; i < toggler.length; i++) {
                 toggler[i].removeEventListener("click", handleClick );
               }
 
-              const rootItem = contenedor.firstElementChild;
-              contenedor.removeChild(rootItem);
-        }  
+            // const contenedor = document.querySelector("#myUL");
+            // const rootItem = contenedor.firstElementChild;
+            // contenedor.removeChild(rootItem);
+        } 
 
     },[]);
 
@@ -102,13 +127,17 @@ const Organigrama = () => {
     <section>
         <h1>Organigrama de puestos</h1>
 
-        <ul id="myUL">
-        </ul>
-        <PuestosHome />
-        <DeptosHome />
+        <ul id="myUL"></ul>
+
+        { loading && <Loader />}
+        { !loading &&
         <div>
-            <Link to="/">Regresar</Link>
-        </div>
+            <PuestosHome />
+            <DeptosHome />
+            <div>
+                <Link to="/">Regresar</Link>
+            </div>
+        </div>}
     </section>
     );
 

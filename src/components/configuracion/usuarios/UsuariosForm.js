@@ -1,8 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
+import Loader from '../../Loader';
+import { AxiosExpenseApi } from '../../../utils/axiosApi';
 
 const UsuariosForm = ( { onSubmit, usuario} )=> {
+
+    const [loading, setLoading] = useState(false);
 
     const [nombre, setNombre] = useState('');
     const [apellido_materno, setApellidoM] = useState('');
@@ -14,7 +18,7 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
     const [puestoId, setPuestoId] = useState('');
     const [puesto, setPuesto] = useState('');
 
-    const [renovarPass, setRenovarPass] = useState(true);
+    const [renovarPass, setRenovarPass] = useState(true);   
 
     const [nivelAut, setNivelAut] = useState("A");
 
@@ -25,78 +29,70 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
 
     useEffect( ()=>{
 
-        const lsPuestos = JSON.parse( localStorage.getItem("puestos") );
-        if( lsPuestos ){
-            const new_lspuestos = lsPuestos.filter( i => !i.asignado )
-            new_lspuestos.unshift({
-                id: "NA",
-                titulo: "Puesto del usuario"
+        const axiosApi = AxiosExpenseApi();
+
+        setLoading(true);
+        axiosApi.get('/puestos').then( (res)=>{
+
+            const temp = res.data.filter( i => !i.asignado );
+            temp.unshift({
+                _id: "",
+                titulo: "Puesto del empleado"
             });
-            setPuestos(new_lspuestos);
-        }
+            setPuestos(temp);
 
-        const lsEmpresas = JSON.parse( localStorage.getItem( "empresas" ) )
-
-        if( lsEmpresas ) {
-            setEmpresas(lsEmpresas.map( i => [ i.id, i.nombre, false ]));
-        }
-
-
-        if(usuario){
-            console.log(usuario);
-            setNombre( usuario.nombre );
-            setApellidoM(usuario.apellido_materno);
-            setApellidoP(usuario.apellido_paterno);
-            setEmail(usuario.email);
-            setNivelAut( usuario.nivel_autorizacion );
-            setRenovarPass( usuario.renovar_password);
-
-            if( usuario.puesto ){
-                setPuestoId(usuario.puesto[0])
-                setPuesto(usuario.puesto[1])
-            }
-            if( usuario.empresas) {
-                setEmpresas(usuario.empresas);
-            }
-
+        }).catch(e =>{
+            alert(e);
+        }).finally( ()=>{
+            setLoading(false);
+        })
         
-        }
+ 
+        axiosApi.get('/empresas').then( (res) =>{
+            const temp = res.data.map( i => [ i._id, i.nombre, false ]);
+            setEmpresas( temp );
+            
+            if(usuario){
+
+                setNombre( usuario.nombre );
+                setApellidoM(usuario.apellido_materno);
+                setApellidoP(usuario.apellido_paterno);
+                setEmail(usuario.email);
+                setNivelAut( usuario.nivel_autorizacion );
+                setRenovarPass( usuario.renovar_password);
+    
+                if( usuario.puesto ){
+                    setPuestoId(usuario.puesto[0])
+                    setPuesto(usuario.puesto[1])
+                }
+                if( usuario.empresas) {
+                    setEmpresas(usuario.empresas);
+                }        
+            }
+
+        }).catch( e => {
+            alert(e);
+        }).finally( () =>{
+            setLoading(false);
+        })
+
+
     },[])
 
     const onGuardar = (e)=> {
         e.preventDefault();
         
-        const randId =  Math.floor(Math.random() * 10000 );
-        const idusuario = !usuario ? randId.toString(): usuario.id
         const data = {
-            id: idusuario ,
             nombre: nombre,
             apellido_paterno,
             apellido_materno,
             email,
             password: passwordA,
             renovar_password: renovarPass,
-            nivel_autorizacion: nivelAut,
+            // nivel_autorizacion: nivelAut,
             puesto: [puestoId, puesto],
             empresas
         }
-
-        /////aqui actualiza el valor "asignado" en el puesto elegido para el usuario
-        const local_puestos = JSON.parse( localStorage.getItem("puestos") );
-        const new_puestos = local_puestos.map( p => {
-            if( p.id === puestoId){
-                return {
-                    ...p,
-                    asignado: true,
-                    usuario: [idusuario, `${nombre} ${apellido_paterno} ${apellido_materno}`,email]
-                }
-            }
-            else {
-                return p;
-            }
-        });
-        localStorage.setItem("puestos", JSON.stringify(new_puestos) );
-        ///////////////////////////////////////////////////////////////////////////
 
         onSubmit(data);
 
@@ -122,8 +118,6 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
                 value={apellido_materno}
                 onChange={e => setApellidoM(e.target.value)}
             ></input>
-
-
                 <input
                     type="email"
                     placeholder="Correo Electronico"
@@ -140,7 +134,7 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
                     onChange={ e => setRenovarPass(e.target.checked) }
                        
                 ></input>
-                <label htmlFor="renovarpass">Actualizar al iniciar</label>
+                <label htmlFor="renovarpass">Solcitar nueva contrasena al iniciar</label>
                 <br/>
 
                 {!renovarPass && 
@@ -160,7 +154,7 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
                 </p>}
 
             <div className="field">
-                <p>Tipo Autorización</p>
+                <p>Informacion del Empleado</p>
                 <input
                     id="requiereaut"
                     type="radio"
@@ -169,7 +163,7 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
                     checked={ nivelAut === "A"}
                     onChange={ (e)=> setNivelAut(e.target.value)}
                 >
-                </input> <label htmlFor='requiereaut'>Requiere Autorizacion</label> 
+                </input> <label htmlFor='requiereaut'>Es empleado</label> 
                 <input
                     id="norequiereaut"
                     type="radio"
@@ -178,7 +172,8 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
                     checked={ nivelAut === "X"}
                     onChange={ (e)=> setNivelAut(e.target.value)}
                 >
-                </input> <label htmlFor='norequiereaut'>No requiere</label>
+                </input> <label htmlFor='norequiereaut'>No es empleado</label>
+                { nivelAut === "A" &&
                 <select
                     value={puestoId}
                     onChange={ e =>{
@@ -189,12 +184,12 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
                 >
                     {
                         puestos.map( p =>   <option
-                                                key={p.id}
-                                                value={p.id}
+                                                key={p._id}
+                                                value={p._id}
                                             >{p.titulo}
                                             </option>)
                     }
-                </select>
+                </select> }
                 <div>
                     
                     <h3>Empresas permitidas:</h3>
@@ -229,8 +224,8 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
         
         
             </div>
-            
-            <button>Guardar</button>
+            { loading && <Loader />}
+            { ! loading && <button>Guardar</button>}
             <Link to="/usuarios">Cancelar</Link>
         </form> 
     

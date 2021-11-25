@@ -7,7 +7,7 @@ const UsuariosReducer = (state, action) => {
             return [
                 ...state,
                 {
-                    id: action.id,
+                    _id: action._id,
                     nombre: action.nombre,
                     apellido_materno: action.apellido_materno,
                     apellido_paterno: action.apellido_paterno,
@@ -18,7 +18,7 @@ const UsuariosReducer = (state, action) => {
                 }
             ]
         case 'REMOVE_USUARIO':
-            return state.filter( ccitem => ccitem.id !== action.id)
+            return state.filter( ccitem => ccitem._id !== action._id)
         default:
             return state
     }

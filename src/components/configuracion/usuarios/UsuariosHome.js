@@ -9,7 +9,6 @@ import UsuariosReducer from "../../../reducers/usuarios";
 
 import axios from "axios";
 
-
 const UsuariosHome = () => {
 
     const [usuarios, dispatchUsuarios] = useReducer( UsuariosReducer, [] );
@@ -44,11 +43,6 @@ const UsuariosHome = () => {
         
 
     },[]);
-
-    // useEffect( ()=>{
-    //     localStorage.setItem('usuarios', JSON.stringify( usuarios ) );
-    // },[usuarios])
-
 
     return (
         <div>

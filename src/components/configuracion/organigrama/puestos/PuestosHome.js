@@ -24,7 +24,9 @@ const PuestosHome = ()=>{
                     dispatchPuestos( {
                         type: "POPULATE_PUESTOS",
                         puestos: res.data
-                    })
+                    });
+
+                    mounted = false;
         
                 }).catch(e =>{
                     alert(e);

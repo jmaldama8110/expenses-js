@@ -1,9 +1,10 @@
 import axios from 'axios';
 
+
 export const AxiosExpenseApi = () => {
     
     const usuario = JSON.parse( sessionStorage.getItem("usuario") );
-    
+
     if( usuario ){
         const tokenString = `Bearer ${usuario.token}`;
         axios.defaults.baseURL = process.env.REACT_APP_BASE_URL_API;
@@ -16,4 +17,7 @@ export const AxiosExpenseApi = () => {
 
 }
 
-// export { AxiosExpenseApi  as default };
+export const getUsuarioSession = () => {
+    const usuario = JSON.parse( sessionStorage.getItem("usuario") );
+    return usuario; 
+}

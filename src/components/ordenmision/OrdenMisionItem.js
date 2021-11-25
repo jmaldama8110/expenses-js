@@ -2,10 +2,16 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 
 const OrdenMisionItem = ({item}) => {
+
+    const idToFolio = (str) =>{
+        return str.substring(20);
+    }
+    
+    
     return (
-        <Link to={`/edit/${item.folio}`}>
+        <Link to={`/edit/${item._id}`}>
             <div className="ordenitem">
-                <p>{item.folio}</p>
+                <p>{idToFolio(item._id)}</p>
                 <p>{item.empleado[1]}</p>
                 <p>{item.centrocosto}</p>
                 <p>{item.fecha_aplicacion}</p>
@@ -17,4 +23,4 @@ const OrdenMisionItem = ({item}) => {
 }
 
 
-export { OrdenMisionItem as default };
+export { OrdenMisionItem as default }

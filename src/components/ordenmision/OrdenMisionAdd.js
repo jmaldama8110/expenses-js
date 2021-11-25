@@ -1,37 +1,37 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import OrdenMisionForm from './OrdenMisionForm';
 import { history} from '../../router/AppRouter';
 import Header from '../Header';
 
+import Loader from '../Loader';
+import { AxiosExpenseApi } from '../../utils/axiosApi';
+
 const OrdenMisionAdd = () => {
     
-   let ordenes = [];
-    
-    useEffect( ()=> {
-
-        // retrieves ordenes from localStorage
-        const localData = JSON.parse(localStorage.getItem('ordenes'))
-        if( localData ) {
-            ordenes = localData;
-
-        } 
-        //////
-
-    },[]);
-
+    const [loading, setLoading] = useState(false);
 
     const onSubmit = (data) => {
 
-        ordenes.push(data);
-        localStorage.setItem('ordenes', JSON.stringify(ordenes));
-        history.push('/home');
+        setLoading(true);
+        const axiosApi = AxiosExpenseApi();
+        axiosApi.post('/ordenes',{
+            ...data
+        }).then( res =>{
+            history.push('/home');
+        }).catch( e =>{
+            alert(e);
+        }).finally( () => {
+            setLoading(false);
+        })
+
     }
 
     return (
         <div>
             <Header />
             <h1>Nueva Orden de Mision</h1>
-            <OrdenMisionForm onSubmit={onSubmit}/>
+            { loading && <Loader />}
+            { !loading && <OrdenMisionForm onSubmit={onSubmit}/>}
         </div>
     );
 }

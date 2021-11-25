@@ -1,35 +1,46 @@
 
-import React, { useEffect } from 'react';
+import React, { useState } from 'react';
 import UsuariosForm from './UsuariosForm';
 import { history} from '../../../router/AppRouter';
 
+import Loader from '../../Loader';
+
+import { AxiosExpenseApi } from '../../../utils/axiosApi';
+
 const UsuariosAdd = () => {
 
-    let usuarios = [];
-
-    useEffect( ()=> {
-
-        // retrieves ordenes from localStorage
-        const localData = JSON.parse(localStorage.getItem('usuarios'))
-        if( localData ) {
-            usuarios = localData;
-
-        } 
-        //////
-
-    },[]);
+    const [loading, setLoading] = useState(false);
 
     const onSubmit = (data) => {
 
-        usuarios.push(data);
-        localStorage.setItem('usuarios', JSON.stringify(usuarios));
-        history.push('/usuarios');
+        setLoading(true);
+        const axiosApi = AxiosExpenseApi();
+        
+        axiosApi.post('/usuarios',{
+            ...data
+        }).then( (res) =>{
+            
+            axiosApi.get('usuarios').then( res =>{
+                console.log(res.data);
+            }).catch(e =>{
+                alert(e);
+            });
+            history.push('/usuarios');
+
+        }).catch( e =>{
+            alert(e);
+        }).finally( ()=>{
+            setLoading(false);
+        })
+
+
     }
 
     return (
         <div>
             <h1>Nuevo Usuario</h1>
-            <UsuariosForm onSubmit={onSubmit}/>
+            { loading && <Loader />}
+            { !loading && <UsuariosForm onSubmit={onSubmit}/>}
         </div>
     );
 }

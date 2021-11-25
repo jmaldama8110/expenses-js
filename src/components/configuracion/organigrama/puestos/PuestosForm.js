@@ -24,7 +24,6 @@ const PuestosForm = ( { onSubmit, puesto} )=> {
     const [loading,setLoading] = useState(false);
     
     useEffect( ()=>{
-
         let mounted = true;
 
         if( mounted ){
@@ -33,8 +32,13 @@ const PuestosForm = ( { onSubmit, puesto} )=> {
 
             axiosApi.get('/deptos').then( (res) =>{
                 const lsDeptos = res.data;
+                lsDeptos.unshift({
+                    _id: "",
+                    titulo: "Departamento"
+                });
+
                 setDeptos(lsDeptos);
-                setDeptoId("NA");
+                setDeptoId("");
     
             }).catch( (e)=>{
                     alert(e);
@@ -45,8 +49,12 @@ const PuestosForm = ( { onSubmit, puesto} )=> {
             setLoading(true);
             axiosApi.get('/puestos').then( (res) =>{
                 const lsPuestos = res.data;
+                lsPuestos.unshift({
+                    _id: "",
+                    titulo: "Puesto"
+                })
                 setPuestos(lsPuestos);
-                setParentId("NA");
+                setParentId("");
             }).catch( (e)=>{
                     alert(e);
             }).finally( ()=>{
@@ -65,8 +73,6 @@ const PuestosForm = ( { onSubmit, puesto} )=> {
 
                 setIsRoot(puesto.isroot);
                 setAsignado(puesto.asignado);
-
-                
             }
         }
 
@@ -97,6 +103,7 @@ const PuestosForm = ( { onSubmit, puesto} )=> {
                 type="text"
                 placeholder="Titulo del puesto"
                 value={titulo}
+                required
                 onChange={ (e) => setTitulo(e.target.value)}
             ></input>
 
@@ -125,10 +132,12 @@ const PuestosForm = ( { onSubmit, puesto} )=> {
 
            <p>Departamento</p>
             <select
+                    required
                     value={deptoId} 
                     onChange={ (e)=> {
                             setDeptoId(e.target.value);
                             setDepto(e.target.options[e.target.selectedIndex].text);
+                        
                     } }
                     >
                 {
@@ -146,7 +155,8 @@ const PuestosForm = ( { onSubmit, puesto} )=> {
             <div>
                 <p>Jefe inmediato</p>
                 <select 
-                        value={parentId} 
+                        required
+                        value={parentId}
                         onChange={ (e)=> {
                                 setParentId(e.target.value);
                                 setParent(e.target.options[e.target.selectedIndex].text);

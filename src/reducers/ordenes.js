@@ -7,7 +7,7 @@ const OrdenesReducer = (state, action) => {
             return [
                 ...state,
                 {
-                    folio: action.folio,
+                    _id: action._id,
                     fecha_aplicacion: action.fecha_aplicacion,
                     empleado: action.empleado,
                     centro_costo: action.centro_costo,
@@ -25,7 +25,7 @@ const OrdenesReducer = (state, action) => {
                 }
             ]
         case 'REMOVE_ORDEN':
-            return state.filter( orden => orden.folio !== action.folio)
+            return state.filter( orden => orden._id !== action._id)
         default:
             return state
     }

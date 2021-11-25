@@ -11,7 +11,7 @@ const OrdenMisionLista = () => {
             {
             ordenes.map( item => 
                     <OrdenMisionItem 
-                    key={item.folio}
+                    key={item._id}
                     item={item}
                 /> )
             }

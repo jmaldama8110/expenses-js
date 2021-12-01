@@ -1,11 +1,14 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useReducer } from 'react';
 import { Link } from 'react-router-dom';
 
 import Loader from '../Loader';
 import { AxiosExpenseApi, getUsuarioSession } from '../../utils/axiosApi';
 import AnticiposHome from './anticipos/AnticiposHome';
+import AnticiposReducer from '../../reducers/anticipos';
+import AutorizacionesReducer from '../../reducers/autorizaciones';
 
 import ExpensesContext from '../../context/ExpensesContext';
+import AutorizacionesHome from './autorizaciones/AutorizacionesHome';
 
 const OrdenMisionForm = ( { onSubmit, orden} )=> {
 
@@ -33,7 +36,9 @@ const OrdenMisionForm = ( { onSubmit, orden} )=> {
     const [estatusId, setEstatusId] = useState("");
     const [estatus, setEstatus] = useState("");
 
-    const [anticipos,setAnticipos ] = useState([]);
+    const [ anticipos, dispatchAnticipos ] = useReducer(AnticiposReducer, []);
+    const [ autorizaciones, dispatchAutorizaciones ] = useReducer( AutorizacionesReducer, []);
+
 
     const Guardar = (e)=> {
         e.preventDefault();
@@ -47,11 +52,14 @@ const OrdenMisionForm = ( { onSubmit, orden} )=> {
             fecha_hasta,
             transporte,
             descripcion,
-            estatus: !orden ? ['P','Pendiente'] : [estatusId,estatus],
+            anticipos,
+            autorizaciones,
+            estatus: !orden ? ['P','Pendiente'] : [estatusId,estatus]
         }
         onSubmit(data);
 
     }
+
 
     useEffect( ()=> {
 
@@ -73,13 +81,18 @@ const OrdenMisionForm = ( { onSubmit, orden} )=> {
                     setCentrosCosto(cc);
 
                     const uss = await axiosApi.get('/usuarios');
-                    setUsuariosEmpleados(uss.data);
 
+                    /// trae unicamente usuario dentro de este mismo departamento
+                    const currentDepto = getUsuarioSession().info.depto[0];
+                    if( currentDepto ){
+                        setUsuariosEmpleados(uss.data.filter( i => i.depto[0] === currentDepto ));
+                    }
+                    
                     if(orden){
-
+                        /// EDIT orden has been called
                         setFechaAplicacion(orden.fecha_aplicacion);
                         setDescripcion(orden.descripcion);
-                        setTransporte(orden.transporte);  
+                        setTransporte(orden.transporte);
                         setFechaDesde(orden.fecha_desde);
                         setFechaHasta(orden.fecha_hasta);
              
@@ -101,15 +114,51 @@ const OrdenMisionForm = ( { onSubmit, orden} )=> {
                             setEstatusId( orden.estatus[0]);
                             setEstatus(orden.estatus[1]);    
                         }
-                        if( orden.movimientos) {
-                            console.log(orden.movimientos);
-                            setAnticipos(orden.movimientos);
+                        if( orden.anticipos) {
+                            dispatchAnticipos({
+                                type: 'POPULATE_ANTICIPOS',
+                                anticipos: orden.anticipos
+                            })
+                        }
+
+                        if( orden.autorizaciones ){
+                            dispatchAutorizaciones({
+                                type: 'POPULATE_AUTORIZACIONES',
+                                autorizaciones: orden.autorizaciones
+                            })
                         }
              
                     } else {
+
+                        //// NUEVA orden has been called
                         const usu = getUsuarioSession();
                         setEmpleadoId( usu.info._id );
-                        setEmpleado(`${usu.info.nombre} ${usu.info.apellido_paterno} ${usu.info.apellido_materno}`)
+                        setEmpleado(`${usu.info.nombre} ${usu.info.apellido_paterno} ${usu.info.apellido_materno}`);
+
+                        const ussTmp = await axiosApi.get('/usuarios');
+
+                        const autA = ussTmp.data.find( i => i.nivel_autorizacion === 'A');
+                        const autB = ussTmp.data.find( i => i.nivel_autorizacion === 'B');
+
+                        if( autB ){
+                            dispatchAutorizaciones({
+                                type: "ADD_AUTORIZACION",
+                                usuario_id: autB._id,
+                                nombre_autorizador: `${autB.nombre} ${autB.apellido_paterno} ${autB.apellido_materno}`,
+                                nivel_autorizacion: autB.nivel_autorizacion,
+                                estatus: [ 'P', 'Pendiente']
+                            });
+                        }
+                        if( autA ){
+                            dispatchAutorizaciones({
+                                type: "ADD_AUTORIZACION",
+                                usuario_id: autA._id,
+                                nombre_autorizador: `${autA.nombre} ${autA.apellido_paterno} ${autA.apellido_materno}`,
+                                nivel_autorizacion: autA.nivel_autorizacion,
+                                estatus: [ 'P', 'Pendiente']
+                            });
+                        }
+
                     }
                 setLoading(false);
                 }
@@ -245,10 +294,15 @@ const OrdenMisionForm = ( { onSubmit, orden} )=> {
                         ></textarea>
                         
                         <div>
-                            <ExpensesContext.Provider value= {{ anticipos }}>
+                            <ExpensesContext.Provider value= {{ anticipos, dispatchAnticipos }}>
                                 <AnticiposHome />
                             </ExpensesContext.Provider>
 
+                        </div>
+                        <div>
+                            <ExpensesContext.Provider value= {{autorizaciones, dispatchAutorizaciones}}>
+                                <AutorizacionesHome />
+                            </ExpensesContext.Provider>
                         </div>
                     
                     </div>

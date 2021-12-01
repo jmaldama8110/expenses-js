@@ -1,42 +1,22 @@
-import React, { useContext } from "react";
-import ExpenseContext from '../../../context/ExpensesContext';
-
-
+import React, {useState } from "react";
+import AnticiposLista from "./AnticiposLista";
+import AnticiposAdd from "./AnticiposAdd";
 const AnticiposHome = () => {
-    
-    const { anticipos } = useContext(ExpenseContext); 
 
+    const [registrar, setRegistrar] = useState(false);
+
+    const onRegistrar = (e) => {
+        e.preventDefault();
+        setRegistrar( !registrar );
+    }
+    
     return (
         <div>
-            <h3>Anticipos </h3>
-            <div>
-                {
-                    anticipos.map( (ant,i) => <p key={i}>+ {ant.importe} {ant.concepto} </p>)
-                }
-            </div>
-            <form>
-                <label>Fecha Aplicacion</label>
-                <input 
-                    type="date"
-                ></input>
-                <label>Tipo</label>
-                <select>
-                    <option>Anticipo</option>
-                    <option>Devolucion</option>
-                </select>
-                <label>Importe</label>
-                <input 
-                    type="text"
-                ></input>
-                <label>Concepto</label>
-                <input 
-                    type="text"
-                ></input>
-                <button>Agregar</button>
-            </form>
-
+            <h3>Anticipos & Reembolsos</h3>
+            <AnticiposLista />
+            <button onClick={onRegistrar}>+</button>
+            {registrar && <AnticiposAdd />}
         </div>
-
     );
 }
 

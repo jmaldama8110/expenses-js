@@ -32,19 +32,6 @@ const UsuariosEdit = ({ match })=> {
 
     const OnSubmit = (data) => {
         
-        // const new_usuarios = usuarios.map( usu =>{
-        //     if( usu.id === data.id) {
-        //         return {
-        //             ...usu,
-        //             ...data
-        //         }
-        //     }
-        //     else{
-        //         return usu;
-        //     }
-        // });
-
-        // localStorage.setItem('usuarios', JSON.stringify(new_usuarios));
         history.push('/usuarios');
 
     }

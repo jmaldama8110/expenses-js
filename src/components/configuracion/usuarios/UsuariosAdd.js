@@ -19,13 +19,20 @@ const UsuariosAdd = () => {
         axiosApi.post('/usuarios',{
             ...data
         }).then( (res) =>{
-            
-            axiosApi.get('usuarios').then( res =>{
-                console.log(res.data);
-            }).catch(e =>{
-                alert(e);
-            });
-            history.push('/usuarios');
+
+            if( res.data.usuario.puesto ){
+                const puesto_id = res.data.usuario.puesto[0];
+
+                axiosApi.patch(`/puestos/${puesto_id}`,{
+                    asignado: true
+                }).then( res =>{
+                    history.push('/usuarios');
+                }).catch( e => {
+                    alert(e);
+                });
+                    
+            }
+
 
         }).catch( e =>{
             alert(e);

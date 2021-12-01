@@ -18,7 +18,7 @@ import DeptosAdd from '../components/configuracion/organigrama/deptos/DeptosAdd'
 import DeptosEdit from '../components/configuracion/organigrama/deptos/DeptosEdit';
 
 import Pago from '../components/configuracion/pago/Pago';
-import Esquemas from '../components/configuracion/esquemas/Esquemas';
+
 
 import EmpresasHome from '../components/configuracion/empresas/EmpresasHome';
 import EmpresasAdd from '../components/configuracion/empresas/EmpresasAdd';
@@ -62,7 +62,6 @@ const AppRouter = () => (
             <PrivateRoute path="/usuariosadd" component={UsuariosAdd} exact={true} />
             <PrivateRoute path="/usuariosedit/:id" component={UsuariosEdit} exact={true} />
             <PrivateRoute path="/metodopago" component={Pago} exact={true} />
-            <PrivateRoute path="/esquemas" component={Esquemas} exact={true} />
 
             <PrivateRoute path="/empresas" component={EmpresasHome} exact={true} />
             <PrivateRoute path="/empresasadd" component={EmpresasAdd} exact={true} />

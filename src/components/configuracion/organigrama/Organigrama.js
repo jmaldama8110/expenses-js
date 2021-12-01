@@ -11,9 +11,10 @@ const Organigrama = () => {
     const [ loading, setLoading ] = useState(false);
 
     class TreeNode {
-        constructor(id,titulo){
+        constructor(id,titulo,asignado){
             this.id = id;
             this.titulo = titulo;
+            this.asignado = asignado;
             this.hijos = [];
         }
     }
@@ -35,11 +36,13 @@ const Organigrama = () => {
 
             if( nodo.hijos.length ){
 
-                label.textContent = nodo.titulo;
+                label.textContent = `${nodo.titulo}`;
+                label.style.cssText = !nodo.asignado ? 'font-style: italic;' : '';
 
                 span.classList.toggle("caret");
                 span.addEventListener("click",handleClick);
                 ul.classList.toggle("nested");
+
                 
                 ul.classList.toggle("active");
                 span.classList.toggle("caret-down");
@@ -54,6 +57,7 @@ const Organigrama = () => {
             } else {
                 
                 label.textContent = nodo.titulo;
+                label.style.cssText = !nodo.asignado ? 'font-style: italic;' : '';
                 li.appendChild(label);
                 contenedor.appendChild(li);
             }
@@ -80,20 +84,21 @@ const Organigrama = () => {
                 const puestos = lsPuestos.map( (i) => {
                     return {
                         id: i._id,
+                        asignado: i.asignado,
                         titulo: i.titulo,
                         padre: i.parent[0]
                     } 
                 });
 
                 const setHijos = ( nodo ) => {
-                    const h = puestos.filter( (i) => i.padre === nodo.id ).map( (obj) => new TreeNode(obj.id,obj.titulo));
+                    const h = puestos.filter( (i) => i.padre === nodo.id ).map( (obj) => new TreeNode(obj.id,obj.titulo, obj.asignado));
                     nodo.hijos.push(...h);
                     h.forEach( (hijo) => setHijos(hijo) );
                 }
         
                 if( puestos )
                 {
-                    const root = new TreeNode( puestos[0].id, puestos[0].titulo );
+                    const root = new TreeNode( puestos[0].id, puestos[0].titulo, true );
                     setHijos(root);
                     construirArbolHTML([root], contenedor);
                 }

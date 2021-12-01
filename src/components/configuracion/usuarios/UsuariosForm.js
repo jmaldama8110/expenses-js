@@ -18,6 +18,9 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
     const [puestoId, setPuestoId] = useState('');
     const [puesto, setPuesto] = useState('');
 
+    const [deptoId, setDeptoId] = useState('');
+    const [depto, setDepto] = useState('');
+
     const [renovarPass, setRenovarPass] = useState(true);   
 
     const [nivelAut, setNivelAut] = useState("A");
@@ -65,6 +68,7 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
                     setPuestoId(usuario.puesto[0])
                     setPuesto(usuario.puesto[1])
                 }
+
                 if( usuario.empresas) {
                     setEmpresas(usuario.empresas);
                 }        
@@ -89,8 +93,9 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
             email,
             password: passwordA,
             renovar_password: renovarPass,
-            // nivel_autorizacion: nivelAut,
+            nivel_autorizacion: nivelAut,
             puesto: [puestoId, puesto],
+            depto: [deptoId, depto],
             empresas
         }
 
@@ -154,42 +159,71 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
                 </p>}
 
             <div className="field">
-                <p>Informacion del Empleado</p>
+                <p>Nivel del Empleado</p>
+
+                <label htmlFor='nivelninguno'>
                 <input
-                    id="requiereaut"
-                    type="radio"
-                    value="A"
-                    name="nivelautoridad"
-                    checked={ nivelAut === "A"}
-                    onChange={ (e)=> setNivelAut(e.target.value)}
-                >
-                </input> <label htmlFor='requiereaut'>Es empleado</label> 
-                <input
-                    id="norequiereaut"
+                    id="nivelninguno"
                     type="radio"
                     value="X"
                     name="nivelautoridad"
                     checked={ nivelAut === "X"}
                     onChange={ (e)=> setNivelAut(e.target.value)}
                 >
-                </input> <label htmlFor='norequiereaut'>No es empleado</label>
-                { nivelAut === "A" &&
-                <select
-                    value={puestoId}
-                    onChange={ e =>{
-                        setPuestoId(e.target.value);
-                        setPuesto( e.target.options[e.target.selectedIndex].text );
+                </input>Niguno</label> 
 
-                    }}
+                <label htmlFor='nivelA'>
+                <input
+                    id="nivelA"
+                    type="radio"
+                    value="A"
+                    name="nivelautoridad"
+                    checked={ nivelAut === "A"}
+                    onChange={ (e)=> setNivelAut(e.target.value)}
                 >
-                    {
-                        puestos.map( p =>   <option
-                                                key={p._id}
-                                                value={p._id}
-                                            >{p.titulo}
-                                            </option>)
-                    }
-                </select> }
+                </input>Nivel A</label>
+
+                <label htmlFor='nivelB'>
+                <input
+                    id="nivelB"
+                    type="radio"
+                    value="B"
+                    name="nivelautoridad"
+                    checked={ nivelAut === "B"}
+                    onChange={ (e)=> setNivelAut(e.target.value)}
+                >
+                </input>Nivel B</label>
+
+                <p>
+                    <select
+                        value={puestoId}
+                        onChange={ e =>{
+                            setPuestoId(e.target.value);
+                            setPuesto( e.target.options[e.target.selectedIndex].text );
+                            const deptoTmp = puestos.find( i => i._id === e.target.value );
+                            setDeptoId('');
+                            setDepto('');
+                            if( deptoTmp.depto ){
+                                setDeptoId( deptoTmp.depto[0] );
+                                setDepto( deptoTmp.depto[1] );
+                            }
+                        }}
+                    >
+                        {
+                            puestos.map( p =>   <option
+                                                    key={p._id}
+                                                    value={p._id}
+                                                >{p.titulo}
+                                                </option>)
+                        }
+                    </select>
+                    <p>
+                    Pertenece A - <strong>{depto}</strong>
+                    </p>
+
+                </p>
+
+
                 <div>
                     
                     <h3>Empresas permitidas:</h3>

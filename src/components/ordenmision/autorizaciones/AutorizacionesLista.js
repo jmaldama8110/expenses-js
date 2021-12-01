@@ -1,19 +1,19 @@
 import React, { useContext } from "react";
 import ExpensesContext from "../../../context/ExpensesContext";
-import AnticiposItem from './AnticiposItem';
+import AutorizacionesItem from './AutorizacionesItem';
 
-const AnticiposLista = () => {
+const AutorizacionesLista = () => {
 
-    const { anticipos } = useContext(ExpensesContext);
+    const { autorizaciones } = useContext(ExpensesContext);
 
     return (
             <div>
                 {
-                    anticipos.map( (item,i) => <AnticiposItem key={i} 
+                    autorizaciones.map( (item,i) => <AutorizacionesItem key={i} 
                                                             item={item}
                                                             />)
                 }
             </div>    );
 }
 
-export { AnticiposLista as default };
+export { AutorizacionesLista as default };

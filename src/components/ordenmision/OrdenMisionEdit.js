@@ -44,6 +44,7 @@ const OrdenMisionEdit = ( { match } ) => {
     const OnSubmit = async (data) => {
         try {
             setLoading(true);
+            
             const axiosApi = AxiosExpenseApi();
             await axiosApi.patch(`/ordenes/${match.params.id}`, { ...data });
             setLoading(false);

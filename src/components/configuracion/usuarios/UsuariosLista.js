@@ -13,6 +13,7 @@ const UsuariosLista = () => {
                 <p className="headerlabel">id</p>
                 <p className="headerlabel">nombre</p>
                 <p className="headerlabel">email</p>
+                <p className="headerlabel">puesto</p>
 
             </div>
             {

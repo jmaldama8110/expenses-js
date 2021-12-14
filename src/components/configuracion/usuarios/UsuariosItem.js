@@ -18,9 +18,10 @@ const UsuariosItem = ({usuario}) => {
         <Link to={`/usuariosedit/${usuario._id}`}>
                 <div className="gridflex">
                     <p><button onClick={onEliminar}>x</button></p>
-                    <p>{usuario.id}</p>
                     <p>{usuario.nombre}</p>
                     <p>{usuario.email}</p>
+                    <p>{usuario.puesto[1]}</p>
+                    <p>{usuario.depto[1]}</p>
                 </div>
         </Link>
 

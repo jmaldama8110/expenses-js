@@ -83,7 +83,7 @@ const Header = () => {
             <div className="dropdown" data-dropdown>
                 <button className="link" data-dropdown-button>Mis Preferencias</button>
                 <div className="dropdown-menu">
-                    <Link className="link" to="/profile">Preferencias</Link>
+                    <Link className="link" to="/preferences">Preferencias</Link>
                     <button className="link" onClick={handleCerrarSesion}>Cerrar Sesion</button>
                 </div> 
             </div>

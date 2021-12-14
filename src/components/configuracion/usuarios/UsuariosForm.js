@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
 import Loader from '../../Loader';
-import { AxiosExpenseApi } from '../../../utils/axiosApi';
+import { AxiosExpenseApi, generatePassword } from '../../../utils/axiosApi';
 
 const UsuariosForm = ( { onSubmit, usuario} )=> {
 
@@ -21,12 +21,19 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
     const [deptoId, setDeptoId] = useState('');
     const [depto, setDepto] = useState('');
 
+    const [centrocostoId, setCentroCostoId] = useState('');
+    const [centroCosto, setCentroCosto] = useState('');
+
+    const [esquemaId, setEsquemaId] = useState('');
+    const [esquema, setEsquema] = useState('');
+    
+    const [puedeCambiarEsquema, setPuedeCambiarEsquema] = useState(false);
+
     const [renovarPass, setRenovarPass] = useState(true);   
 
     const [nivelAut, setNivelAut] = useState("A");
 
     const [puestos, setPuestos] = useState([]);
-
     const [empresas, setEmpresas] = useState([]);
 
 
@@ -42,6 +49,7 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
                 _id: "",
                 titulo: "Puesto del empleado"
             });
+
             setPuestos(temp);
 
         }).catch(e =>{
@@ -63,6 +71,7 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
                 setEmail(usuario.email);
                 setNivelAut( usuario.nivel_autorizacion );
                 setRenovarPass( usuario.renovar_password);
+                setPuedeCambiarEsquema( usuario.puedeCambiarEsquema);
     
                 if( usuario.puesto ){
                     setPuestoId(usuario.puesto[0])
@@ -72,6 +81,13 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
                 if( usuario.empresas) {
                     setEmpresas(usuario.empresas);
                 }        
+            }
+            else {
+                /// runs only when we are adding a new usuario
+                const randpass = generatePassword(6);
+                setPasswordA(randpass);
+                setPasswordB(randpass);
+
             }
 
         }).catch( e => {
@@ -85,18 +101,29 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
 
     const onGuardar = (e)=> {
         e.preventDefault();
+
+        const empresa_default = {
+            id: empresas[0][0],
+            nombre: empresas[0][1]
+        }
         
         const data = {
-            nombre: nombre,
+            nombre,
             apellido_paterno,
             apellido_materno,
             email,
             password: passwordA,
             renovar_password: renovarPass,
+            puede_cambiar_esquema: puedeCambiarEsquema,
             nivel_autorizacion: nivelAut,
             puesto: [puestoId, puesto],
             depto: [deptoId, depto],
-            empresas
+            centrocosto:[centrocostoId, centroCosto],
+            esquema: [ esquemaId, esquema],
+            empresas,
+            preferences: {
+                ...empresa_default
+            }
         }
 
         onSubmit(data);
@@ -141,8 +168,18 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
                 ></input>
                 <label htmlFor="renovarpass">Solcitar nueva contrasena al iniciar</label>
                 <br/>
+                <input
+                    id="puedecambiaresquema"
+                    type="checkbox"
+                    
+                    checked={ puedeCambiarEsquema }
+                    onChange={ e => setPuedeCambiarEsquema(e.target.checked) }
+                       
+                ></input>
+                <label htmlFor="puedecambiaresquema">Permitir cambiar esquema</label>
+                <br/>
 
-                {!renovarPass && 
+                
                 <p>
                     <label>Contraseña</label>
                     <input
@@ -150,13 +187,17 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
                         value={passwordA}
                         onChange={e => setPasswordA(e.target.value)}
                     ></input>
-                    <label>Repetir Contraseña</label>
-                    <input
+                    
+                   {!usuario && <input
                         type="password"
                         value={passwordB}
                         onChange={e => setPasswordB(e.target.value)}
-                    ></input>
-                </p>}
+                    ></input>}
+
+                    {!usuario && <div>
+                        Password temporal:<strong>{passwordA}</strong>
+                    </div>}
+                </p>
 
             <div className="field">
                 <p>Nivel del Empleado</p>
@@ -198,14 +239,25 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
                     <select
                         value={puestoId}
                         onChange={ e =>{
+
                             setPuestoId(e.target.value);
                             setPuesto( e.target.options[e.target.selectedIndex].text );
-                            const deptoTmp = puestos.find( i => i._id === e.target.value );
+                            
+                            const puestoTmp = puestos.find( i => i._id === e.target.value );
+                        
                             setDeptoId('');
                             setDepto('');
-                            if( deptoTmp.depto ){
-                                setDeptoId( deptoTmp.depto[0] );
-                                setDepto( deptoTmp.depto[1] );
+
+                            if( puestoTmp.depto ){
+                                setDeptoId( puestoTmp.depto[0] );
+                                setDepto( puestoTmp.depto[1] );
+
+                                setCentroCostoId( puestoTmp.centrocosto[0] );
+                                setCentroCosto( puestoTmp.centrocosto[1] );
+
+                                setEsquemaId( puestoTmp.esquema[0] );
+                                setEsquema( puestoTmp.esquema[1] );
+
                             }
                         }}
                     >
@@ -217,10 +269,6 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
                                                 </option>)
                         }
                     </select>
-                    <p>
-                    Pertenece A - <strong>{depto}</strong>
-                    </p>
-
                 </p>
 
 
@@ -252,7 +300,7 @@ const UsuariosForm = ( { onSubmit, usuario} )=> {
                                                     ></input>{emp[1]}</label>)
                     }
 
-                    <p></p>
+                    
 
                 </div>
         

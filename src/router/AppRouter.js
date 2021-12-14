@@ -6,6 +6,7 @@ import OrdenMisionAdd from '../components/ordenmision/OrdenMisionAdd';
 import Home from '../components/Home';
 import GeneralConfig from '../components/configuracion/general/GeneralConfig';
 import Organigrama from '../components/configuracion/organigrama/Organigrama';
+import Preferences from '../components/preferences/Preferences';
 
 import UsuariosHome from '../components/configuracion/usuarios/UsuariosHome';
 import UsuariosAdd from '../components/configuracion/usuarios/UsuariosAdd';
@@ -25,7 +26,10 @@ import EmpresasAdd from '../components/configuracion/empresas/EmpresasAdd';
 import EmpresasEdit from '../components/configuracion/empresas/EmpresasEdit';
 
 import CentroCosto from '../components/configuracion/centrocosto/CentroCosto';
-import OrdenMisionComprobacion from '../components/comprobacion/OrdenMisionComprobacion';
+
+import EsquemasHome from '../components/configuracion/esquemas/EsquemasHome';
+import EsquemasEdit from '../components/configuracion/esquemas/EsquemasEdit';
+import EsquemasAdd from '../components/configuracion/esquemas/EsquemasAdd';
 
 import { createBrowserHistory } from "history";
 import OrdenMisionEdit from '../components/ordenmision/OrdenMisionEdit';
@@ -46,9 +50,9 @@ const AppRouter = () => (
             <PrivateRoute path="/home" component={Home} exact={true} />
             <PrivateRoute path="/add" component={OrdenMisionAdd} exact={true} />
             <PrivateRoute path="/edit/:id" component={OrdenMisionEdit} exact={true} />
-            <PrivateRoute path="/comprobacion" component={OrdenMisionComprobacion} exact={true} />
             
             <PrivateRoute path="/generalconfig" component={GeneralConfig} exact={true} />
+            <PrivateRoute path="/preferences" component={Preferences} exact={true} />
 
             <PrivateRoute path="/organigrama" component={Organigrama} exact={true} />
 
@@ -69,6 +73,10 @@ const AppRouter = () => (
 
 
             <PrivateRoute path="/centrocosto" component={CentroCosto} exact={true} />
+
+            <PrivateRoute path="/esquemas" component={EsquemasHome} exact={true} />
+            <PrivateRoute path="/esquemasadd" component={EsquemasAdd} exact={true} />
+            <PrivateRoute path="/esquemasedit/:id" component={EsquemasEdit} exact={true} />
       
             <PublicRoute path="/" component={Login} exact={true} />
             

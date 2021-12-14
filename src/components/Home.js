@@ -1,7 +1,6 @@
 import React, { useEffect, useReducer, useState } from 'react';
 
 import OrdenMisionLista from './ordenmision/OrdenMisionLista';
-import OrdenMisionFiltro from './ordenmision/OrdenMisionFiltro';
 
 import ordenesReducer from '../reducers/ordenes';
 import ExpensesContext from '../context/ExpensesContext';
@@ -16,14 +15,17 @@ const Home = () => {
     const [ordenes, dispatchOrdenes ] = useReducer(ordenesReducer,[]);
 
     const [usuario, setUsuario ] = useState('');
+    const [empresa_actual, setEmpresaActual] = useState('');
     const [loading, setLoading] = useState(false);
 
     useEffect( ()=>{
 
-
         const localSession = JSON.parse(sessionStorage.getItem('usuario'));
         setUsuario(localSession.info.nombre);
-    
+
+        if( localSession.info.preferences ){
+            setEmpresaActual( localSession.info.preferences.empresa_default );
+        }
         setLoading(true);
         const axiosApi = AxiosExpenseApi();
         axiosApi.get('/ordenes').then( res => {
@@ -39,7 +41,6 @@ const Home = () => {
 
     },[]);
 
-
     return (
         <div>
         <Header />
@@ -47,7 +48,10 @@ const Home = () => {
             { !loading&&
             <div>
                 <h1>Hola {usuario}, busca tus misiones!</h1>
-                <ExpensesContext.Provider value={ { ordenes, dispatchOrdenes,usuario }}>
+                <p>Ambiente: { empresa_actual ? <strong><label>{empresa_actual.nombre}</label></strong>
+                                        : <strong> <label>No hay una empresa predeterminada</label></strong>}</p>
+
+                <ExpensesContext.Provider value={ { ordenes, dispatchOrdenes }}>
                     <OrdenMisionLista />
                 </ExpensesContext.Provider>
 

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 
-import { AxiosExpenseApi } from '../../../../utils/axiosApi';
+import { AxiosExpenseApi, getUsuarioSession } from '../../../../utils/axiosApi';
 import Loader from '../../../Loader';
 
 const PuestosForm = ( { onSubmit, puesto} )=> {
@@ -14,66 +14,102 @@ const PuestosForm = ( { onSubmit, puesto} )=> {
     const [parentId, setParentId] = useState('');
     const [parent, setParent] = useState('');
 
+    const [esquemaId, setEsquemaId] = useState('');
+    const [esquema,setEsquema] = useState('');
+
+    const [centroCostoId, setCentroCostoId] = useState('');
+    const [centroCosto, setCentroCosto] = useState('');
+    
     const [isroot, setIsRoot] = useState(false);
     
     const [asignado, setAsignado] = useState(false);
 
     const [deptos, setDeptos] = useState([]);
     const [puestos, setPuestos] = useState([]);
+    const [esquemas, setEsquemas] = useState([]);
+    const [centroscosto, setCentrosCosto] = useState([]);
+
 
     const [loading,setLoading] = useState(false);
     
     useEffect( ()=>{
         let mounted = true;
 
-        if( mounted ){
-            setLoading(true);
-            const axiosApi = AxiosExpenseApi();
+        const loadData = async () => {
 
-            axiosApi.get('/deptos').then( (res) =>{
+
+            const axiosApi = AxiosExpenseApi();
+            const uss = getUsuarioSession();
+            
+            try {
+
+                setLoading(true);
+                const res = await axiosApi.get('/deptos');
                 const lsDeptos = res.data;
                 lsDeptos.unshift({
                     _id: "",
                     titulo: "Departamento"
                 });
-
                 setDeptos(lsDeptos);
                 setDeptoId("");
-    
-            }).catch( (e)=>{
-                    alert(e);
-            }).finally( ()=>{
-                setLoading(false);
-            });
 
-            setLoading(true);
-            axiosApi.get('/puestos').then( (res) =>{
-                const lsPuestos = res.data;
+                const res2 = await axiosApi.get('/puestos');
+                const lsPuestos = res2.data;
+
                 lsPuestos.unshift({
-                    _id: "",
-                    titulo: "Puesto"
-                })
+                        _id: "",
+                        titulo: "Puesto"
+                });
+
                 setPuestos(lsPuestos);
                 setParentId("");
-            }).catch( (e)=>{
-                    alert(e);
-            }).finally( ()=>{
-                setLoading(false);
-            })
-            
-            if(puesto){
 
-                setTitulo(puesto.titulo);
+                const res3 = await axiosApi.get(`/esquemas/${uss.info.preferences.empresa_default.id}`);
+                const esqTmp = res3.data;
+                esqTmp.unshift({
+                    _id: "",
+                    descripcion: "Esquema Contable"
+                });
+                setEsquemas(esqTmp);
+
+                const res4 = await axiosApi.get('/centroscosto');
+                const ccsTmp = res4.data;
+                ccsTmp.unshift({
+                    _id: "",
+                    nombre: "Centro de Costo"
+                })
+                setCentrosCosto(ccsTmp);
                 
-                setDeptoId( puesto.depto[0]);
-                setDepto( puesto.depto[1]);
+                if(puesto){
+    
+                    setTitulo(puesto.titulo);
+        
+                    setDeptoId( puesto.depto[0]);
+                    setDepto( puesto.depto[1]);
+    
+                    setParentId( puesto.parent[0]);
+                    setParent( puesto.parent[1]);
 
-                setParentId( puesto.parent[0]);
-                setParent( puesto.parent[1]);
+                    setEsquemaId(puesto.esquema[0]);
+                    setEsquema( puesto.esquema[1]);
 
-                setIsRoot(puesto.isroot);
-                setAsignado(puesto.asignado);
+                    setCentroCostoId( puesto.centrocosto[0]);
+                    setCentroCosto( puesto.centrocosto[1]);
+    
+                    setIsRoot(puesto.isroot);
+                    setAsignado(puesto.asignado);
+                }
+                setLoading(false);
+
             }
+            catch(e){
+                alert(e);
+            }
+
+        }
+
+        if( mounted ){
+            loadData();               
         }
 
         return () => mounted = false;
@@ -85,6 +121,8 @@ const PuestosForm = ( { onSubmit, puesto} )=> {
         const data = {
             titulo: titulo,
             depto: [deptoId,depto],
+            esquema: [esquemaId, esquema],
+            centrocosto: [centroCostoId, centroCosto],
             parent: [parentId, parent],
             isroot: isroot,
             asignado: asignado
@@ -146,6 +184,47 @@ const PuestosForm = ( { onSubmit, puesto} )=> {
                                             value={d._id}
                                         >
                                         {`${d.titulo}`}
+                                        </option>)
+                }
+
+            </select>
+
+            <p>Esquema Contable</p>
+            <select
+                    required
+                    value={esquemaId} 
+                    onChange={ (e)=> {
+                            setEsquemaId(e.target.value);
+                            setEsquema(e.target.options[e.target.selectedIndex].text);
+                        
+                    } }
+                    >
+                {
+                    esquemas.map( esq =>    <option
+                                            key={esq._id}
+                                            value={esq._id}
+                                        >
+                                        {`${esq.descripcion}`}
+                                        </option>)
+                }
+
+            </select>
+            <p>Centro de Costos</p>
+            <select
+                    required
+                    value={centroCostoId} 
+                    onChange={ (e)=> {
+                            setCentroCostoId(e.target.value);
+                            setCentroCosto(e.target.options[e.target.selectedIndex].text);
+                        
+                    } }
+                    >
+                {
+                    centroscosto.map( cc =>    <option
+                                            key={cc._id}
+                                            value={cc._id}
+                                        >
+                                        {`${cc.nombre}`}
                                         </option>)
                 }
 

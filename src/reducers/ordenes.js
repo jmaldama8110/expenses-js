@@ -16,6 +16,7 @@ const OrdenesReducer = (state, action) => {
                     via_transporte: action.via_transporte,
                     descripcion: action.descripcion,
                     anticipos: action.anticipos,
+                    autorizaciones: action.autorizaciones,
                     gastos_total: action.gastos_total,
                     saldo: action.saldo,
                     alimentos: action.alimentos,

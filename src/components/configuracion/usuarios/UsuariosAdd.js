@@ -11,7 +11,7 @@ const UsuariosAdd = () => {
 
     const [loading, setLoading] = useState(false);
 
-    const onSubmit = (data) => {
+    const onSubmit = async (data) => {
 
         setLoading(true);
         const axiosApi = AxiosExpenseApi();
@@ -20,7 +20,9 @@ const UsuariosAdd = () => {
             ...data
         }).then( (res) =>{
 
-            if( res.data.usuario.puesto ){
+            
+            if( res.data.usuario.puesto[0] ){
+                
                 const puesto_id = res.data.usuario.puesto[0];
 
                 axiosApi.patch(`/puestos/${puesto_id}`,{

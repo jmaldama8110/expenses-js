@@ -7,7 +7,7 @@ import Loader from '../../Loader';
 import ExpensesContext from '../../../context/ExpensesContext';
 import CentroCostoReducer from '../../../reducers/centrocosto';
 
-import { AxiosExpenseApi } from '../../../utils/axiosApi';
+import { AxiosExpenseApi,getUsuarioSession } from '../../../utils/axiosApi';
 
 
 const CentroCosto = () => {
@@ -23,10 +23,11 @@ const CentroCosto = () => {
         setLoading(true);
 
         const axiosApi = AxiosExpenseApi();
+        const empresaid = getUsuarioSession().info.preferences.empresa_default.id;
 
         if( axiosApi ){
            
-            axiosApi.get('/centroscosto').then( (res)=>{
+            axiosApi.get(`/centroscosto/${empresaid}`).then( (res)=>{
                 if( res.data ){
                     dispatchCentroCosto( {
                         type: "POPULATE_CC",
@@ -55,6 +56,7 @@ const CentroCosto = () => {
         if( axiosApi ){
 
             axiosApi.post('/centroscosto',{
+                empresa_id: getUsuarioSession().info.preferences.empresa_default.id,
                 nombre: nombre_centro_costo,
                 codigo,
                 activo: true,

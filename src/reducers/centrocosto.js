@@ -8,6 +8,7 @@ const CentroCostoReducer = (state, action) => {
                 ...state,
                 {
                     _id: action._id,
+                    empresa: action.empresa,
                     nombre: action.nombre,
                     codigo: action.codigo,
                     activo: action.activo

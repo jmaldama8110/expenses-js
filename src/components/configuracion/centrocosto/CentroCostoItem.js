@@ -19,6 +19,7 @@ const CentroCostoItem = ({item}) => {
                 <p><button onClick={onEliminar}>x</button></p>
                 <p>{item.codigo}</p>
                 <p>{item.nombre}</p>
+                <p>{item.empresa[1]}</p>
             </div>
 
     );

@@ -7,7 +7,7 @@ import Loader from "../../Loader";
 import ExpensesContext from "../../../context/ExpensesContext";
 import UsuariosReducer from "../../../reducers/usuarios";
 
-import axios from "axios";
+import { AxiosExpenseApi } from "../../../utils/axiosApi";
 
 const UsuariosHome = () => {
 
@@ -17,30 +17,25 @@ const UsuariosHome = () => {
 
     useEffect( ()=>{
     
-        setLoading(true);
+        const loadData = async () => {
 
-        const usuario = JSON.parse( sessionStorage.getItem("usuario") );
-        // obtiene el usuario de la sesion Local, solo si existe, hacemos la peticion
-        if( usuario ){
-            const tokenString = `Bearer ${usuario.token}`;
-            axios.defaults.baseURL = process.env.REACT_APP_BASE_URL_API;
-            axios.defaults.headers.common['Authorization'] = tokenString;
-
-            axios.get('/usuarios').then( (res)=>{
-                if( res.data ){
-                    dispatchUsuarios( {
-                        type: "POPULATE_USUARIOS",
-                        usuarios: res.data
-                    });
-                }
-
-            }).catch( (e)=>{
-                alert(e);
-            }).finally( ()=>{
+            try{
+                setLoading(true);
+                const axiosApi = AxiosExpenseApi();
+                const res = await axiosApi.get('/usuarios/all');
+                dispatchUsuarios({
+                    type: "POPULATE_USUARIOS",
+                    usuarios: res.data
+                })
                 setLoading(false);
-            })
+            }
+            catch(e){
+
+            }
+
         }
-        
+        loadData();
+
 
     },[]);
 

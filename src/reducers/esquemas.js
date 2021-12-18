@@ -8,7 +8,7 @@ const EsquemasReducer = (state, action) => {
                 ...state,
                 {
                     _id: action._id,
-                    empresa_id: action.empresa_id,
+                    empresa: action.empresa,
                     descripcion: action.descripcion,
                     anticipos_cr: action.anticipos_cr,
                     anticipos_ab: action.anticipos_ab,

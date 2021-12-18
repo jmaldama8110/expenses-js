@@ -7,7 +7,7 @@ import Loader from "../../Loader";
 import ExpensesContext from "../../../context/ExpensesContext";
 import EsquemasReducer from '../../../reducers/esquemas';
 
-import { AxiosExpenseApi,getUsuarioSession } from "../../../utils/axiosApi";
+import { AxiosExpenseApi } from "../../../utils/axiosApi";
 
 const EsquemasHome = () => {
 
@@ -23,8 +23,7 @@ const EsquemasHome = () => {
                 setLoading(true);
 
                 const axiosApi = AxiosExpenseApi();
-                const empresaid = getUsuarioSession().info.preferences.empresa_default.id;
-                const res = await axiosApi.get(`/esquemas/${empresaid}`);
+                const res = await axiosApi.get(`/esquemas`);
                 
                 dispatchEsquemas({
                     type: "POPULATE_ESQUEMAS",

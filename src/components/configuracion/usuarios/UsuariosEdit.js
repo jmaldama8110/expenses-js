@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { history } from "../../../router/AppRouter";
 import UsuariosForm from './UsuariosForm';
 import Loader from "../../Loader";
-import axios from "axios";
+import { AxiosExpenseApi } from "../../../utils/axiosApi";
 
 const UsuariosEdit = ({ match })=> {
 
@@ -10,29 +10,56 @@ const UsuariosEdit = ({ match })=> {
     const [loading, setLoading] = useState(false);
 
     useEffect( ()=>{
-        
-        setLoading(true);
-        // retrieves ordenes from localStorage
-        const usuarioses = JSON.parse( sessionStorage.getItem("usuario") );
-        if( usuarioses ){
-            const tokenString = `Bearer ${usuarioses.token}`;
-            axios.defaults.baseURL = process.env.REACT_APP_BASE_URL_API;
-            axios.defaults.headers.common['Authorization'] = tokenString;
 
-            axios.get(`/usuarios?id=${match.params.id}`).then( (res)=>{
-                    setUsuario(res.data[0]);
-            }).catch( (e)=>{
-                alert(e);
-            }).finally( ()=>{
+
+        const loadData = async () => {
+            try {
+                setLoading(true);
+                const axiosApi = AxiosExpenseApi();
+
+                let res = await axiosApi.get(`/usuarios/${match.params.id}`);
+                
+                setUsuario(res.data);
                 setLoading(false);
-            })
+            }
+            catch(e)
+            {
+                alert(e);
+            }
+
         }
+        
+        loadData();
 
     },[]);
 
-    const OnSubmit = (data) => {
+    const OnSubmit = async (data) => {
         
-        history.push('/usuarios');
+        try{
+            setLoading(true);
+            const axiosApi = AxiosExpenseApi();
+            let res = await axiosApi.patch(`/usuarios/${match.params.id}`,{ ...data});
+
+            /// si se cambia el puesto del usuario, entonces se deshabilita la bandera 'asignado' en el puesto anterior asi
+            // estar disponible para otra asignacion
+            if( usuario.puesto[0] !== res.data.puesto[0] ){
+                await axiosApi.patch(`/puestos/${usuario.puesto[0]}`,{ asignado: false} );
+            }
+            
+            if( res.data.puesto ){
+                const puesto_id = res.data.puesto[0];
+                res = await axiosApi.patch(`/puestos/${puesto_id}`, { asignado: true } );
+            }
+            setLoading(false);    
+            history.push('/usuarios');
+
+        }
+        catch(e){
+            console.log(e);
+            alert(e);
+        }
+
+
 
     }
 

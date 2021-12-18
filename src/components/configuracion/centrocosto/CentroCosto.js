@@ -16,71 +16,84 @@ const CentroCosto = () => {
 
     const [nombre_centro_costo,setNombreCentroCosto] = useState('');
     const [codigo, setCodigo] = useState('');
+
+    const [empresaId, setEmpresaId] = useState('');
+    const [empresa, setEmpresa] = useState('');
+    const [empresas,setEmpresas] = useState([]);
+
     const [loading, setLoading] = useState(false);
 
     useEffect( ()=>{
         
-        setLoading(true);
 
-        const axiosApi = AxiosExpenseApi();
-        const empresaid = getUsuarioSession().info.preferences.empresa_default.id;
+        const loadData = async() => {
 
-        if( axiosApi ){
-           
-            axiosApi.get(`/centroscosto/${empresaid}`).then( (res)=>{
-                if( res.data ){
-                    dispatchCentroCosto( {
-                        type: "POPULATE_CC",
-                        centroscosto: res.data
-                    });
-                }
+            try{
+                setLoading(true);
+                const axiosApi = AxiosExpenseApi();
+                let res = await axiosApi.get('/centrocosto/all');
+                
+                dispatchCentroCosto( {
+                    type: "POPULATE_CC",
+                    centroscosto: res.data
+                });
 
-            }).catch( (e)=>{
-                alert(e);
-            }).finally( ()=>{
+                res = await axiosApi.get('/empresas');
+                const empresasTmp = res.data;
+                empresasTmp.unshift({
+                    _id: '',
+                    nombre: ''
+                })
+                setEmpresas(empresasTmp);
+
+                
                 setLoading(false);
-            })
-    
+            }
+            catch(e){
+                console.log(e);
+                alert(e);
+            }
         }
+
+        loadData();
+        
 
 
     },[]);
 
 
-    const onSubmit = (e)=>{
+    const onSubmit = async (e)=>{
+        
         e.preventDefault();
-        setLoading(true);
 
-        const axiosApi = AxiosExpenseApi();
+        try{
+            setLoading(true);
+            const axiosApi = AxiosExpenseApi();
+            let res = await axiosApi.post('/centroscosto',{ empresa: [empresaId,empresa],
+                                                            nombre: nombre_centro_costo,
+                                                            codigo,
+                                                            activo: true,
+                                                        })
 
-        if( axiosApi ){
-
-            axiosApi.post('/centroscosto',{
-                empresa_id: getUsuarioSession().info.preferences.empresa_default.id,
-                nombre: nombre_centro_costo,
-                codigo,
-                activo: true,
-            }).then( (res)=>{
-
-                dispatchCentroCosto({
+            dispatchCentroCosto({
                     type: "ADD_CC",
                     _id: res.data._id,
+                    empresa: res.data.empresa,
                     nombre: res.data.nombre,
                     codigo: res.data.codigo,
                     activo: true
                     
-                });
-    
-                setNombreCentroCosto('');
-                setCodigo('');
-
-            }).catch( (e)=>{
-                alert(e);
-            }).finally( ()=>{
-                setLoading(false);
-            })
-
+            });
+            setLoading(false);
         }
+        catch(e) {
+            console.log(e);
+            alert(e);
+        }
+
+
+
+    
     }
 
     return (
@@ -91,14 +104,34 @@ const CentroCosto = () => {
             <form onSubmit={onSubmit}>
                 <input  type="text"
                         placeholder="nombre centro costo"
+                        required
                         value={nombre_centro_costo}
                         onChange={ e => setNombreCentroCosto(e.target.value) }
                 ></input>
                 <input  type="text"
                         placeholder="codigo"
+                        required
                         value={codigo}
                         onChange={ e => setCodigo(e.target.value) }
                 ></input>
+                <select
+                    value={empresaId}
+                    required
+                    onChange={e => {
+                        setEmpresaId(e.target.value);
+                        setEmpresa(e.target.options[e.target.selectedIndex].text);
+                    }}
+                >
+                    {
+                        empresas.map(emp => <option
+                            key={emp._id}
+                            value={emp._id}
+                        >{emp.nombre}
+                        </option>)
+                    }
+                </select>
+
+                
                 { !loading && <button>Guardar</button>}
             </form>
 

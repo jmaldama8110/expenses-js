@@ -1,9 +1,15 @@
 import React, {  useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { AxiosExpenseApi } from "../../../utils/axiosApi";
+
 const EsquemasForm = ({ onSubmit, esquema }) => {
 
-    const [descripcion, setDescripcion] = useState('');
+    const [empresaId, setEmpresaId] = useState('');
+    const [empresa, setEmpresa] = useState('');
+    const [empresas, setEmpresas] = useState([]);
 
+    const [descripcion, setDescripcion] = useState('');
+    
     const [aj_cargo, setAJCargo] = useState('');
     const [aj_abono, setAJAbono] = useState('');
     const [aj_tope, setAJTope] = useState('');
@@ -46,9 +52,34 @@ const EsquemasForm = ({ onSubmit, esquema }) => {
 
     useEffect( ()=> {
 
+        const loadData = async() => {
+
+            try {
+                const axiosApi = AxiosExpenseApi();
+                let res = await axiosApi.get('/empresas');
+                const empresasTmp = res.data;
+                empresasTmp.unshift({
+                    _id: '',
+                    nombre: ''
+                });
+                setEmpresas(empresasTmp);
+
+            }
+            catch(e){
+                alert(e);
+            }
+        }
+
+        loadData();
+
         if( esquema ){
         
             setDescripcion( esquema.descripcion );
+            
+            if( esquema.empresa){
+                setEmpresaId( esquema.empresa[0]);
+                setEmpresa( esquema.empresa[1]);    
+            }
 
             setAJCargo( esquema.anticipos_cr);
             setAJAbono(esquema.anticipos_ab);
@@ -100,6 +131,7 @@ const EsquemasForm = ({ onSubmit, esquema }) => {
 
         const data = {
 
+            empresa: [empresaId, empresa],
             descripcion,
             anticipos_cr: aj_cargo,
             anticipos_ab: aj_abono,
@@ -148,6 +180,25 @@ const EsquemasForm = ({ onSubmit, esquema }) => {
         <form onSubmit={onGuardar}>
             <div>
                 <div>
+                <h3>Empresa</h3>
+                <select
+                    value={empresaId}
+                    required
+                    onChange={e => {
+                        setEmpresaId(e.target.value);
+                        setEmpresa(e.target.options[e.target.selectedIndex].text);
+                    }}
+                >
+                    {
+                        empresas.map(emp => <option
+                            key={emp._id}
+                            value={emp._id}
+                        >{emp.nombre}
+                        </option>)
+                    }
+                </select>
+                <h3>Descripcion del Esquema</h3>
+
                     <input
                         type="text"
                         value={descripcion}

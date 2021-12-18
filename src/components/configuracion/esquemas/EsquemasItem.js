@@ -19,6 +19,7 @@ const EsquemasItem = ( { esquema } ) => {
                 <div className="gridflex">
                     <p><button onClick={onEliminar}>x</button></p>
                     <p>{esquema.descripcion}</p>
+                    <p>{esquema.empresa[1]}</p>
                 </div>
         </Link>
 

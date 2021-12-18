@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 const OrdenMisionItem = ({item}) => {
 
     const idToFolio = (str) =>{
-        return str.substring(20);
+        return str.substring(20).toUpperCase();
     }
     
     

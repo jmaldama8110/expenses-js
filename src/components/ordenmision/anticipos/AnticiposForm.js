@@ -4,8 +4,8 @@ const AnticiosForm = ( { anticipo, onSubmit } ) =>{
 
     const [fecha_aplicacion, setFechaAplicacion] = useState('');
 
-    const [tipo_mov, setTipoMov] = useState('');
-    const [tipo_movId, setTipoMovId] = useState('');
+    const [tipo_mov, setTipoMov] = useState('Anticipo');
+    const [tipo_movId, setTipoMovId] = useState('A');
 
     const [importe, setImporte] = useState('');
     const [concepto, setConcepto] = useState('');

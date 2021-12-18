@@ -14,31 +14,27 @@ const PuestosHome = ()=>{
     const [puestos, dispatchPuestos]  = useReducer(PuestosReducer, []);
 
     useEffect( ()=>{
-    
-        let mounted = true;
-        if( mounted ){
-            
-            const axiosApi = AxiosExpenseApi();
-            if( axiosApi ){
-                axiosApi.get('/puestos').then( res => {
-                    dispatchPuestos( {
-                        type: "POPULATE_PUESTOS",
-                        puestos: res.data
-                    });
 
-                    mounted = false;
-        
-                }).catch(e =>{
-                    alert(e);
-                }).finally( ()=>{
-                    setLoading(false);
-                })
+        const loadData = async () => {
 
+            try{
+                setLoading(true);
+                const axiosApi = AxiosExpenseApi();
+                let res = await axiosApi.get('/puestos');
+                dispatchPuestos( {
+                    type: "POPULATE_PUESTOS",
+                    puestos: res.data
+                });
+                setLoading(false);
             }
+            catch(e) {
+                alert(e);
+            }
+            
 
         }
-      
-        return () => mounted = false;
+        
+        loadData();
         
     },[]);
 

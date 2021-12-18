@@ -11,19 +11,22 @@ const PuestosAdd = () => {
 
     const [loading, setLoading] = useState(false);
 
-    const onSubmit = (data) => {
-        setLoading(true);
-        const axiosApi = AxiosExpenseApi();
-        if( axiosApi ){
-            axiosApi.post('/puestos',{...data})
-            .then( (res)=>{
-                history.push('/organigrama');
-            }).catch( e=>{
-                alert(e)
-            }).finally( ()=>{
-                setLoading(false);
-            })
+    const onSubmit = async (data) => {
+
+        try{
+
+            setLoading(true);
+            const axiosApi = AxiosExpenseApi();
+            let res = await axiosApi.post('/puestos',{...data});
+            setLoading(false);
+            history.push('/organigrama');
+
         }
+
+        catch(e){
+            alert(e);
+        }
+
     
     }
 

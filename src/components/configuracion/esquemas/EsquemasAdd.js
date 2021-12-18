@@ -5,7 +5,7 @@ import { history} from '../../../router/AppRouter';
 
 import Loader from '../../Loader';
 
-import { AxiosExpenseApi, getUsuarioSession } from '../../../utils/axiosApi';
+import { AxiosExpenseApi } from '../../../utils/axiosApi';
 
 
 const EsquemasAdd = () => {
@@ -17,17 +17,14 @@ const EsquemasAdd = () => {
         try {
             setLoading(true);
             const axiosApi = AxiosExpenseApi();
-            const usuario = getUsuarioSession();
 
             const res = await axiosApi.post("/esquemas",{
-                empresa_id: usuario.info.preferences.empresa_default.id,
                 ...data
             });
             setLoading(false);
             history.push("/esquemas");
         }
         catch(e) {
-            console.log(e);
             alert(e);
         }
     }

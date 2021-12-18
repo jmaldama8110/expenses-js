@@ -2,7 +2,7 @@ import React, { useState, useEffect, useReducer } from 'react';
 import { Link } from 'react-router-dom';
 
 import Loader from '../Loader';
-import { AxiosExpenseApi, getUsuarioSession } from '../../utils/axiosApi';
+import { AxiosExpenseApi, diffFechaInicioFin } from '../../utils/axiosApi';
 import AnticiposHome from './anticipos/AnticiposHome';
 import AnticiposReducer from '../../reducers/anticipos';
 import AutorizacionesReducer from '../../reducers/autorizaciones';
@@ -16,6 +16,7 @@ const OrdenMisionForm = ({ onSubmit, orden }) => {
 
     const [loading, setLoading] = useState(false);
     const [fecha_aplicacion, setFechaAplicacion] = useState('');
+    const [usuarioInfo, setUsuarioInfo] = useState('');
 
     const [empleadoId, setEmpleadoId] = useState('');
     const [empleado, setEmpleado] = useState('');
@@ -38,17 +39,29 @@ const OrdenMisionForm = ({ onSubmit, orden }) => {
     const [estatusId, setEstatusId] = useState("");
     const [estatus, setEstatus] = useState("");
 
+    const [empresaId, setEmpresaId] = useState('');
+    const [empresa, setEmpresa] = useState('');
+    const [empresas, setEmpresas] = useState([]);
+
     const [anticipos, dispatchAnticipos] = useReducer(AnticiposReducer, []);
     const [autorizaciones, dispatchAutorizaciones] = useReducer(AutorizacionesReducer, []);
-    const [comprobantes, dispatchComprobantes] = useReducer( ComprobantesReducer, []);
+    const [comprobantes, dispatchComprobantes] = useReducer(ComprobantesReducer, []);
+
+    const [duracion, setDuracion] = useState('0');
+    const [alimentos_tope, setAlimentosTope] = useState('0');
+    const [anticipos_tope, setAnticiposTope] = useState('0');
+    const [hospedaje_tope, setHospedajeTope] = useState('0');
+    const [transporte_tope, setTransporteTope] = useState('0');
+    const [nodeducibles_tope, setNodeduciblesTope] = useState('0');
+    const [recepcion_tope, setRecepcionTope] = useState('0');
+    const [mtto_vehiculos_tope, setMttoVehiculosTope] = useState('0');
+
 
     const Guardar = (e) => {
         e.preventDefault();
-        
-        const uss = getUsuarioSession().info;
 
         const data = {
-            empresa_id: uss.preferences.empresa_default.id,
+            empresa: [empresaId, empresa],
             fecha_aplicacion,
             empleado: [empleadoId, empleado],
             centro_costo: [centrocostoId, centrocosto],
@@ -66,6 +79,7 @@ const OrdenMisionForm = ({ onSubmit, orden }) => {
 
     }
 
+    
 
     useEffect(() => {
 
@@ -75,56 +89,59 @@ const OrdenMisionForm = ({ onSubmit, orden }) => {
             try {
 
                 if (mounted) {
-
                     setLoading(true);
                     const axiosApi = AxiosExpenseApi();
-                    const usuarioSession = getUsuarioSession();
-                    const res = await axiosApi.get('/centroscosto');
-                    const cc = res.data;
-                    cc.unshift({
-                        _id: "",
-                        nombre: "Centro de Costo"
-                    });
-                    setCentrosCosto(cc);
+                    let res = await axiosApi.get('/usuarios/yo');
+                    setUsuarioInfo(res.data);
 
-                    const uss = await axiosApi.get('/usuarios');
+                    const empresasTmp = res.data.empresas;
+                    empresasTmp.unshift(['', 'Elige empresa', true]);
 
+                    setEmpresas(empresasTmp.filter(i => i[2] === true));
+
+                    res = await axiosApi.get('/usuario/depto');
+                    const usuariosTmp = res.data;
+                    usuariosTmp.unshift({
+                        _id: '',
+                        nombre: 'Nombre del Empleado',
+                        apellido_paterno: '',
+                        apellido_materno: ''
+                    })
                     /// trae unicamente usuario dentro de este mismo departamento
-                    if (usuarioSession) {
-                        setUsuariosEmpleados(uss.data.filter(i => i.depto[0] === usuarioSession.info.depto[0]));
-                    }
 
-                    const esqlistTmp = await axiosApi.get(`/esquemas/${usuarioSession.info.preferences.empresa_default.id}`);
-                    
-                    const esqList = esqlistTmp.data
-                    esqList.unshift({
-                        _id: "",
-                        descripcion: "Esquema"
-                    });
-
-                    setEsquemas(esqList);
+                    setUsuariosEmpleados(usuariosTmp);
 
                     if (orden) {
-                        /// EDIT orden has been called
+
                         setFechaAplicacion(orden.fecha_aplicacion);
                         setDescripcion(orden.descripcion);
                         setTransporte(orden.transporte);
                         setFechaDesde(orden.fecha_desde);
                         setFechaHasta(orden.fecha_hasta);
 
+                        if (orden.empresa) {
+                            setEmpresaId(orden.empresa[0]);
+                            setEmpresa(orden.empresa[1]);
+
+                            const data = JSON.stringify({
+                                _id: orden.empresa[0],
+                                nombre: orden.empresa[1]
+                            });
+                            populateSelectList(data);
+
+                            setEsquemaId(orden.esquema[0]);
+                            setEsquema(orden.esquema[1]);
+
+                            setCentroCostoId(orden.centro_costo[0]);
+                            setCentroCosto(orden.centro_costo[1]);
+
+                        }
+
                         if (orden.empleado) {
                             setEmpleadoId(orden.empleado[0]);
                             setEmpleado(orden.empleado[1]);
                         }
 
-                        if (orden.esquema) {
-                            setEsquemaId(orden.esquema[0]);
-                            setEsquema(orden.esquema[1]);
-                        }
-                        if (orden.centro_costo) {
-                            setCentroCostoId(orden.centro_costo[0]);
-                            setCentroCosto(orden.centro_costo[1]);
-                        }
 
                         if (orden.estatus) {
                             setEstatusId(orden.estatus[0]);
@@ -137,8 +154,8 @@ const OrdenMisionForm = ({ onSubmit, orden }) => {
                             })
                         }
 
-                        if( orden.comprobantes ){
-                            dispatchComprobantes( {
+                        if (orden.comprobantes) {
+                            dispatchComprobantes({
                                 type: 'POPULATE_COMPROBANTES',
                                 comprobantes: orden.comprobantes
                             })
@@ -149,19 +166,16 @@ const OrdenMisionForm = ({ onSubmit, orden }) => {
                                 type: 'POPULATE_AUTORIZACIONES',
                                 autorizaciones: orden.autorizaciones
                             })
+
                         }
 
                     } else {
+                        setEmpleadoId(usuarioInfo._id);
+                        setDuracion(0);
 
-                        //// NUEVA orden has been called
-                        const usu = getUsuarioSession();
-                        setEmpleadoId(usu.info._id);
-                        setEmpleado(`${usu.info.nombre} ${usu.info.apellido_paterno} ${usu.info.apellido_materno}`);
-
-                        const ussTmp = await axiosApi.get('/usuarios');
-
-                        const autA = ussTmp.data.find(i => i.nivel_autorizacion === 'A');
-                        const autB = ussTmp.data.find(i => i.nivel_autorizacion === 'B');
+                        /* Busca dentro de los usuarios del mismo departamento, quien tiene los niveles de autoriacion  */
+                        const autA = usuariosTmp.find(i => i.nivel_autorizacion === 'A');
+                        const autB = usuariosTmp.find(i => i.nivel_autorizacion === 'B');
 
                         if (autB) {
                             dispatchAutorizaciones({
@@ -181,10 +195,12 @@ const OrdenMisionForm = ({ onSubmit, orden }) => {
                                 estatus: ['P', 'Pendiente']
                             });
                         }
+                        /* ------------------------- */
 
                     }
-                    setLoading(false);
+
                 }
+                setLoading(false);
             }
             catch (e) {
                 alert(e);
@@ -197,6 +213,74 @@ const OrdenMisionForm = ({ onSubmit, orden }) => {
 
         };
     }, [])
+
+    useEffect(() => {
+
+        const updateTopesDiarios = () => {
+
+            const esquemasTmp = esquemas;
+            const esquemaSelected = esquemasTmp.find(i => i._id === esquemaId);
+
+            if (esquemaSelected) {
+                setAlimentosTope(esquemaSelected.alimentos_tope);
+
+                setAnticiposTope(esquemaSelected.anticipos_tope);
+                setHospedajeTope(esquemaSelected.hospedaje_tope);
+                setMttoVehiculosTope(esquemaSelected.mtto_vehiculos_tope);
+                setNodeduciblesTope(esquemaSelected.nodeducibles_tope);
+                setRecepcionTope(esquemaSelected.recepcion_tope);
+                setTransporteTope(esquemaSelected.transporte_tope);
+
+            }
+
+        }
+
+        updateTopesDiarios();
+
+    }, [esquemas, esquemaId])
+
+    useEffect(() => {
+
+        setDuracion(1 + diffFechaInicioFin(fecha_desde, fecha_hasta, 'hours') / 24);
+
+    }, [fecha_desde, fecha_hasta])
+
+    const getTotalPorDia = () => {
+        return ((
+            parseFloat(alimentos_tope) +
+            parseFloat(transporte_tope) +
+            parseFloat(hospedaje_tope) +
+            parseFloat(recepcion_tope) +
+            parseFloat(mtto_vehiculos_tope) +
+            parseFloat(nodeducibles_tope)
+        ) * duracion)
+            - parseFloat(hospedaje_tope); // menos un dia de hospedaje
+
+    }
+
+    const populateSelectList = async (data) => {
+
+        const axiosApi = AxiosExpenseApi();
+
+        let res = await axiosApi.get(`/centroscosto?empresa=${data}`);
+        const ccTmp = res.data;
+        ccTmp.unshift({
+            _id: '',
+            nombre: 'Centro de costo'
+        })
+        setCentrosCosto(ccTmp);
+
+        res = await axiosApi.get(`/esquemas?empresa=${data}`)
+        const esquemasTmp = res.data;
+        esquemasTmp.unshift({
+            _id: '',
+            descripcion: 'Elige Esquema'
+        });
+
+        setEsquemas(esquemasTmp);
+
+
+    }
 
     return (
         <div>
@@ -211,6 +295,33 @@ const OrdenMisionForm = ({ onSubmit, orden }) => {
                             value={fecha_aplicacion}
                             onChange={(e) => setFechaAplicacion(e.target.value)}
                         ></input>
+
+                        <select
+                            value={empresaId}
+                            required
+                            onChange={async (e) => {
+                                setEmpresaId(e.target.value);
+                                setEmpresa(e.target.options[e.target.selectedIndex].text);
+
+                                const data = JSON.stringify({
+                                    _id: e.target.value,
+                                    nombre: e.target.options[e.target.selectedIndex].text
+                                });
+
+                                populateSelectList(data);
+
+
+                            }}
+                        >
+                            {
+                                empresas.map(emp => <option
+                                    key={emp[0]}
+                                    value={emp[0]}
+                                >{emp[1]}
+                                </option>)
+                            }
+                        </select>
+
 
                         <select value={empleadoId}
                             required
@@ -242,8 +353,11 @@ const OrdenMisionForm = ({ onSubmit, orden }) => {
 
                         <select value={esquemaId}
                             onChange={(e) => {
+
                                 setEsquemaId(e.target.value);
                                 setEsquema(e.target.options[e.target.selectedIndex].text);
+
+
                             }}>
                             {esquemas.map((esq) => <option
                                 key={esq._id}
@@ -316,6 +430,41 @@ const OrdenMisionForm = ({ onSubmit, orden }) => {
                             onChange={(e) => setDescripcion(e.target.value)}
                             placeholder="Escriba aqui una descripcion detallada de la mision a realiza"
                         ></textarea>
+                        <h3>Resumen & condiciones</h3>
+                        <p>Duracion de la mision: <strong>{duracion}</strong> dias</p>
+                        <p>Anticipo maximo: <strong>{anticipos_tope}</strong></p>
+                        <h4>Cuota por dia:</h4>
+                        {alimentos_tope !== '0' &&
+                            <p>
+                                <button onClick={e => { e.preventDefault(); setAlimentosTope('0') }}>x</button>
+                                + Alimentos: <strong>{alimentos_tope}</strong>
+                            </p>}
+                        {transporte_tope !== '0' &&
+                            <p>
+                                <button onClick={e => { e.preventDefault(); setTransporteTope('0') }}>x</button>
+                                + Transporte: <strong>{transporte_tope}</strong>
+                            </p>}
+                        {hospedaje_tope !== '0' &&
+                            <p>
+                                <button onClick={e => { e.preventDefault(); setHospedajeTope('0') }}>x</button>
+                                + Hospedaje ({duracion - 1} noches): <strong>{hospedaje_tope}</strong>
+                            </p>}
+                        {recepcion_tope !== '0' &&
+                            <p>
+                                <button onClick={e => { e.preventDefault(); setRecepcionTope('0') }}>x</button>
+                                + Recepcion: <strong>{recepcion_tope}</strong>
+                            </p>}
+                        {mtto_vehiculos_tope !== '0' &&
+                            <p>
+                                <button onClick={e => { e.preventDefault(); setMttoVehiculosTope('0') }}>x</button>
+                                + Mtto Vehiculos: <strong>{mtto_vehiculos_tope}</strong>
+                            </p>}
+                        {nodeducibles_tope !== '0' &&
+                            <p>
+                                <button onClick={e => { e.preventDefault(); setNodeduciblesTope('0') }}>x</button>
+                                + No deducibles: <strong>{nodeducibles_tope}</strong>
+                            </p>}
+                        <p>Total: <strong>{getTotalPorDia()}</strong></p>
 
                         <div>
                             <ExpensesContext.Provider value={{ anticipos, dispatchAnticipos }}>
@@ -324,7 +473,7 @@ const OrdenMisionForm = ({ onSubmit, orden }) => {
 
                         </div>
                         <div>
-                            <ExpensesContext.Provider value={{ autorizaciones, dispatchAutorizaciones }}>
+                            <ExpensesContext.Provider value={{ autorizaciones, usuarioInfo, dispatchAutorizaciones }}>
                                 <AutorizacionesHome />
                             </ExpensesContext.Provider>
 

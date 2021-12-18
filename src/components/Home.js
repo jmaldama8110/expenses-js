@@ -48,8 +48,8 @@ const Home = () => {
             { !loading&&
             <div>
                 <h1>Hola {usuario}, busca tus misiones!</h1>
-                <p>Ambiente: { empresa_actual ? <strong><label>{empresa_actual.nombre}</label></strong>
-                                        : <strong> <label>No hay una empresa predeterminada</label></strong>}</p>
+                <p>Entorno actual: { empresa_actual ? <strong><label>{empresa_actual.nombre}</label></strong>
+                                        : <strong> <label>Sin predeterimnado</label></strong>}</p>
 
                 <ExpensesContext.Provider value={ { ordenes, dispatchOrdenes }}>
                     <OrdenMisionLista />

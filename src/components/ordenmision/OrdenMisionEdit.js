@@ -22,9 +22,9 @@ const OrdenMisionEdit = ( { match } ) => {
                 if ( mounted) {
                     setLoading(true);
                     const axiosApi = AxiosExpenseApi();
-                    const res = await axiosApi.get(`/ordenes/${match.params.id}`);
+                    const res = await axiosApi.get(`/ordenes?id=${match.params.id}`);
                     
-                    setOrden(res.data);
+                    setOrden(res.data[0]);
                     setLoading(false);
                     
                 }

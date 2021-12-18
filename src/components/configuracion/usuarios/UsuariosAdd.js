@@ -13,35 +13,28 @@ const UsuariosAdd = () => {
 
     const onSubmit = async (data) => {
 
-        setLoading(true);
-        const axiosApi = AxiosExpenseApi();
-        
-        axiosApi.post('/usuarios',{
-            ...data
-        }).then( (res) =>{
+        try{
 
-            
-            if( res.data.usuario.puesto[0] ){
-                
+            setLoading(true);
+            const axiosApi = AxiosExpenseApi();
+            let res = await axiosApi.post('/usuarios', {...data} );
+
+            if( res.data.usuario.puesto ){
                 const puesto_id = res.data.usuario.puesto[0];
+                res = await axiosApi.patch(`/puestos/${puesto_id}`, { asignado: true } );
 
-                axiosApi.patch(`/puestos/${puesto_id}`,{
-                    asignado: true
-                }).then( res =>{
-                    history.push('/usuarios');
-                }).catch( e => {
-                    alert(e);
-                });
-                    
             }
 
-
-        }).catch( e =>{
-            alert(e);
-        }).finally( ()=>{
             setLoading(false);
-        })
+            history.push('/usuarios');
+        }
+        catch(e){
+            alert(e);
+        }
+    
 
+
+        
 
     }
 

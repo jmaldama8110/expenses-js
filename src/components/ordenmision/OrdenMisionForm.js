@@ -7,10 +7,15 @@ import AnticiposHome from './anticipos/AnticiposHome';
 import AnticiposReducer from '../../reducers/anticipos';
 import AutorizacionesReducer from '../../reducers/autorizaciones';
 import ComprobantesReducer from '../../reducers/comprobantes';
+import ConceptosReducer from '../../reducers/conceptos';
 
 import ExpensesContext from '../../context/ExpensesContext';
 import AutorizacionesHome from './autorizaciones/AutorizacionesHome';
 import ComprobantesHome from './comprobantes/ComprobantesHome';
+import ConceptosHome from './conceptos/ConceptosHome';
+import OrdenMisionStats from './OrdenMisionStats';
+
+import { formatoPesos } from '../../utils/numberFormatter';
 
 const OrdenMisionForm = ({ onSubmit, orden }) => {
 
@@ -36,8 +41,8 @@ const OrdenMisionForm = ({ onSubmit, orden }) => {
     const [transporte, setTransporte] = useState('');
     const [descripcion, setDescripcion] = useState('');
 
-    const [estatusId, setEstatusId] = useState("");
-    const [estatus, setEstatus] = useState("");
+    const [estatusId, setEstatusId] = useState("P");
+    const [estatus, setEstatus] = useState("Pendiente");
 
     const [empresaId, setEmpresaId] = useState('');
     const [empresa, setEmpresa] = useState('');
@@ -46,15 +51,11 @@ const OrdenMisionForm = ({ onSubmit, orden }) => {
     const [anticipos, dispatchAnticipos] = useReducer(AnticiposReducer, []);
     const [autorizaciones, dispatchAutorizaciones] = useReducer(AutorizacionesReducer, []);
     const [comprobantes, dispatchComprobantes] = useReducer(ComprobantesReducer, []);
+    const [conceptos, dispatchConceptos] = useReducer(ConceptosReducer, []);
 
     const [duracion, setDuracion] = useState('0');
-    const [alimentos_tope, setAlimentosTope] = useState('0');
+    const [totalDiario, setTotalDiario] = useState(0);
     const [anticipos_tope, setAnticiposTope] = useState('0');
-    const [hospedaje_tope, setHospedajeTope] = useState('0');
-    const [transporte_tope, setTransporteTope] = useState('0');
-    const [nodeducibles_tope, setNodeduciblesTope] = useState('0');
-    const [recepcion_tope, setRecepcionTope] = useState('0');
-    const [mtto_vehiculos_tope, setMttoVehiculosTope] = useState('0');
 
 
     const Guardar = (e) => {
@@ -73,13 +74,14 @@ const OrdenMisionForm = ({ onSubmit, orden }) => {
             anticipos,
             autorizaciones,
             comprobantes,
+            conceptos,
             estatus: !orden ? ['P', 'Pendiente'] : [estatusId, estatus]
         }
         onSubmit(data);
 
     }
 
-    
+
 
     useEffect(() => {
 
@@ -161,6 +163,13 @@ const OrdenMisionForm = ({ onSubmit, orden }) => {
                             })
                         }
 
+                        if (orden.conceptos) {
+                            dispatchConceptos({
+                                type: 'POPULATE_CONCEPTOS',
+                                conceptos: orden.conceptos
+                            })
+                        }
+
                         if (orden.autorizaciones) {
                             dispatchAutorizaciones({
                                 type: 'POPULATE_AUTORIZACIONES',
@@ -197,6 +206,8 @@ const OrdenMisionForm = ({ onSubmit, orden }) => {
                         }
                         /* ------------------------- */
 
+
+
                     }
 
                 }
@@ -222,41 +233,66 @@ const OrdenMisionForm = ({ onSubmit, orden }) => {
             const esquemaSelected = esquemasTmp.find(i => i._id === esquemaId);
 
             if (esquemaSelected) {
-                setAlimentosTope(esquemaSelected.alimentos_tope);
+                setAnticiposTope( formatoPesos( parseFloat(esquemaSelected.anticipos_tope) ) );
+            }
 
-                setAnticiposTope(esquemaSelected.anticipos_tope);
-                setHospedajeTope(esquemaSelected.hospedaje_tope);
-                setMttoVehiculosTope(esquemaSelected.mtto_vehiculos_tope);
-                setNodeduciblesTope(esquemaSelected.nodeducibles_tope);
-                setRecepcionTope(esquemaSelected.recepcion_tope);
-                setTransporteTope(esquemaSelected.transporte_tope);
+            if (!orden) {
+                // llena la lista por primera vez en modo Add
+                dispatchConceptos({
+                    type: 'POPULATE_CONCEPTOS',
+                    conceptos: []
+                });
 
+                if (esquemaSelected) {
+                    dispatchConceptos({ type: 'ADD_CONCEPTO', _id: '1001', tipo_concepto: ['A', 'Alimentos'], tope_importe: esquemaSelected.alimentos_tope });
+                    dispatchConceptos({ type: 'ADD_CONCEPTO', _id: '1002', tipo_concepto: ['T', 'Transporte'], tope_importe: esquemaSelected.transporte_tope });
+                    dispatchConceptos({ type: 'ADD_CONCEPTO', _id: '1003', tipo_concepto: ['H', 'Hospedaje'], tope_importe: esquemaSelected.hospedaje_tope });
+                    dispatchConceptos({ type: 'ADD_CONCEPTO', _id: '1004', tipo_concepto: ['M', 'Mantenimieto Vehhiculos'], tope_importe: esquemaSelected.mtto_vehiculos_tope });
+                    dispatchConceptos({ type: 'ADD_CONCEPTO', _id: '1005', tipo_concepto: ['N', 'No deducibles'], tope_importe: esquemaSelected.nodeducibles_tope });
+                    dispatchConceptos({ type: 'ADD_CONCEPTO', _id: '1006', tipo_concepto: ['R', 'Recepcion'], tope_importe: esquemaSelected.recepcion_tope });
+
+                }
             }
 
         }
 
         updateTopesDiarios();
 
+
     }, [esquemas, esquemaId])
 
     useEffect(() => {
 
-        setDuracion(1 + diffFechaInicioFin(fecha_desde, fecha_hasta, 'hours') / 24);
+        const diasDuracion = 1 + diffFechaInicioFin(fecha_desde, fecha_hasta, 'hours') / 24;
+        setDuracion(diasDuracion);
+        updateTotalDiario(diasDuracion);
+
 
     }, [fecha_desde, fecha_hasta])
 
-    const getTotalPorDia = () => {
-        return ((
-            parseFloat(alimentos_tope) +
-            parseFloat(transporte_tope) +
-            parseFloat(hospedaje_tope) +
-            parseFloat(recepcion_tope) +
-            parseFloat(mtto_vehiculos_tope) +
-            parseFloat(nodeducibles_tope)
-        ) * duracion)
-            - parseFloat(hospedaje_tope); // menos un dia de hospedaje
+    useEffect(() => {
+        const diasDuracion = 1 + diffFechaInicioFin(fecha_desde, fecha_hasta, 'hours') / 24;
+        updateTotalDiario(diasDuracion);
+    }, [conceptos])
+
+    const updateTotalDiario = (diasDuracion) => {
+
+        const listaTmp = conceptos;
+
+        let totalDiario = 0;
+        let hospedajeNoches = 0;
+
+        listaTmp.forEach((e) => {
+            totalDiario = totalDiario + parseFloat(e.tope_importe);
+            if( e.tipo_concepto[0] === 'H'){
+                hospedajeNoches = parseFloat( e.tope_importe );
+            }
+        })
+        /// siempre resta el equivalente a 1 noche, de la duracion de dias
+        setTotalDiario( formatoPesos( (totalDiario * diasDuracion) - hospedajeNoches) );
 
     }
+
 
     const populateSelectList = async (data) => {
 
@@ -292,6 +328,7 @@ const OrdenMisionForm = ({ onSubmit, orden }) => {
                         <label>Fecha apliación</label>
                         <input type="date"
                             required
+                            disabled={!(estatusId === 'P')}
                             value={fecha_aplicacion}
                             onChange={(e) => setFechaAplicacion(e.target.value)}
                         ></input>
@@ -299,6 +336,7 @@ const OrdenMisionForm = ({ onSubmit, orden }) => {
                         <select
                             value={empresaId}
                             required
+                            disabled={!(estatusId === 'P')}
                             onChange={async (e) => {
                                 setEmpresaId(e.target.value);
                                 setEmpresa(e.target.options[e.target.selectedIndex].text);
@@ -325,6 +363,7 @@ const OrdenMisionForm = ({ onSubmit, orden }) => {
 
                         <select value={empleadoId}
                             required
+                            disabled={!(estatusId === 'P')}
                             onChange={(e) => {
                                 setEmpleadoId(e.target.value);
                                 setEmpleado(e.target.options[e.target.selectedIndex].text);
@@ -339,6 +378,7 @@ const OrdenMisionForm = ({ onSubmit, orden }) => {
 
                         <select value={centrocostoId}
                             required
+                            disabled={!(estatusId === 'P')}
                             onChange={
                                 (e) => {
                                     setCentroCostoId(e.target.value);
@@ -352,6 +392,8 @@ const OrdenMisionForm = ({ onSubmit, orden }) => {
                         </select>
 
                         <select value={esquemaId}
+                            required
+                            disabled={!(estatusId === 'P')}
                             onChange={(e) => {
 
                                 setEsquemaId(e.target.value);
@@ -374,6 +416,7 @@ const OrdenMisionForm = ({ onSubmit, orden }) => {
                             }}>
                             <option value="P">Pendiente</option>
                             <option value="A">Autorizada</option>
+                            <option value="R">En Revision</option>
                             <option value="V">Vencida</option>
                             <option value="F">Finalizada</option>
                             <option value="C">Cancelada</option>
@@ -385,12 +428,14 @@ const OrdenMisionForm = ({ onSubmit, orden }) => {
                         <label>De</label>
                         <input type="date"
                             required
+                            disabled={!(estatusId === 'P')}
                             value={fecha_desde}
                             onChange={(e) => setFechaDesde(e.target.value)}
                         ></input>
                         <label>A</label>
                         <input type="date"
                             required
+                            disabled={!(estatusId === 'P')}
                             value={fecha_hasta}
                             onChange={(e) => setFechaHasta(e.target.value)}
                         ></input>
@@ -402,6 +447,7 @@ const OrdenMisionForm = ({ onSubmit, orden }) => {
                             name="transporte"
                             value="aereo"
                             checked={transporte === 'aereo'}
+                            disabled={!(estatusId === 'P')}
                             onChange={(e) => setTransporte(e.target.value)}
                         />
                         <label htmlFor="aereo">Aéreo</label>
@@ -411,6 +457,7 @@ const OrdenMisionForm = ({ onSubmit, orden }) => {
                             name="transporte"
                             value="autobus"
                             checked={transporte === 'autobus'}
+                            disabled={!(estatusId === 'P')}
                             onChange={(e) => setTransporte(e.target.value)}
                         />
                         <label htmlFor="autobus">Autobus</label>
@@ -420,72 +467,47 @@ const OrdenMisionForm = ({ onSubmit, orden }) => {
                             name="transporte"
                             value="auto"
                             checked={transporte === 'auto'}
+                            disabled={!(estatusId === 'P')}
                             onChange={(e) => setTransporte(e.target.value)}
                         />
                         <label htmlFor="auto">Automóvil</label><br /><br />
 
                         <label>Descripcion de mision</label>
                         <textarea
+                            required
+                            disabled={!(estatusId === 'P')}
                             value={descripcion}
                             onChange={(e) => setDescripcion(e.target.value)}
                             placeholder="Escriba aqui una descripcion detallada de la mision a realiza"
                         ></textarea>
-                        <h3>Resumen & condiciones</h3>
-                        <p>Duracion de la mision: <strong>{duracion}</strong> dias</p>
-                        <p>Anticipo maximo: <strong>{anticipos_tope}</strong></p>
-                        <h4>Cuota por dia:</h4>
-                        {alimentos_tope !== '0' &&
-                            <p>
-                                <button onClick={e => { e.preventDefault(); setAlimentosTope('0') }}>x</button>
-                                + Alimentos: <strong>{alimentos_tope}</strong>
-                            </p>}
-                        {transporte_tope !== '0' &&
-                            <p>
-                                <button onClick={e => { e.preventDefault(); setTransporteTope('0') }}>x</button>
-                                + Transporte: <strong>{transporte_tope}</strong>
-                            </p>}
-                        {hospedaje_tope !== '0' &&
-                            <p>
-                                <button onClick={e => { e.preventDefault(); setHospedajeTope('0') }}>x</button>
-                                + Hospedaje ({duracion - 1} noches): <strong>{hospedaje_tope}</strong>
-                            </p>}
-                        {recepcion_tope !== '0' &&
-                            <p>
-                                <button onClick={e => { e.preventDefault(); setRecepcionTope('0') }}>x</button>
-                                + Recepcion: <strong>{recepcion_tope}</strong>
-                            </p>}
-                        {mtto_vehiculos_tope !== '0' &&
-                            <p>
-                                <button onClick={e => { e.preventDefault(); setMttoVehiculosTope('0') }}>x</button>
-                                + Mtto Vehiculos: <strong>{mtto_vehiculos_tope}</strong>
-                            </p>}
-                        {nodeducibles_tope !== '0' &&
-                            <p>
-                                <button onClick={e => { e.preventDefault(); setNodeduciblesTope('0') }}>x</button>
-                                + No deducibles: <strong>{nodeducibles_tope}</strong>
-                            </p>}
-                        <p>Total: <strong>{getTotalPorDia()}</strong></p>
 
-                        <div>
-                            <ExpensesContext.Provider value={{ anticipos, dispatchAnticipos }}>
-                                <AnticiposHome />
-                            </ExpensesContext.Provider>
+                        <ExpensesContext.Provider value={{ anticipos, comprobantes, setEstatus, setEstatusId, estatusId }}>
+                            { (estatusId === 'A' || estatusId === 'R' || estatusId === 'F' ) && <OrdenMisionStats />}
+                        </ExpensesContext.Provider>
+                        
+                        <p>* Duracion de la mision: <strong>{duracion}</strong> dias
+                        + Anticipo maximo: <strong>{anticipos_tope} </strong>
+                        + Total aproximado a ejercer: <strong>{totalDiario}</strong></p>
+                        <ExpensesContext.Provider value={{ estatusId, conceptos, dispatchConceptos }}>
+                            <ConceptosHome />
+                        </ExpensesContext.Provider>
+                        
+                        <ExpensesContext.Provider value={{ anticipos, dispatchAnticipos }}>
+                            { estatusId ==='A' && <AnticiposHome />}
+                        </ExpensesContext.Provider> 
 
-                        </div>
-                        <div>
-                            <ExpensesContext.Provider value={{ autorizaciones, usuarioInfo, dispatchAutorizaciones }}>
-                                <AutorizacionesHome />
-                            </ExpensesContext.Provider>
+                        <ExpensesContext.Provider value={{ comprobantes, dispatchComprobantes, estatusId }}>
+                            { (estatusId ==='A' || estatusId ==='R') && <ComprobantesHome />}
+                        </ExpensesContext.Provider>
 
-                        </div>
-                        <div>
-                            <ExpensesContext.Provider value={{ comprobantes, dispatchComprobantes }}>
-                                <ComprobantesHome />
-                            </ExpensesContext.Provider>
-                        </div>
+                        <ExpensesContext.Provider value={{ autorizaciones, estatusId,estatus,usuarioInfo, dispatchAutorizaciones }}>
+                            <AutorizacionesHome />
+                        </ExpensesContext.Provider>
+
 
                     </div>
-                    <button>Guardar</button>
+                    {   ( estatusId === 'P' || estatusId === 'A' || estatusId === 'F') &&
+                        <button>Guardar</button>}
                     <Link to="/">Cancelar</Link>
 
                 </form>}

@@ -9,44 +9,45 @@ const EsquemasReducer = (state, action) => {
                 {
                     _id: action._id,
                     empresa: action.empresa,
+                    anticipos_banco: action.anticipos_banco,
                     descripcion: action.descripcion,
-                    anticipos_cr: action.anticipos_cr,
-                    anticipos_ab: action.anticipos_ab,
+                    anticipos_cuenta: action.anticipos_cuenta,
+                    anticipos_subcuenta: action.anticipos_subcuenta,
                     anticipos_tope: action.anticipos_tope,
                     anticipos_desc: action.anticipos_desc,
                 
-                    transporte_cr: action.transporte_cr,
-                    transporte_ab: action.transporte_ab,
+                    transporte_cuenta: action.transporte_cuenta,
+                    transporte_subcuenta: action.transporte_subcuenta,
                     transporte_tope: action.transporte_tope,
                     transporte_desc: action.transporte_desc,
                 
-                    recepcion_cr: action.recepcion_cr,
-                    recepcion_ab: action.recepcion_ab,
+                    recepcion_cuenta: action.recepcion_cuenta,
+                    recepcion_subcuenta: action.recepcion_subcuenta,
                     recepcion_tope: action.recepcion_tope,
                     recepcion_desc: action.recepcion_desc,
                 
-                    hospedaje_cr: action.hospedaje_cr,
-                    hospedaje_ab: action.hospedaje_ab,
+                    hospedaje_cuenta: action.hospedaje_cuenta,
+                    hospedaje_subcuenta: action.hospedaje_subcuenta,
                     hospedaje_tope: action.hospedaje_tope,
                     hospedaje_desc: action.hospedaje_desc,
                 
-                    alimentos_cr: action.alimentos_cr,
-                    alimentos_ab: action.alimentos_ab,
+                    alimentos_cuenta: action.alimentos_cuenta,
+                    alimentos_subcuenta: action.alimentos_subcuenta,
                     alimentos_tope: action.alimentos_tope,
                     alimentos_desc: action.alimentos_desc,
                     
-                    nodeducibles_cr: action.nodeducibles_cr,
-                    nodeducibles_ab: action.nodeducibles_ab,
+                    nodeducibles_cuenta: action.nodeducibles_cuenta,
+                    nodeducibles_subcuenta: action.nodeducibles_subcuenta,
                     nodeducibles_tope: action.nodeducibles_tope,
                     nodeducibles_desc: action.recepcion_desc,
                 
-                    mtto_vehiculos_cr: action.mtto_vehiculos_cr,
-                    mtto_vehiculos_ab: action.mtto_vehiculos_ab,
+                    mtto_vehiculos_cuenta: action.mtto_vehiculos_cuenta,
+                    mtto_vehiculos_subcuenta: action.mtto_vehiculos_subcuenta,
                     mtto_vehiculos_tope: action.mtto_vehiculos_tope,
                     mtto_vehiculos_desc: action.mtto_vehiculos_desc,
                 
-                    iva_cr: action.iva_cr,
-                    iva_ab: action.iva_ab,
+                    iva_cuenta: action.iva_cuenta,
+                    iva_subcuenta: action.iva_subcuenta,
                     iva_desc: action.iva_desc
         
                 }

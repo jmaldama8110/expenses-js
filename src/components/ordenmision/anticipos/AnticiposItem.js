@@ -1,9 +1,10 @@
 import React, { useContext, useState } from "react";
 import ExpensesContext from "../../../context/ExpensesContext";
 import AnticiposEdit from './AnticiposEdit';
+import { formatoPesos } from '../../../utils/numberFormatter';
 
-const AnticiposItem = ( {item}) => {
-    
+const AnticiposItem = ({ item }) => {
+
     const { dispatchAnticipos } = useContext(ExpensesContext);
     const [editar, setEditar] = useState(false);
 
@@ -15,19 +16,19 @@ const AnticiposItem = ( {item}) => {
         })
     }
 
-    const toggleEdit = (e)=> {
+    const toggleEdit = (e) => {
         e.preventDefault();
-        setEditar( !editar );
+        setEditar(!editar);
     }
-    return  (
-    <div>
-        <p>
+    return (
+        <li>
+
             <button onClick={onEliminar}>x</button>
             <button onClick={toggleEdit}>?</button>
-            {item.importe} {item.concepto}
-        </p>
-        {editar && <AnticiposEdit anticipo={item} setEditar={setEditar} />}
-    </div>
+            {formatoPesos( parseFloat(item.importe) )} {item.concepto}
+
+            {editar && <AnticiposEdit anticipo={item} setEditar={setEditar} />}
+        </li>
 
     );
 }

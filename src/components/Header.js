@@ -76,6 +76,8 @@ const Header = () => {
                     <Link className="link" to="/esquemas">Esquemas Contables</Link>
                     <Link className="link" to="/centrocosto">Centros de Costo</Link>
                     <Link className="link" to="/empresas">Empresas</Link>
+                    <Link className="link" to="/bancos">Bancos</Link>
+                    <Link className="link" to="/varios">Gastos Varios</Link>
                     
                 </div> 
             </div>

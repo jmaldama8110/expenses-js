@@ -1,19 +1,19 @@
 import React, { useContext } from "react";
 import ExpensesContext from '../../../context/ExpensesContext';
-import ComprobantesItem from './ComprobantesItem';
+import ConceptosItem from './ConceptosItem';
 
-const ComprobantesLista = () => {
+const ConceptosLista = () => {
 
-    const { comprobantes } = useContext(ExpensesContext);
+    const { conceptos } = useContext(ExpensesContext);
 
     return (
             <ul>
                 {
-                    comprobantes.map( (item,i) => <ComprobantesItem key={i} 
+                    conceptos.map( (item,i) => <ConceptosItem key={i} 
                                                             item={item}
                                                             />)
                 }
             </ul>    );
 }
 
-export { ComprobantesLista as default };
+export { ConceptosLista as default };

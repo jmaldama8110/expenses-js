@@ -12,7 +12,8 @@ const AutorizacionesReducer = (state, action) => {
                     usuario_id: action.usuario_id,
                     nombre_autorizador: action.nombre_autorizador,
                     nivel_autorizacion: action.nivel_autorizacion,
-                    estatus: action.estatus
+                    estatus: action.estatus,
+                    orden_estatus: action.orden_estatus
                 }
             ]
         case 'EDIT_AUTORIZACION':

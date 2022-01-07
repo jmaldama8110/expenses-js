@@ -7,13 +7,13 @@ const AnticiposLista = () => {
     const { anticipos } = useContext(ExpensesContext);
 
     return (
-            <div>
+            <ul>
                 {
                     anticipos.map( (item,i) => <AnticiposItem key={i} 
                                                             item={item}
                                                             />)
                 }
-            </div>    );
+            </ul>    );
 }
 
 export { AnticiposLista as default };

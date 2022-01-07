@@ -7,7 +7,8 @@ const ComprobantesReducer = (state, action) => {
             return [
                 ...state,
                 {
-                    tipo: action.tipo,
+                    _id: action._id,
+                    tipo_concepto: action.tipo_concepto,
                     fecha_aplicacion: action.fecha_aplicacion,
                     concepto: action.concepto,
                     fecha_comprobante: action.fecha_comprobante,

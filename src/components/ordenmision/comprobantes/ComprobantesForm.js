@@ -3,7 +3,8 @@ import React,{ useEffect, useState } from "react";
 const ComprobantesForm = ( {  comprobante, onSubmit } ) =>{
 
 
-    const [tipo, setTipo] = useState('');
+    const [tipoId, setTipoId] = useState('A');
+    const [tipo, setTipo] = useState('Alimentos');
     const [fecha_aplicacion, setFechaAplicacion] = useState('');
     const [concepto, setConcepto] = useState('');
     const [importe, setImporte] = useState('');
@@ -17,8 +18,11 @@ const ComprobantesForm = ( {  comprobante, onSubmit } ) =>{
 
         if( mounted ){
             if( comprobante ){
+                if( comprobante.tipo_concepto){
+                    setTipoId( comprobante.tipo_concepto[0]);
+                    setTipo( comprobante.tipo_concepto[1]);
+                } 
 
-                setTipo( comprobante.tipo );
                 setFechaAplicacion( comprobante.fecha_aplicacion );
                 setConcepto( comprobante.concepto);
                 setImporte( comprobante.importe );
@@ -38,7 +42,7 @@ const ComprobantesForm = ( {  comprobante, onSubmit } ) =>{
         e.preventDefault();
 
         const data = {
-            tipo,
+            tipo_concepto: [tipoId,tipo],
             fecha_aplicacion,
             concepto,
             importe,
@@ -53,9 +57,10 @@ const ComprobantesForm = ( {  comprobante, onSubmit } ) =>{
     return (
         <div>
                 <label>Tipo</label>
-                <select     value={tipo}                              
+                <select     value={tipoId}                              
                             onChange={ (e)=> {
-                                        setTipo(e.target.value);
+                                        setTipoId(e.target.value);
+                                        setTipo(e.target.options[e.target.selectedIndex].text);
                                         }}>
                             <option value="A">Alimentos</option>
                             <option value="T">Transporte</option>

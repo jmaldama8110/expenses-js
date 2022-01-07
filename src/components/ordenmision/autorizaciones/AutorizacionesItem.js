@@ -4,7 +4,7 @@ import ExpensesContext from "../../../context/ExpensesContext";
 
 const AutorizacionesItem = ({ item }) => {
 
-    const { dispatchAutorizaciones, usuarioInfo } = useContext(ExpensesContext);
+    const { dispatchAutorizaciones, usuarioInfo, estatusId, estatus } = useContext(ExpensesContext);
 
     const onAutorizar = (e) => {
         e.preventDefault();
@@ -12,7 +12,8 @@ const AutorizacionesItem = ({ item }) => {
         if (window.confirm('¿Autorizar esta Orden de Mision?')) {
 
             const edit_object = {
-                estatus: ['A', 'Autorizado']
+                estatus: ['A', 'Autorizado'],
+                orden_estatus: [estatusId,estatus]
             }
             dispatchAutorizaciones({
                 type: 'EDIT_AUTORIZACION',

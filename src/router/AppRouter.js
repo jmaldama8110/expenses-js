@@ -20,6 +20,9 @@ import DeptosEdit from '../components/configuracion/organigrama/deptos/DeptosEdi
 
 import Pago from '../components/configuracion/pago/Pago';
 
+import BancosHome from '../components/configuracion/bancos/BancosHome';
+import BancosEdit from '../components/configuracion/bancos/BancosEdit';
+import BancosAdd from '../components/configuracion/bancos/BancosAdd';
 
 import EmpresasHome from '../components/configuracion/empresas/EmpresasHome';
 import EmpresasAdd from '../components/configuracion/empresas/EmpresasAdd';
@@ -30,6 +33,8 @@ import CentroCosto from '../components/configuracion/centrocosto/CentroCosto';
 import EsquemasHome from '../components/configuracion/esquemas/EsquemasHome';
 import EsquemasEdit from '../components/configuracion/esquemas/EsquemasEdit';
 import EsquemasAdd from '../components/configuracion/esquemas/EsquemasAdd';
+
+import VariosGastos from '../components/configuracion/varios/VariosGastos';
 
 import { createBrowserHistory } from "history";
 import OrdenMisionEdit from '../components/ordenmision/OrdenMisionEdit';
@@ -71,8 +76,13 @@ const AppRouter = () => (
             <PrivateRoute path="/empresasadd" component={EmpresasAdd} exact={true} />
             <PrivateRoute path="/empresasedit/:id" component={EmpresasEdit} exact={true} />
 
+            <PrivateRoute path="/bancos" component={BancosHome} exact={true} />
+            <PrivateRoute path="/bancosadd" component={BancosAdd} exact={true} />
+            <PrivateRoute path="/bancosedit/:id" component={BancosEdit} exact={true} />
+
 
             <PrivateRoute path="/centrocosto" component={CentroCosto} exact={true} />
+            <PrivateRoute path="/varios" component={VariosGastos} exact={true} />
 
             <PrivateRoute path="/esquemas" component={EsquemasHome} exact={true} />
             <PrivateRoute path="/esquemasadd" component={EsquemasAdd} exact={true} />

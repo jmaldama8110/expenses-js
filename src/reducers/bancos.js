@@ -10,6 +10,8 @@ const BancosReducer = (state, action) => {
                     _id: action._id,
                     numero_cuenta: action.numero_cuenta,
                     clabe: action.clabe,
+                    cuenta: action.cuenta,
+                    subcuenta: action.subcuenta,
                     banco: action.banco
                 }
             ]

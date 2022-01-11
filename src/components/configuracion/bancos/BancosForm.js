@@ -6,6 +6,8 @@ const BancosForm = ( { onSubmit, banco} )=> {
 
     const [numero_cuenta, setNumeroCuenta] = useState('');
     const [clabe, setClabe] = useState('');
+    const [cuenta, setCuenta] = useState('');
+    const [subcuenta, setSubcuenta] = useState('');
     const [bancoClave, setBancoClave] = useState('');
     const [bancoNombre, setBancoNombre] = useState('');
 
@@ -16,7 +18,9 @@ const BancosForm = ( { onSubmit, banco} )=> {
             if(banco){
                 setNumeroCuenta(banco.numero_cuenta);
                 setClabe( banco.clabe);
-
+                setCuenta( banco.cuenta);
+                setSubcuenta( banco.subcuenta);
+                
                 if( banco.banco ){
                     setBancoClave( banco.banco[0]);
                     setBancoNombre( banco.banco[1]);
@@ -33,6 +37,8 @@ const BancosForm = ( { onSubmit, banco} )=> {
               
         const data = {
             numero_cuenta,
+            cuenta, 
+            subcuenta,
             clabe,
             banco: [ bancoClave, bancoNombre]
         }
@@ -45,6 +51,7 @@ const BancosForm = ( { onSubmit, banco} )=> {
             <p>Numero de cuenta</p>
             <input
                 type="text"
+                required
                 placeholder="Numero de cuenta"
                 value={numero_cuenta}
                 onChange={ (e) => setNumeroCuenta(e.target.value)}
@@ -52,14 +59,31 @@ const BancosForm = ( { onSubmit, banco} )=> {
             <p>CLABE</p>
             <input
                 type="text"
+                required
                 placeholder="CLABE interbancaria"
                 value={clabe}
                 onChange={ (e) => setClabe(e.target.value)}
+            ></input>
+            <p>Cuenta / Subcuenta contable</p>
+            <input
+                type="text"
+                required
+                placeholder="Cuenta"
+                value={cuenta}
+                onChange={ (e) => setCuenta(e.target.value)}
+            ></input>
+            <input
+                type="text"
+                required
+                placeholder="Subcuenta"
+                value={subcuenta}
+                onChange={ (e) => setSubcuenta(e.target.value)}
             ></input>
 
             <p>Clave del Banco o IFI</p>
             <input
                 type="text"
+                required
                 placeholder="Clave del Banco"
                 value={bancoClave}
                 onChange={ (e) => setBancoClave(e.target.value)}
@@ -68,6 +92,7 @@ const BancosForm = ( { onSubmit, banco} )=> {
             <p>Nombre del banco</p>
             <input
                 type="text"
+                required
                 placeholder="Nombre del banco"
                 value={bancoNombre}
                 onChange={ (e) => setBancoNombre(e.target.value)}

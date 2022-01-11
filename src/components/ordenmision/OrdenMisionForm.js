@@ -8,12 +8,14 @@ import AnticiposReducer from '../../reducers/anticipos';
 import AutorizacionesReducer from '../../reducers/autorizaciones';
 import ComprobantesReducer from '../../reducers/comprobantes';
 import ConceptosReducer from '../../reducers/conceptos';
+import VariosGastoReducer from '../../reducers/variosgastos';
 
 import ExpensesContext from '../../context/ExpensesContext';
 import AutorizacionesHome from './autorizaciones/AutorizacionesHome';
 import ComprobantesHome from './comprobantes/ComprobantesHome';
 import ConceptosHome from './conceptos/ConceptosHome';
 import OrdenMisionStats from './OrdenMisionStats';
+import VariosGastosHome from './varios_gastos/VariosGastosHome';
 
 import { formatoPesos } from '../../utils/numberFormatter';
 
@@ -51,6 +53,7 @@ const OrdenMisionForm = ({ onSubmit, orden }) => {
     const [anticipos, dispatchAnticipos] = useReducer(AnticiposReducer, []);
     const [autorizaciones, dispatchAutorizaciones] = useReducer(AutorizacionesReducer, []);
     const [comprobantes, dispatchComprobantes] = useReducer(ComprobantesReducer, []);
+    const [varios_gastos, dispatchVariosGastos] = useReducer(VariosGastoReducer, []);
     const [conceptos, dispatchConceptos] = useReducer(ConceptosReducer, []);
 
     const [duracion, setDuracion] = useState('0');
@@ -74,6 +77,7 @@ const OrdenMisionForm = ({ onSubmit, orden }) => {
             anticipos,
             autorizaciones,
             comprobantes,
+            varios_gastos,
             conceptos,
             estatus: !orden ? ['P', 'Pendiente'] : [estatusId, estatus]
         }
@@ -160,6 +164,12 @@ const OrdenMisionForm = ({ onSubmit, orden }) => {
                             dispatchComprobantes({
                                 type: 'POPULATE_COMPROBANTES',
                                 comprobantes: orden.comprobantes
+                            })
+                        }
+                        if (orden.varios_gastos) {
+                            dispatchVariosGastos({
+                                type: 'POPULATE_VARIOS_GASTOS',
+                                varios_gastos: orden.varios_gastos
                             })
                         }
 
@@ -292,7 +302,6 @@ const OrdenMisionForm = ({ onSubmit, orden }) => {
         setTotalDiario( formatoPesos( (totalDiario * diasDuracion) - hospedajeNoches) );
 
     }
-
 
     const populateSelectList = async (data) => {
 
@@ -481,7 +490,7 @@ const OrdenMisionForm = ({ onSubmit, orden }) => {
                             placeholder="Escriba aqui una descripcion detallada de la mision a realiza"
                         ></textarea>
 
-                        <ExpensesContext.Provider value={{ anticipos, comprobantes, setEstatus, setEstatusId, estatusId }}>
+                        <ExpensesContext.Provider value={{ anticipos, comprobantes, varios_gastos, setEstatus, setEstatusId, estatusId }}>
                             { (estatusId === 'A' || estatusId === 'R' || estatusId === 'F' ) && <OrdenMisionStats />}
                         </ExpensesContext.Provider>
                         
@@ -500,13 +509,17 @@ const OrdenMisionForm = ({ onSubmit, orden }) => {
                             { (estatusId ==='A' || estatusId ==='R') && <ComprobantesHome />}
                         </ExpensesContext.Provider>
 
+                        <ExpensesContext.Provider value={{ varios_gastos, dispatchVariosGastos, estatusId }}>
+                            { (estatusId ==='A' || estatusId ==='R') && <VariosGastosHome />}
+                        </ExpensesContext.Provider>
+
+
                         <ExpensesContext.Provider value={{ autorizaciones, estatusId,estatus,usuarioInfo, dispatchAutorizaciones }}>
                             <AutorizacionesHome />
                         </ExpensesContext.Provider>
 
-
                     </div>
-                    {   ( estatusId === 'P' || estatusId === 'A' || estatusId === 'F') &&
+                    {   ( estatusId === 'P' || estatusId === 'A' || estatusId === 'R' || estatusId === 'F') &&
                         <button>Guardar</button>}
                     <Link to="/">Cancelar</Link>
 

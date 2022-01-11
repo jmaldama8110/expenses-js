@@ -5,7 +5,7 @@ import { formatoPesos } from '../../utils/numberFormatter';
 
 const OrdenMisionStats = () => {
 
-    const { anticipos, comprobantes, setEstatus, setEstatusId, estatusId } = useContext(ExpensesContext);
+    const { anticipos, comprobantes, varios_gastos, setEstatus, setEstatusId, estatusId } = useContext(ExpensesContext);
 
     const [tanticipos, setTotalAnticipos] = useState('0');
 
@@ -20,8 +20,8 @@ const OrdenMisionStats = () => {
     const [tnodeducibles, setTotalNodeducibles] = useState('0');
     const [tvarios, setTotalVarios] = useState('0');
 
-    const [saldo, setSaldo ] = useState('0');
-    const [saldoEstatus, setSaldoEstatus ] = useState('')
+    const [saldo, setSaldo] = useState('0');
+    const [saldoEstatus, setSaldoEstatus] = useState('')
 
     const totalAnticipos = () => {
         let tot = 0;
@@ -36,7 +36,7 @@ const OrdenMisionStats = () => {
             }
             tot = tot + parseFloat(importe);
         })
-         
+
         return tot;
 
     }
@@ -63,7 +63,7 @@ const OrdenMisionStats = () => {
                 case 'T':
                     return tot_transporte = tot_transporte - parseFloat(e.importe);
                 case 'H':
-                    return tot_hospedaje = tot_hospedaje - parseFloat( e.importe);
+                    return tot_hospedaje = tot_hospedaje - parseFloat(e.importe);
                 case 'R':
                     return tot_recepcion = tot_recepcion - parseFloat(e.importe);
                 case 'M':
@@ -71,9 +71,12 @@ const OrdenMisionStats = () => {
                 case 'N':
                     return tot_nodeducibles = tot_nodeducibles - parseFloat(e.importe);
             }
-
-            
         });
+
+        varios_gastos.forEach(e => {
+            tot_varios = tot_varios - parseFloat(e.importe)
+        });
+        tot = tot + tot_varios;
 
         return {
             tot,
@@ -85,23 +88,23 @@ const OrdenMisionStats = () => {
             tot_nodeducibles,
             tot_varios
         };
-        
+
     }
 
 
     const totalKm = () => {
         setTotalKm('0');
     }
-    const evaluarSaldo = ( saldo ) => {
-       if (saldo == 0){
-           return '(ok)';
-       }
-       if(saldo > 0){
-           return 'a devolver'
-       }
-       if( saldo < 0 ){
-           return 'a favor de usuario'
-       }
+    const evaluarSaldo = (saldo) => {
+        if (saldo == 0) {
+            return '(ok)';
+        }
+        if (saldo > 0) {
+            return 'a devolver'
+        }
+        if (saldo < 0) {
+            return 'a favor de usuario'
+        }
     }
 
     useEffect(() => {
@@ -111,37 +114,48 @@ const OrdenMisionStats = () => {
         setTotalAnticipos(formatoPesos(sumaAnticipos));
 
         const saldoTotal = sumaGastosObj.tot + sumaAnticipos;
-        setSaldoEstatus(evaluarSaldo( saldoTotal ) );
-        setSaldo( formatoPesos(saldoTotal));
+        setSaldoEstatus(evaluarSaldo(saldoTotal));
+        setSaldo(formatoPesos(saldoTotal));
 
-        
+
     }, [anticipos]);
-    
+
     useEffect(() => {
 
         const sumaAnticipos = totalAnticipos();
         const sumaGastosObj = totalGastos();
 
-        setTotalGasto( formatoPesos( sumaGastosObj.tot) );
-        setTotalAlimentos( formatoPesos(sumaGastosObj.tot_alimentos) );
-        setTotalTransporte( formatoPesos( sumaGastosObj.tot_transporte) );
-        setTotalHospedaje( formatoPesos( sumaGastosObj.tot_hospedaje) );
-        setTotalRecepcion( formatoPesos( sumaGastosObj.tot_recepcion) );
-        setTotalMttoVehiculos( formatoPesos( sumaGastosObj.tot_mttoVehiculos) );
-        setTotalNodeducibles( formatoPesos( sumaGastosObj.tot_nodeducibles) );
-        setTotalVarios( formatoPesos( sumaGastosObj.tot_varios) );
+        setTotalGasto(formatoPesos(sumaGastosObj.tot));
+        setTotalAlimentos(formatoPesos(sumaGastosObj.tot_alimentos));
+        setTotalTransporte(formatoPesos(sumaGastosObj.tot_transporte));
+        setTotalHospedaje(formatoPesos(sumaGastosObj.tot_hospedaje));
+        setTotalRecepcion(formatoPesos(sumaGastosObj.tot_recepcion));
+        setTotalMttoVehiculos(formatoPesos(sumaGastosObj.tot_mttoVehiculos));
+        setTotalNodeducibles(formatoPesos(sumaGastosObj.tot_nodeducibles));
+        setTotalVarios(formatoPesos(sumaGastosObj.tot_varios));
 
         const saldoTotal = sumaGastosObj.tot + sumaAnticipos;
-        setSaldoEstatus(evaluarSaldo( saldoTotal ) );
-        setSaldo( formatoPesos(saldoTotal));
-        
+        setSaldoEstatus(evaluarSaldo(saldoTotal));
+        setSaldo(formatoPesos(saldoTotal));
+
     }, [comprobantes]);
+
+    useEffect(() => {
+        const sumaAnticipos = totalAnticipos();
+        const sumaGastosObj = totalGastos();
+
+        setTotalVarios(formatoPesos(sumaGastosObj.tot_varios));
+
+        const saldoTotal = sumaGastosObj.tot + sumaAnticipos;
+        setSaldoEstatus(evaluarSaldo(saldoTotal));
+        setSaldo(formatoPesos(saldoTotal));
+    }, [varios_gastos])
 
     const onSolicitarRevision = (e) => {
 
         e.preventDefault();
 
-        if( window.confirm(`¿Solicitar a revision, enviara un correo a:jmgomez@gmail.com`)){
+        if (window.confirm(`¿Solicitar a revision, enviara un correo a:jmgomez@gmail.com`)) {
             alert(`Se ha enviado un correo a jm@gmail.com`);
 
             setEstatus('En Revision');
@@ -152,8 +166,8 @@ const OrdenMisionStats = () => {
 
     const onAprobarComprobacion = (e) => {
         e.preventDefault();
-        if( window.confirm(`¿Aprobar la comprobacion?`) ){
-            
+        if (window.confirm(`¿Aprobar la comprobacion?`)) {
+
             setEstatus('Finalizada');
             setEstatusId('F');
         }
@@ -162,13 +176,13 @@ const OrdenMisionStats = () => {
     return (
         <div>
             <h3>Saldo: <span>{saldo}</span> {saldoEstatus}</h3>
-            { (saldoEstatus ==='(ok)' && estatusId === 'A') &&
-                
+            {(saldoEstatus === '(ok)' && estatusId === 'A') &&
+
                 <button onClick={onSolicitarRevision}
                 >Solicitar revision</button>
             }
             {
-                (saldoEstatus ==='(ok)' && estatusId === 'R') &&
+                (saldoEstatus === '(ok)' && estatusId === 'R') &&
                 <button onClick={onAprobarComprobacion}
                 >Aprobar Comprobacion</button>
             }
@@ -178,7 +192,7 @@ const OrdenMisionStats = () => {
             </ul>
             <ul>
                 <li>Kilometros: <strong>{tkm}</strong></li>
-                <li>Transporte: <strong>{ ttransporte}</strong></li>
+                <li>Transporte: <strong>{ttransporte}</strong></li>
                 <li>Recepcion: <strong>{trecepcion}</strong></li>
                 <li>Hospedaje: <strong>{thospedaje}</strong></li>
                 <li>Alimentos: <strong>{talimentos}</strong></li>
